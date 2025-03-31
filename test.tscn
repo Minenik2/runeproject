@@ -1,9 +1,28 @@
-[gd_scene load_steps=10 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=13 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="MeshLibrary" uid="uid://5gkxpqldmndh" path="res://assets/tileset.tres" id="2_8uh7m"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="3_ppyta"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="4_ykrsh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ppyta"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_ykrsh"]
+sky_material = SubResource("ProceduralSkyMaterial_ppyta")
+
+[sub_resource type="Environment" id="Environment_g14j6"]
+background_mode = 2
+sky = SubResource("Sky_ykrsh")
+ambient_light_color = Color(0.932796, 0.851745, 0.749393, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.02
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.932796, 0.851745, 0.749393, 1)
+fog_light_energy = 0.02
+fog_density = 0.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_8uh7m"]
 
@@ -19,6 +38,9 @@ height = 0.5
 
 [node name="Node3D" type="Node3D"]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_g14j6")
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(6.30802, 0, 0, 0, 0.321505, 0, 0, 0, 7.27489, 0, -0.22543, 0)
 visible = false
@@ -33,6 +55,10 @@ script = ExtResource("1_37kl0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.131681, 0)
 shape = SubResource("CapsuleShape3D_37kl0")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.165992)
+light_color = Color(0.932796, 0.851745, 0.749393, 1)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.865016, 0)
