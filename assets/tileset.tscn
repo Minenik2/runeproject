@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://d3mxlemimtv0f"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_d3e1p"]
+size = Vector3(2, 0.1, 2)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_d3e1p"]
+data = PackedVector3Array(-1, 0.05, 1, 1, 0.05, 1, -1, -0.05, 1, 1, 0.05, 1, 1, -0.05, 1, -1, -0.05, 1, 1, 0.05, -1, -1, 0.05, -1, 1, -0.05, -1, -1, 0.05, -1, -1, -0.05, -1, 1, -0.05, -1, 1, 0.05, 1, 1, 0.05, -1, 1, -0.05, 1, 1, 0.05, -1, 1, -0.05, -1, 1, -0.05, 1, -1, 0.05, -1, -1, 0.05, 1, -1, -0.05, -1, -1, 0.05, 1, -1, -0.05, 1, -1, -0.05, -1, 1, 0.05, 1, -1, 0.05, 1, 1, 0.05, -1, -1, 0.05, 1, -1, 0.05, -1, 1, 0.05, -1, -1, -0.05, 1, 1, -0.05, 1, -1, -0.05, -1, 1, -0.05, 1, 1, -0.05, -1, -1, -0.05, -1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8jwlm"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d3e1p"]
+size = Vector3(2.00659, 2.06, 2.03084)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="floor" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_d3e1p")
+skeleton = NodePath("floor")
+
+[node name="floor" type="StaticBody3D" parent="floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor/floor"]
+shape = SubResource("ConcavePolygonShape3D_d3e1p")
+
+[node name="wall" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_8jwlm")
+skeleton = NodePath("wall")
+
+[node name="wall" type="StaticBody3D" parent="wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall/wall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_d3e1p")
