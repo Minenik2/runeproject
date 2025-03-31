@@ -24,6 +24,8 @@ func _unhandled_input(event):
 			rotate_left()
 		elif event.keycode == KEY_D:
 			rotate_right()
+		elif event.keycode == KEY_E:  # Press 'E' to interact
+			interact_with_object()
 
 func _process(delta):
 	if is_moving:
@@ -41,6 +43,7 @@ func _process(delta):
 
 func move_forward():
 	var new_position = global_transform.origin + direction * grid_size
+	#print("moving to: ", new_position)
 
 	# Check for collision before moving
 	if not is_wall_in_front():
@@ -70,3 +73,14 @@ func is_wall_in_front() -> bool:
 	var result = space_state.intersect_ray(query)
 
 	return result.size() > 0  # If something is hit, return true (wall detected)
+	
+func interact_with_object():
+	var space_state = get_world_3d().direct_space_state
+	var ray_origin = global_transform.origin
+	var ray_end = ray_origin + direction * 1.5  # Slightly ahead of the player
+
+	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+	var result = space_state.intersect_ray(query)
+
+	if result.has("collider") and result.collider.has_method("interact"):
+		result.collider.interact()  # Call interact() on the hit object

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=19 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -7,15 +7,8 @@
 [ext_resource type="Shader" uid="uid://ciam46qh5kw37" path="res://fogwar.gdshader" id="2_vbegm"]
 [ext_resource type="PackedScene" uid="uid://bi2sk57rml81p" path="res://assets/exitMaze.tscn" id="2_xersf"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="3_ppyta"]
-[ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="4_00tp4"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="4_ykrsh"]
 [ext_resource type="PackedScene" uid="uid://i5bss45dqgbu" path="res://assets/door.tscn" id="5_ykrsh"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xersf"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_00tp4"]
-atlas = SubResource("NoiseTexture2D_xersf")
-region = Rect2(0, 0, 512, 512)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ehkex"]
 shader = ExtResource("2_vbegm")
@@ -63,58 +56,16 @@ gridmap = NodePath("../GridMap")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Minimap" type="Control" parent="UI" node_paths=PackedStringArray("dungeon_map", "player_marker", "labyrinth_generator")]
-texture_filter = 1
+[node name="Minimap" type="Control" parent="UI" node_paths=PackedStringArray("dungeon_map")]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -150.0
-offset_right = 150.0
+offset_top = -40.0
+offset_right = 40.0
 grow_vertical = 0
 script = ExtResource("1_g14j6")
-dungeon_map = NodePath("CenterContainer/maptexture")
-player_marker = NodePath("CenterContainer/PlayerPointer")
-labyrinth_generator = NodePath("../../labyrinth_generator")
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Minimap"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -37.0
-offset_top = -111.0
-offset_right = 113.0
-offset_bottom = 39.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="maptexture" type="TextureRect" parent="UI/Minimap/CenterContainer"]
-texture_filter = 1
-custom_minimum_size = Vector2(225, 225)
-layout_mode = 2
-texture = SubResource("AtlasTexture_00tp4")
-expand_mode = 2
-
-[node name="PlayerPointer" type="TextureRect" parent="UI/Minimap/CenterContainer"]
-modulate = Color(1, 0.211765, 1, 1)
-texture_filter = 1
-layout_mode = 2
-size_flags_horizontal = 4
-texture = ExtResource("4_00tp4")
-expand_mode = 1
-stretch_mode = 3
-
-[node name="GridContainer" type="GridContainer" parent="UI/Minimap"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -602.0
-offset_right = 512.0
-offset_bottom = -90.0
-grow_vertical = 0
-metadata/_edit_use_anchors_ = true
+dungeon_map = NodePath("maptexture")
 
 [node name="fogOfWar" type="ColorRect" parent="UI/Minimap"]
 visible = false
@@ -124,11 +75,33 @@ offset_right = 64.0
 offset_bottom = 64.0
 color = Color(0, 0, 0, 0)
 
+[node name="maptexture" type="TextureRect" parent="UI/Minimap"]
+visible = false
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+offset_right = 64.0
+grow_vertical = 0
+expand_mode = 3
+
 [node name="fogofwar" type="TextureRect" parent="UI/Minimap"]
 visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="PlayerPointer" type="TextureRect" parent="UI/Minimap"]
+modulate = Color(1, 0.211765, 1, 1)
+texture_filter = 1
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_ppyta")
+stretch_mode = 3
 
 [node name="background" type="ColorRect" parent="UI/Minimap"]
 visible = false
@@ -138,6 +111,7 @@ offset_bottom = 64.0
 color = Color(0.381703, 0.381703, 0.381703, 1)
 
 [node name="mobMarker" type="TextureRect" parent="UI/Minimap"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.203
@@ -146,6 +120,7 @@ offset_right = -4.12
 offset_bottom = -4.28
 
 [node name="alertMarker" type="TextureRect" parent="UI/Minimap"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.203
