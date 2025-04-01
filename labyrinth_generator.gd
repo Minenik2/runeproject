@@ -205,6 +205,6 @@ func spawn_enemies(num_enemies: int):
 	for i in range(num_enemies):
 		var enemy = enemy_scene.instantiate()
 		var spawn_pos = find_random_open_space()
-		enemy.global_position = Vector3(spawn_pos.x * grid_size, 0.8, spawn_pos.y * grid_size)
+		enemy.global_position = Vector3(spawn_pos.x * grid_size + 0.5, 0.8, spawn_pos.y * grid_size + 0.5)
 		add_child(enemy)
 		enemies.append(enemy)
