@@ -22,7 +22,7 @@ func _process(delta):
 
 func update_minimap():
 	if maze.is_empty():
-		return  # Prevent errors if the maze isn't set
+		return  # Prevent errors if maze isn't set
 
 	var player = $"../../player"
 	var player_tile = world_to_tile(player.global_transform.origin)
@@ -34,23 +34,26 @@ func update_minimap():
 	var img = Image.create(minimap_size, minimap_size, false, Image.FORMAT_RGBA8)
 	img.fill(Color.BLACK)  # Default to unexplored
 
-	for dx in range(-5, 6):  # 5 tiles in each direction
+	for dx in range(-5, 6):  
 		for dy in range(-5, 6):
 			var tile = player_tile + Vector2(dx, dy)
-			if is_within_bounds(tile):
-				if explored_tiles.has(tile):  # Show only explored tiles
-					var color = Color.WHITE if maze[tile.x][tile.y] == 0 else Color.GRAY
-					img.set_pixel(dx + 5, dy + 5, color)  # Center player on minimap
+			if is_within_bounds(tile) and explored_tiles.has(tile) and explored_tiles[tile]:
+				var color = Color.WHITE if maze[tile.x][tile.y] == 0 else Color.GRAY
+				img.set_pixel(dx + 5, dy + 5, color)  # Center player on minimap
 
-	# Update minimap position so the player stays centered
-	#dungeon_map.position = -player_tile * minimap_scale + Vector2(dungeon_map.size.x / 2, dungeon_map.size.y / 2)
-
-	# Update player marker
-	player_marker.rotation_degrees = -player.rotation_degrees.y  # Rotate based on player direction
+	# Show enemies
+	for enemy in labyrinth_generator.enemies:
+		var enemy_tile = world_to_tile(enemy.global_position)
+		var relative_pos = enemy_tile - player_tile
+		if abs(relative_pos.x) <= 5 and abs(relative_pos.y) <= 5:
+			img.set_pixel(relative_pos.x + 5, relative_pos.y + 5, Color.RED)  # Enemy is red
 
 	# Update minimap texture
 	var texture = ImageTexture.create_from_image(img)
 	dungeon_map.texture = texture
+
+	# Update player marker
+	player_marker.rotation_degrees = -player.rotation_degrees.y  # Rotate based on player direction
 
 func reveal_tiles_around(center_tile):
 	# Reveal a 5x5 area around the player
@@ -66,3 +69,18 @@ func world_to_tile(world_pos):
 
 func is_within_bounds(tile):
 	return tile.x >= 0 and tile.x < maze.size() and tile.y >= 0 and tile.y < maze[0].size()
+	
+func reset_minimap():
+	maze = labyrinth_generator.maze
+	explored_tiles.clear()  # Clear all previous exploration data
+
+	# Make all tiles unexplored at the start
+	for x in range(maze.size()):  
+		for y in range(maze[0].size()):  
+			explored_tiles[Vector2(x, y)] = false  
+
+	# Reveal only the starting position of the player
+	var player_tile = world_to_tile($"../../player".global_transform.origin)
+	reveal_tiles_around(player_tile)
+
+	update_minimap()  # Refresh minimap after resetting

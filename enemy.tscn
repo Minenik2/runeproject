@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7p7rh2wnumgn"]
+
+[ext_resource type="Script" uid="uid://dfr3hmw61xbic" path="res://enemy.gd" id="1_4gyqm"]
+[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="1_7k104"]
+[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="3_qi2p4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
+
+[node name="enemy" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_4gyqm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("BoxShape3D_4gyqm")
+
+[node name="Sprite3D" type="Sprite3D" parent="CharacterBody3D"]
+modulate = Color(1, 0.243137, 0.105882, 1)
+texture = ExtResource("1_7k104")
+script = ExtResource("3_qi2p4")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=23 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -6,6 +6,7 @@
 [ext_resource type="MeshLibrary" uid="uid://5gkxpqldmndh" path="res://assets/tileset.tres" id="2_8uh7m"]
 [ext_resource type="Shader" uid="uid://ciam46qh5kw37" path="res://fogwar.gdshader" id="2_vbegm"]
 [ext_resource type="PackedScene" uid="uid://bi2sk57rml81p" path="res://assets/exitMaze.tscn" id="2_xersf"]
+[ext_resource type="PackedScene" uid="uid://b7p7rh2wnumgn" path="res://enemy.tscn" id="3_77dp3"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="3_ppyta"]
 [ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="4_00tp4"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="4_ykrsh"]
@@ -59,6 +60,7 @@ height = 0.5
 script = ExtResource("1_ehkex")
 player = NodePath("../player")
 maze_reset_scene = ExtResource("2_xersf")
+enemy_scene = ExtResource("3_77dp3")
 gridmap = NodePath("../GridMap")
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -161,7 +163,7 @@ transform = Transform3D(6.30802, 0, 0, 0, 0.321505, 0, 0, 0, 7.27489, 0, -0.2254
 visible = false
 mesh = SubResource("BoxMesh_8uh7m")
 
-[node name="player" type="CharacterBody3D" parent="."]
+[node name="player" type="CharacterBody3D" parent="." groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, 0.5)
 script = ExtResource("1_37kl0")
 

@@ -68,7 +68,8 @@ func is_wall_in_front() -> bool:
 	var ray_end = ray_origin + direction * collision_check_distance
 
 	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
-	query.collide_with_areas = false  # Only collide with static bodies
+	query.collide_with_areas = false  # Only collide with static bodieswa
+	query.collision_mask = 0b1111111111111101  # Ignores layer 2 (bit 2 = 0)
 
 	var result = space_state.intersect_ray(query)
 

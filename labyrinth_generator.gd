@@ -5,6 +5,7 @@ extends Node
 @export var height: int = 10  # Maze height
 @export var grid_size: float = 2.0  # World space size per tile
 @export var maze_reset_scene: PackedScene  # Assign your .tscn file here
+@export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
 
 var maze = []  # 2D array to store walls & paths
 var directions = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
@@ -13,10 +14,12 @@ var exit_point: Vector2
 var tile_scale = 1  # Scale factor
 var maze_reset_instance: Node3D  # To store the instance of the reset object
 var explored_tiles = []  # Stores explored tiles for fog of war
+var enemies = []  # Store enemy instances
 
 func _ready():
 	generate_maze()
 	build_maze()
+	spawn_enemies(3)
 	print_maze()  # Debug output
 
 func generate_maze():
@@ -80,7 +83,7 @@ func carve_path(pos):
 
 	for dir in directions:
 		var next_pos = pos + dir * 2  # Move 2 steps in a direction
-		if is_within_bounds(next_pos) and maze[next_pos.x][next_pos.y] == 1:
+		if is_within_bounds(next_pos) and is_within_bounds((pos + dir)) and maze[next_pos.x][next_pos.y] == 1:
 			var between = (pos + next_pos) / 2
 			maze[between.x][between.y] = 0  # Remove wall between
 			carve_path(next_pos)
@@ -92,7 +95,8 @@ func prims_algorithm():
 
 	for dir in directions:
 		var neighbor = start + dir * 2
-		if is_within_bounds(neighbor):
+		var between = start + dir  # The wall between two paths
+		if is_within_bounds(neighbor) and is_within_bounds(between):
 			walls.append(neighbor)
 
 	while walls.size() > 0:
@@ -116,6 +120,14 @@ func prims_algorithm():
 						walls.append(new_wall)
 
 func binary_tree_algorithm():
+	for x in range(width):
+		maze[x][0] = 1  # Top border
+		maze[x][height - 1] = 1  # Bottom border
+
+	for y in range(height):
+		maze[0][y] = 1  # Left border
+		maze[width - 1][y] = 1  # Right border
+	
 	for x in range(0, width, 2):
 		for y in range(0, height, 2):
 			maze[x][y] = 0
@@ -126,7 +138,7 @@ func binary_tree_algorithm():
 					maze[x][y - 1] = 0
 
 func is_within_bounds(pos):
-	return pos.x >= 0 and pos.x < width and pos.y >= 0 and pos.y < height
+	return pos.x > 0 and pos.x < width - 1 and pos.y > 0 and pos.y < height - 1
 
 func print_maze():
 	for row in maze:
@@ -182,3 +194,17 @@ func spawn_maze_reset_object():
 		0.8,  
 		(exit_point.y + 0.5) * tile_scale
 	)
+
+func spawn_enemies(num_enemies: int):
+	# Remove old enemies
+	for enemy in enemies:
+		enemy.queue_free()
+	enemies.clear()
+
+	# Spawn new enemies
+	for i in range(num_enemies):
+		var enemy = enemy_scene.instantiate()
+		var spawn_pos = find_random_open_space()
+		enemy.global_position = Vector3(spawn_pos.x * grid_size, 0.8, spawn_pos.y * grid_size)
+		add_child(enemy)
+		enemies.append(enemy)
