@@ -3,12 +3,21 @@ extends Control
 @export var dungeon_map: TextureRect  # UI Texture for the minimap
 @export var player_marker: TextureRect  # The fixed player pointer
 @export var grid_size: float = 1.0  # World space size per tile
-@export var minimap_scale: float = 10.0  # Scale for rendering
+@export var minimap_scale: float = 20.0  # Scale for rendering
 @export var labyrinth_generator: Node  # Reference to the labyrinth generator
+@export var player: Node
+@export var zoom: float = 1.5
+
+
+@onready var margin_container: MarginContainer = $MarginContainer
+@onready var mob_marker: TextureRect = $MarginContainer/CenterContainer/maptexture/mobMarker
+@onready var exit_marker: TextureRect = $MarginContainer/CenterContainer/maptexture/exitMarker
+@onready var icons = {"enemy": mob_marker, "exit": exit_marker}
 
 var explored_tiles = {}  # Dictionary to store explored tiles
 var maze = []  # Holds the labyrinth structure
 var minimap_size = 11  # 5 tiles in each direction + player tile
+var markers = {} # keys are the actuall object and the values are the markers assigned to them
 
 func _ready():
 	# Fetch the generated maze from the Labyrinth Generator
@@ -16,7 +25,8 @@ func _ready():
 		maze = labyrinth_generator.maze
 	else:
 		print("ERROR: Labyrinth Generator not assigned!")
-
+	get_markers()
+		
 func _process(delta):
 	update_minimap()
 
@@ -24,7 +34,6 @@ func update_minimap():
 	if maze.is_empty():
 		return  # Prevent errors if maze isn't set
 
-	var player = $"../../player"
 	var player_tile = world_to_tile(player.global_transform.origin)
 
 	# Reveal tiles as player moves
@@ -54,6 +63,26 @@ func update_minimap():
 
 	# Update player marker
 	player_marker.rotation_degrees = -player.rotation_degrees.y  # Rotate based on player direction
+	for item in markers:
+		if not is_instance_valid(item):
+			continue  # Skip this item if it has been freed
+		
+		var obj_tile = world_to_tile(item.global_transform.origin)
+		var relative_pos = obj_tile - player_tile  # Calculate relative position in tiles
+
+		var final_pos = relative_pos * minimap_scale + dungeon_map.size / 2  # Scale to minimap
+		var local_final_pos = final_pos - dungeon_map.position  # Convert to local coords
+		final_pos.x = clamp(final_pos.x, 0, dungeon_map.size.x)
+		final_pos.y = clamp(final_pos.y, 0, dungeon_map.size.y)
+		
+		final_pos.x -= 8
+		final_pos.y -= 8
+
+		markers[item].position = final_pos  # Assign to marker
+		if margin_container.get_rect().has_point(local_final_pos):
+			markers[item].show()
+		else:
+			markers[item].hide()
 
 func reveal_tiles_around(center_tile):
 	# Reveal a 5x5 area around the player
@@ -83,4 +112,21 @@ func reset_minimap():
 	var player_tile = world_to_tile($"../../player".global_transform.origin)
 	reveal_tiles_around(player_tile)
 
-	update_minimap()  # Refresh minimap after resetting
+	get_markers()
+	print(markers)
+
+func get_markers():
+	# Free only the markers that were added
+	for marker in markers.values():
+		if is_instance_valid(marker):  # Check if it's not already freed
+			marker.queue_free()
+	
+	markers.clear()  # Clear the dictionary since markers are now freed
+	
+	var map_objects = get_tree().get_nodes_in_group("minimap_objects")
+	for item in map_objects:
+		print(item.minimap_icon, icons)
+		var new_marker = icons[item.minimap_icon].duplicate()
+		margin_container.add_child(new_marker)
+		new_marker.show()
+		markers[item] = new_marker

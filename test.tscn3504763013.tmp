@@ -96,25 +96,12 @@ layout_mode = 2
 texture = SubResource("AtlasTexture_00tp4")
 expand_mode = 2
 
-[node name="exitMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture"]
-visible = false
-modulate = Color(0.45, 1, 0, 1)
-texture_filter = 1
-layout_mode = 2
-offset_right = 16.0
-offset_bottom = 16.0
-pivot_offset = Vector2(8, 8)
-texture = ExtResource("4_00tp4")
-stretch_mode = 2
-
 [node name="mobMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture"]
-visible = false
 modulate = Color(1, 0.333333, 0, 1)
 texture_filter = 1
 layout_mode = 2
-offset_right = 16.0
-offset_bottom = 16.0
-pivot_offset = Vector2(8, 8)
+offset_right = 225.0
+offset_bottom = 225.0
 texture = ExtResource("4_00tp4")
 stretch_mode = 2
 
@@ -160,7 +147,6 @@ offset_bottom = 64.0
 color = Color(0.381703, 0.381703, 0.381703, 1)
 
 [node name="alertMarker" type="TextureRect" parent="UI/Minimap"]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.203

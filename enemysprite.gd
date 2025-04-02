@@ -1,6 +1,6 @@
 extends Sprite3D
 
-@onready var player = $"../../../../player"  # Adjust path
+@onready var player = $"../../../player"  # Adjust path
 
 func _process(delta):
 	if player:

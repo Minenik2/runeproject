@@ -12,6 +12,8 @@ var target_rotation: float
 var is_moving: bool = false
 var is_rotating: bool = false
 
+var minimap_icon = "enemy"
+
 @onready var labyrinth_generator = $"../../../labyrinth_generator"
 @onready var move_timer: Timer = $Timer
 

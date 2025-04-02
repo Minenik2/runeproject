@@ -6,6 +6,7 @@ extends Node
 @export var grid_size: float = 2.0  # World space size per tile
 @export var maze_reset_scene: PackedScene  # Assign your .tscn file here
 @export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
+@export var gridmap: GridMap  # Assign your GridMap node in the Inspector
 
 var maze = []  # 2D array to store walls & paths
 var directions = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
@@ -151,8 +152,6 @@ func print_maze():
 			else:
 				row_string += "x"
 		print(row_string)
-
-@export var gridmap: GridMap  # Assign your GridMap node in the Inspector
 
 func build_maze():
 	gridmap.clear()  # Clear previous maze data

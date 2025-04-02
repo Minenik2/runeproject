@@ -1,22 +1,21 @@
 [gd_scene load_steps=5 format=3 uid="uid://bi2sk57rml81p"]
 
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="1_ssom6"]
-[ext_resource type="Script" uid="uid://25138i77kkuh" path="res://assets/exitMazeSprite.gd" id="2_1dbcc"]
 [ext_resource type="Script" uid="uid://botma03tjgoqt" path="res://assets/exitMaze.gd" id="3_1dbcc"]
+[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="3_gsvhn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tmc66"]
 
-[node name="ExitMaze" type="Node3D"]
+[node name="ExitMaze" type="Node3D" groups=["minimap_objects"]]
+script = ExtResource("3_1dbcc")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 texture = ExtResource("1_ssom6")
-script = ExtResource("2_1dbcc")
+script = ExtResource("3_gsvhn")
 
 [node name="Area3D" type="Area3D" parent="."]
-script = ExtResource("3_1dbcc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_tmc66")
 
-[connection signal="area_entered" from="Area3D" to="Area3D" method="_on_area_entered"]
-[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
