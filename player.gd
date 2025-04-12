@@ -5,6 +5,7 @@ extends CharacterBody3D
 @export var collision_check_distance: float = 1.0  # Same as grid_size
 @export var move_speed: float = 10.0  # Speed of movement transition
 @export var rotate_speed: float = 10.0  # Speed of rotation transition
+@onready var minimap: Control = $"../UI/Minimap"
 
 var direction = Vector3.FORWARD
 var target_position: Vector3

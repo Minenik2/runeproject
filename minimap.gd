@@ -79,7 +79,7 @@ func update_minimap():
 		final_pos.y -= 8
 
 		markers[item].position = final_pos  # Assign to marker
-		if margin_container.get_rect().has_point(local_final_pos):
+		if Rect2(Vector2.ZERO, dungeon_map.size).has_point(local_final_pos):
 			markers[item].show()
 		else:
 			markers[item].hide()
@@ -113,7 +113,7 @@ func reset_minimap():
 	reveal_tiles_around(player_tile)
 
 	get_markers()
-	print(markers)
+	print("current markers", markers)
 
 func get_markers():
 	# Free only the markers that were added
@@ -127,6 +127,6 @@ func get_markers():
 	for item in map_objects:
 		print(item.minimap_icon, icons)
 		var new_marker = icons[item.minimap_icon].duplicate()
-		margin_container.add_child(new_marker)
+		dungeon_map.add_child(new_marker)
 		new_marker.show()
 		markers[item] = new_marker
