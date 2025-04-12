@@ -19,3 +19,5 @@ script = ExtResource("3_qi2p4")
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

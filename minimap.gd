@@ -79,6 +79,8 @@ func update_minimap():
 		final_pos.y -= 8
 
 		markers[item].position = final_pos  # Assign to marker
+		markers[item].rotation_degrees = -rad_to_deg(item.rotation.y) # Update rotation based on object rotation
+		
 		if Rect2(Vector2.ZERO, dungeon_map.size).has_point(local_final_pos):
 			markers[item].show()
 		else:

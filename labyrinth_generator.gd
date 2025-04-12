@@ -60,8 +60,6 @@ func find_random_open_space(far_from=null):
 			if maze[x][y] == 0:  # Only consider walkable paths
 				open_spaces.append(Vector2(x, y))
 
-	print("our maze looks like this, ", open_spaces)
-
 	if open_spaces.is_empty():
 		return Vector2(1, 1)  # Default if no valid space is found
 
