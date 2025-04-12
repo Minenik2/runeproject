@@ -113,7 +113,7 @@ func reset_minimap():
 	reveal_tiles_around(player_tile)
 
 	get_markers()
-	print("current markers", markers)
+	#print("current markers", markers)
 
 func get_markers():
 	# Free only the markers that were added
@@ -125,7 +125,7 @@ func get_markers():
 	
 	var map_objects = get_tree().get_nodes_in_group("minimap_objects")
 	for item in map_objects:
-		print(item.minimap_icon, icons)
+		#print(item.minimap_icon, icons)
 		var new_marker = icons[item.minimap_icon].duplicate()
 		dungeon_map.add_child(new_marker)
 		new_marker.show()

@@ -41,8 +41,8 @@ func generate_maze():
 		prims_algorithm()
 		print("used prims algorithm")
 	else:
-		binary_tree_algorithm()
-		print("used binary tree algorithm")
+		room_based_algorithm()
+		print("used room based algorithm")
 
 	# Find a random open space for spawn and exit
 	spawn_point = find_random_open_space()
@@ -60,6 +60,8 @@ func find_random_open_space(far_from=null):
 			if maze[x][y] == 0:  # Only consider walkable paths
 				open_spaces.append(Vector2(x, y))
 
+	print("our maze looks like this, ", open_spaces)
+
 	if open_spaces.is_empty():
 		return Vector2(1, 1)  # Default if no valid space is found
 
@@ -75,6 +77,8 @@ func find_random_open_space(far_from=null):
 
 		if not valid_spaces.is_empty():
 			return valid_spaces[0]  # Pick the farthest valid space
+
+	open_spaces.shuffle()
 
 	return open_spaces[0]  # Default to the first open space
 
@@ -120,23 +124,75 @@ func prims_algorithm():
 					if is_within_bounds(new_wall) and maze[new_wall.x][new_wall.y] == 1:
 						walls.append(new_wall)
 
-func binary_tree_algorithm():
+# ROOM BASED ALGORITHM
+func room_based_algorithm():
+	# Fill everything with walls
 	for x in range(width):
-		maze[x][0] = 1  # Top border
-		maze[x][height - 1] = 1  # Bottom border
+		for y in range(height):
+			maze[x][y] = 1
 
+	var rooms = []
+	var max_rooms = 6
+	var min_room_size = 3
+	var max_room_size = 5
+
+	for i in range(max_rooms):
+		var room_width = randi_range(min_room_size, max_room_size)
+		var room_height = randi_range(min_room_size, max_room_size)
+
+		var room_x = randi_range(1, width - room_width - 2)
+		var room_y = randi_range(1, height - room_height - 2)
+
+		var new_room = Rect2(room_x, room_y, room_width, room_height)
+
+		# Check for overlap
+		var overlaps = false
+		for other_room in rooms:
+			if new_room.intersects(other_room.grow(1)):
+				overlaps = true
+				break
+
+		if not overlaps:
+			create_room(new_room)
+			if rooms.size() > 0:
+				# Connect this room to the previous one
+				var prev_center = rooms[rooms.size() - 1].get_center()
+				var new_center = new_room.get_center()
+				create_hallway(prev_center, new_center)
+
+			rooms.append(new_room)
+
+	# Enclose the maze with outer walls
+	for x in range(width):
+		maze[x][0] = 1
+		maze[x][height - 1] = 1
 	for y in range(height):
-		maze[0][y] = 1  # Left border
-		maze[width - 1][y] = 1  # Right border
-	
-	for x in range(0, width, 2):
-		for y in range(0, height, 2):
+		maze[0][y] = 1
+		maze[width - 1][y] = 1
+
+func create_room(room: Rect2):
+	for x in range(room.position.x, room.position.x + room.size.x):
+		for y in range(room.position.y, room.position.y + room.size.y):
 			maze[x][y] = 0
-			if x > 0 and y > 0:
-				if randi() % 2 == 0:
-					maze[x - 1][y] = 0
-				else:
-					maze[x][y - 1] = 0
+
+func create_hallway(from_pos: Vector2, to_pos: Vector2):
+	from_pos = from_pos.floor()
+	to_pos = to_pos.floor()
+
+	if randi() % 2 == 0:
+		# Horizontal then vertical
+		for x in range(min(from_pos.x, to_pos.x), max(from_pos.x, to_pos.x) + 1):
+			maze[x][from_pos.y] = 0
+		for y in range(min(from_pos.y, to_pos.y), max(from_pos.y, to_pos.y) + 1):
+			maze[to_pos.x][y] = 0
+	else:
+		# Vertical then horizontal
+		for y in range(min(from_pos.y, to_pos.y), max(from_pos.y, to_pos.y) + 1):
+			maze[from_pos.x][y] = 0
+		for x in range(min(from_pos.x, to_pos.x), max(from_pos.x, to_pos.x) + 1):
+			maze[x][to_pos.y] = 0
+			
+## end of room based algorithm
 
 func is_within_bounds(pos):
 	return pos.x > 0 and pos.x < width - 1 and pos.y > 0 and pos.y < height - 1
@@ -200,10 +256,46 @@ func spawn_enemies(num_enemies: int):
 		enemy.queue_free()
 	enemies.clear()
 
-	# Spawn new enemies
+	var min_distance = 5
+	var attempts_per_enemy = 30  # Max attempts before giving up on placing an enemy
+
+	# Track placed positions (in tile coords)
+	var placed_positions = []
+
 	for i in range(num_enemies):
-		var enemy = enemy_scene.instantiate()
-		var spawn_pos = find_random_open_space()
-		enemy.global_position = Vector3(spawn_pos.x * grid_size + 0.5, 0.8, spawn_pos.y * grid_size + 0.5)
-		add_child(enemy)
-		enemies.append(enemy)
+		var attempts = 0
+		var found = false
+
+		while attempts < attempts_per_enemy and not found:
+			var spawn_pos = find_random_open_space()
+			var too_close = false
+
+			# Check against player spawn position
+			if spawn_point.distance_to(spawn_pos) < min_distance:
+				too_close = true
+
+			# Check against other enemies
+			for pos in placed_positions:
+				if pos.distance_to(spawn_pos) < min_distance:
+					too_close = true
+					break
+
+			if not too_close:
+				found = true
+				placed_positions.append(spawn_pos)
+
+				var enemy = enemy_scene.instantiate()
+				print("enemy spawned at ", spawn_pos)
+				enemy.global_position = Vector3(
+					(spawn_pos.x + 0.5) * tile_scale,
+					0.8,
+					(spawn_pos.y + 0.5) * tile_scale
+				)
+				add_child(enemy)
+				enemies.append(enemy)
+
+			attempts += 1
+
+	# You can print a warning if not all enemies were spawned
+	if enemies.size() < num_enemies:
+		print("Only spawned %d out of %d enemies due to space constraints." % [enemies.size(), num_enemies])
