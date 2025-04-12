@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://i5bss45dqgbu"]
 
-[ext_resource type="Script" uid="uid://dkq0jl1ultc1f" path="res://assets/static_body_3d.gd" id="1_7g2qk"]
+[ext_resource type="Script" uid="uid://dkq0jl1ultc1f" path="res://assets/dungeon/static_body_3d.gd" id="1_7g2qk"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_fithg"]
 size = Vector3(0.1, 1, 1)

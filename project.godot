@@ -15,7 +15,21 @@ run/main_scene="uid://be4diiash3jp6"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=840
+window/size/viewport_height=680
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_width"
+
+[gui]
+
+theme/custom="uid://detis17yiamg3"
+theme/custom_font="uid://d22tpxinmhb64"
+theme/default_font_multichannel_signed_distance_field=true
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

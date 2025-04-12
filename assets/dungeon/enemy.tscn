@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://b7p7rh2wnumgn"]
 
-[ext_resource type="Script" uid="uid://dfr3hmw61xbic" path="res://enemy.gd" id="1_4gyqm"]
+[ext_resource type="Script" uid="uid://dfr3hmw61xbic" path="res://assets/dungeon/enemy.gd" id="1_4gyqm"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="1_7k104"]
-[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://enemysprite.gd" id="3_qi2p4"]
+[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_qi2p4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 

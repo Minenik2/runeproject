@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://4u35d5dndusb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6gwsu"]
+content_margin_left = 20.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+
+[node name="combatScene" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+color = Color(0.688027, 0.520386, 0.41303, 1)
+
+[node name="Enemies" type="GridContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer"]
+layout_mode = 2
+
+[node name="content" type="Panel" parent="CanvasLayer/UI/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6gwsu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="turn" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Turn 1"
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Deals Blood Damage"
+
+[node name="messagePanel" type="Panel" parent="CanvasLayer/UI/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Party" type="Control" parent="CanvasLayer/UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
