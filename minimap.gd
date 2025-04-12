@@ -65,8 +65,13 @@ func update_minimap():
 	player_marker.rotation_degrees = -player.rotation_degrees.y  # Rotate based on player direction
 	for item in markers:
 		if not is_instance_valid(item):
-			continue  # Skip this item if it has been freed
+			# Clean up any leftover markers for freed objects
+			if is_instance_valid(markers[item]):
+				markers[item].queue_free()
+			markers.erase(item)
+			continue
 		
+		# Update marker normally if still valid
 		var obj_tile = world_to_tile(item.global_transform.origin)
 		var relative_pos = obj_tile - player_tile  # Calculate relative position in tiles
 
@@ -115,7 +120,7 @@ func reset_minimap():
 	reveal_tiles_around(player_tile)
 
 	get_markers()
-	#print("current markers", markers)
+	print("current markers", markers)
 
 func get_markers():
 	# Free only the markers that were added
@@ -125,9 +130,10 @@ func get_markers():
 	
 	markers.clear()  # Clear the dictionary since markers are now freed
 	
+	# Get fresh objects in the new minimap context
 	var map_objects = get_tree().get_nodes_in_group("minimap_objects")
 	for item in map_objects:
-		#print(item.minimap_icon, icons)
+		print(item.minimap_icon, icons)
 		var new_marker = icons[item.minimap_icon].duplicate()
 		dungeon_map.add_child(new_marker)
 		new_marker.show()
