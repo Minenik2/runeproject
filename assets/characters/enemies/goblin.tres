@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=3 format=3 uid="uid://bxh50s4ref45l"]
+
+[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="1_hmicb"]
+[ext_resource type="Texture2D" uid="uid://bqtqcw0cg2r2l" path="res://assets/art/goblin.png" id="1_nnla3"]
+
+[resource]
+script = ExtResource("1_hmicb")
+character_name = "Goblin"
+battle_sprite = ExtResource("1_nnla3")
+character_class = 0
+level = 1
+max_hp = 100
+current_hp = 100
+max_mp = 30
+current_mp = 30
+strength = 10
+intelligence = 9
+vitality = 9
+dexterity = 9
+faith = 9
+speed = 9
+experience = 0
+experience_to_level = 100
+metadata/_custom_type_script = "uid://bgmc65osxl4eh"

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=3 format=3 uid="uid://kpdbchq2kwou"]
+
+[ext_resource type="Texture2D" uid="uid://bdixvbrybixjr" path="res://assets/art/player.png" id="1_lwoim"]
+[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_ajrra"]
+
+[resource]
+script = ExtResource("2_ajrra")
+character_name = "Player"
+battle_sprite = ExtResource("1_lwoim")
+character_class = 0
+level = 1
+max_hp = 100
+current_hp = 100
+max_mp = 30
+current_mp = 30
+strength = 10
+intelligence = 9
+vitality = 9
+dexterity = 9
+faith = 9
+speed = 9
+experience = 0
+experience_to_level = 100
+metadata/_custom_type_script = "uid://bgmc65osxl4eh"

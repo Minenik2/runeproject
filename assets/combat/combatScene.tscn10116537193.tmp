@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://4u35d5dndusb"]
 
 [ext_resource type="Script" uid="uid://cugtmwau1bn6f" path="res://assets/combat/action_menu.gd" id="1_0btas"]
-[ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/partyUi.gd" id="2_grv6n"]
+[ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/timeline_ui.gd" id="2_grv6n"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="2_mt5hy"]
 [ext_resource type="Script" uid="uid://rk4wd8tk1s3a" path="res://assets/combat/CombatManager.gd" id="4_ys864"]
 
@@ -83,9 +83,8 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 10.0
 offset_top = -32.0
-offset_right = 71.0
+offset_right = 61.0
 offset_bottom = 32.0
 grow_vertical = 2
 script = ExtResource("1_0btas")
@@ -98,31 +97,30 @@ text = "Attack"
 layout_mode = 2
 text = "Item"
 
-[node name="PartyUI" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+[node name="TimelineUI" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -92.0
-offset_right = 320.0
+offset_top = -40.0
+offset_right = 40.0
 grow_vertical = 0
 columns = 3
 script = ExtResource("2_grv6n")
 
-[node name="Label" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+[node name="Label" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/TimelineUI"]
 layout_mode = 2
 text = "JOJO"
 
-[node name="Label2" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+[node name="Label2" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/TimelineUI"]
 layout_mode = 2
 text = "miku"
 
-[node name="Label3" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+[node name="Label3" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/TimelineUI"]
 layout_mode = 2
 text = "lol"
 
-[node name="Label4" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+[node name="Label4" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/TimelineUI"]
 layout_mode = 2
 text = "fighter"
 
@@ -156,20 +154,18 @@ layout_mode = 2
 text = "HP: 23/24"
 
 [node name="enemyGroup" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
-texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-offset_bottom = 64.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-columns = 5
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyGroup"]
 modulate = Color(1, 0.13, 0.13, 1)
@@ -184,6 +180,3 @@ layout_mode = 2
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton" to="CombatManager" method="_on_attack_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton" to="CombatManager" method="_on_item_button_pressed"]

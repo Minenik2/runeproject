@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=3 format=3 uid="uid://dshds0e6iq1s4"]
+
+[ext_resource type="Texture2D" uid="uid://d00t1yfxrgj88" path="res://assets/art/miku.png" id="1_mfda3"]
+[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_783kt"]
+
+[resource]
+script = ExtResource("2_783kt")
+character_name = "Miku"
+battle_sprite = ExtResource("1_mfda3")
+character_class = 1
+level = 1
+max_hp = 100
+current_hp = 100
+max_mp = 50
+current_mp = 50
+strength = 10
+intelligence = 9
+vitality = 9
+dexterity = 9
+faith = 9
+speed = 9
+experience = 0
+experience_to_level = 100
+metadata/_custom_type_script = "uid://bgmc65osxl4eh"

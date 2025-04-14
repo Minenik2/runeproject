@@ -83,9 +83,8 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 10.0
 offset_top = -32.0
-offset_right = 71.0
+offset_right = 61.0
 offset_bottom = 32.0
 grow_vertical = 2
 script = ExtResource("1_0btas")
@@ -103,9 +102,9 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
 offset_top = -92.0
-offset_right = 320.0
+offset_right = 326.0
+offset_bottom = 96.0
 grow_vertical = 0
 columns = 3
 script = ExtResource("2_grv6n")
@@ -156,20 +155,18 @@ layout_mode = 2
 text = "HP: 23/24"
 
 [node name="enemyGroup" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
-texture_filter = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-offset_bottom = 64.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-columns = 5
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyGroup"]
 modulate = Color(1, 0.13, 0.13, 1)
