@@ -86,15 +86,53 @@ func _set_current_member_display(member_name: String):
 	sprite.texture = load(CHARACTER_PATH + member_name + ".png")
 	current_member_display.add_child(sprite)
 
+#
+# ACTION BUTTON FUNCTIONS
+#
+
 func _on_attack_button_pressed() -> void:
 	print("Attack pressed — choose a target")
 	message_panel.add_message("Attack pressed — choose a target")
 	targeting_mode = true
 	_highlight_enemies(true)
 
-
 func _on_item_button_pressed() -> void:
 	print("item!")
+
+func _on_special_button_2_pressed() -> void:
+	var current_member = turnOrder[0]
+	var abilities = current_member.abilities
+	
+	# Clear any previous buttons in the special menu (if any)
+	var container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu"
+
+	# Remove all existing buttons
+	for child in container.get_children():
+		child.queue_free()
+	
+	var source_button = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton"
+	var source_font = source_button.get_theme()
+
+	# Create a button for each ability
+	for ability in abilities:
+		var button = Button.new()
+		button.text = ability.name
+		button.add_theme_font_override("font", source_font)
+		
+		# Use a lambda function to call _on_ability_button_pressed with the specific ability
+		button.pressed.connect(func(): _on_ability_button_pressed(ability))
+		
+		# Add the button to the special menu
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".add_child(button)
+	
+	# Optionally, you can add a "Cancel" button to return to the action menu
+	var cancel_button = Button.new()
+	cancel_button.text = "Cancel"
+	cancel_button.pressed.connect(func(): _on_back_button_pressed())
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".add_child(cancel_button)
+	
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".show()
 	
 func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 	if targeting_mode and event is InputEventMouseButton and event.pressed:
@@ -297,3 +335,18 @@ func shake_screen(intensity: float, duration: float):
 # Helper function to reset position if needed (optional)
 func _reset_position(initial_position: Vector2):
 	ui.position = initial_position
+
+
+func _on_back_button_pressed() -> void:
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+	
+# Function to handle the ability use when the button is pressed
+func _on_ability_button_pressed(ability) -> void:
+	# You can now handle the logic for using the ability
+	print("Using ability: ", ability.name)
+	# Add your code for handling the ability here
+	
+	# After using the ability, return to the action menu
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()

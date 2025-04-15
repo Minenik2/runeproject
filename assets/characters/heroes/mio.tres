@@ -1,7 +1,9 @@
-[gd_resource type="Resource" script_class="CharacterStats" load_steps=3 format=3 uid="uid://2adx4d51x26a"]
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=5 format=3 uid="uid://2adx4d51x26a"]
 
+[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_juq7j"]
 [ext_resource type="Texture2D" uid="uid://jde32uewfvg3" path="res://assets/art/mio.png" id="1_ylj0t"]
 [ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_6p2ye"]
+[ext_resource type="Resource" uid="uid://cf63f00had88d" path="res://assets/abilities/Heal.tres" id="2_qwnhl"]
 
 [resource]
 script = ExtResource("2_6p2ye")
@@ -21,4 +23,5 @@ faith = 9
 speed = 9
 experience = 0
 experience_to_level = 100
+abilities = Array[ExtResource("1_juq7j")]([ExtResource("2_qwnhl")])
 metadata/_custom_type_script = "uid://bgmc65osxl4eh"

@@ -34,6 +34,8 @@ enum CHARACTER_CLASS {
 @export var experience: int = 0
 @export var experience_to_level: int = 100
 
+@export var abilities: Array[Ability] = []
+
 # Derived stats (no @export since they're calculated)
 var attack_power: int
 var magic_power: int
