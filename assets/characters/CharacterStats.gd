@@ -43,6 +43,8 @@ var magic_defense: int
 var evasion: float
 var critical_chance: float
 var critical_multiplier: float
+var combat_initiative : int
+var is_ally: bool
 
 # Initialize with default values
 func _init():
@@ -284,4 +286,5 @@ func is_alive() -> bool:
 
 # Calculate initiative for turn order (higher is better)
 func calculate_initiative() -> int:
-	return speed + randi() % 5  # Add small random variance
+	combat_initiative = speed + randi() % 5 # Add small random variance
+	return combat_initiative  

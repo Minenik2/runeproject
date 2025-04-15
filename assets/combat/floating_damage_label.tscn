@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://c78fxqkwak3nn"]
+
+[ext_resource type="Script" uid="uid://cm8fgrcdyo8n5" path="res://floating_damage_label.gd" id="1_m7y3r"]
+
+[node name="FloatingDamageLabel" type="Control" node_paths=PackedStringArray("label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_m7y3r")
+label = NodePath("Label")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 44.0
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1

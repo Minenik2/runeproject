@@ -144,7 +144,7 @@ script = ExtResource("4_de3ys")
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"]
 layout_mode = 2
 
-[node name="visualRight" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="Sprite2D" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
 texture = ExtResource("2_mt5hy")
 
