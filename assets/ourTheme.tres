@@ -1,8 +1,39 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://detis17yiamg3"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://detis17yiamg3"]
 
 [ext_resource type="FontFile" uid="uid://d22tpxinmhb64" path="res://assets/font/cute-mono/retro-pixel-cute-mono.ttf" id="1_suvlp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suvlp"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ctrpp"]
+bg_color = Color(0.54, 0.081, 0.0963, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3bo7m"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [resource]
 Button/fonts/font = ExtResource("1_suvlp")
 Label/font_sizes/font_size = 32
 Label/fonts/font = ExtResource("1_suvlp")
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_suvlp")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_ctrpp")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_ctrpp")
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_3bo7m")

@@ -98,11 +98,16 @@ func _on_item_button_pressed() -> void:
 	
 func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 	if targeting_mode and event is InputEventMouseButton and event.pressed:
+		$hit.play()
 		var enemy_data = enemy_sprite.get_meta("enemy_data")
-
+		
 		# Damage calculation
 		var attacker = turnOrder[0]
 		var damage = attacker.attack_power
+		var is_crit = randf() < attacker.critical_chance
+
+		if is_crit:
+			damage *= attacker.critical_multiplier
 
 		print("%s attacks %s for %d damage!" % [attacker.character_name, enemy_data.character_name, damage])
 		
@@ -115,6 +120,9 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 			target_color, enemy_data.character_name,
 			damage
 		]
+		
+		if is_crit:
+			message += " [color=yellow](CRITICAL!)[/color]"
 		
 		message_panel.add_message(message)
 		
@@ -131,6 +139,7 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 			message_panel.add_message("[color=crimson]%s[/color] is defeated!" % [enemy_data.character_name])
 			enemy_sprite.queue_free()
 			enemiesRes.erase(enemy_data)
+			turnOrder.erase(enemy_data)
 		
 		# Move attacker to end of turnOrder
 		turnOrder.push_back(turnOrder.pop_front())
@@ -151,11 +160,14 @@ func _highlight_enemies(active: bool):
 		
 func _check_combat_end():
 	if enemiesRes.is_empty():
+		$victory.play()
 		print("Combat is over! You win!")
 		message_panel.add_message("[color=green]Victory! All enemies defeated![/color]")
 		
 func _enemy_take_turn():
 	var enemy = turnOrder[0]
+	
+	$enemyHit.play()
 	
 	# Safety check — skip if no party members
 	if memberRes.is_empty():
@@ -169,6 +181,10 @@ func _enemy_take_turn():
 
 	# Damage calculation
 	var damage = enemy.attack_power
+	var is_crit = randf() < enemy.critical_chance
+
+	if is_crit:
+		damage *= enemy.critical_multiplier
 
 	print("%s attacks %s for %d damage!" % [enemy.character_name, target.character_name, damage])
 
@@ -181,6 +197,9 @@ func _enemy_take_turn():
 		target_color, target.character_name,
 		damage
 	]
+	
+	if is_crit:
+		message += " [color=yellow](CRITICAL!)[/color]"
 
 	message_panel.add_message(message)
 
@@ -189,6 +208,9 @@ func _enemy_take_turn():
 	print("%s's HP: %d/%d" % [target.character_name, target.current_hp, target.max_hp])
 	
 	party_ui.flash_damage(target, damage)
+	
+	# Trigger screen shake on enemy hit
+	shake_screen(10, 0.5)  # Adjust intensity and duration as needed
 
 	# Check if party member died
 	if target.current_hp <= 0:
@@ -206,6 +228,9 @@ func _enemy_take_turn():
 	_announce_next_turn()
 
 func _announce_next_turn():
+	turn += 1
+	turn_indicator.text = "Turn %s" % turn
+	
 	if turnOrder[0].is_ally:
 		message_panel.add_message("[color=green]%s[/color] takes the initiative." % turnOrder[0].character_name)
 	else:
@@ -248,3 +273,27 @@ func _show_damage_number(amount: int, position: Vector2, parent: Control):
 	tween.tween_property(label, "position:y", position.y - 30, 0.6)
 	tween.tween_property(label, "modulate:a", 0, 0.6)
 	tween.connect("finished", Callable(label, "queue_free"))
+
+# Function to shake the screen (parent or CanvasLayer)
+func shake_screen(intensity: float, duration: float):
+	var tween = create_tween()
+	var initial_position = ui.position  # or canvas_layer.position if that's where you want to shake
+
+	# Set transition and easing method (optional)
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
+	
+	# Random shake in x and y directions
+	for i in range(5):  # Shake in small bursts
+		tween.tween_property(ui, "position", initial_position + Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity)), 0.05)
+
+	# Reset position after shake duration
+	tween.tween_property(ui, "position", initial_position, duration)
+
+	# Optionally reset the modulate (if you had any modulate changes before)
+	# You could also use a callback to clear anything after the shake
+	tween.connect("finished", Callable(self, "_reset_position").bind(initial_position))
+
+# Helper function to reset position if needed (optional)
+func _reset_position(initial_position: Vector2):
+	ui.position = initial_position

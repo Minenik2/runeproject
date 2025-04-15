@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ability" load_steps=2 format=3 uid="uid://b6mf70la20wqx"]
+
+[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_4o32s"]
+
+[resource]
+script = ExtResource("1_4o32s")
+name = "Fireball"
+description = "A ball of flame that scorches an enemy."
+type = "attack"
+target_type = "enemy"
+power = 30
+crit_chance = 0.0
+mp_cost = 8
+sp_cost = 0
+hp_cost = 0
