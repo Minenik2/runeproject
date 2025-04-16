@@ -10,6 +10,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cqemw")
 
+[node name="lvlLabel" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Lv."
+
 [node name="nameLabel" type="Button" parent="."]
 layout_mode = 2
 text = "test"

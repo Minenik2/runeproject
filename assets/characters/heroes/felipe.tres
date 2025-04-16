@@ -1,26 +1,27 @@
-[gd_resource type="Resource" script_class="CharacterStats" load_steps=4 format=3 uid="uid://b6x42ormjksqg"]
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=5 format=3 uid="uid://b6x42ormjksqg"]
 
 [ext_resource type="Texture2D" uid="uid://u1qj5hvn7ei" path="res://assets/art/felipe.png" id="1_2a0ay"]
 [ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_8lian"]
 [ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_8lian"]
+[ext_resource type="Resource" uid="uid://b6mf70la20wqx" path="res://assets/abilities/Fireball.tres" id="2_y2fqs"]
 
 [resource]
 script = ExtResource("2_8lian")
 character_name = "Felipe"
 battle_sprite = ExtResource("1_2a0ay")
-character_class = 4
+character_class = 1
 level = 1
 max_hp = 100
 current_hp = 100
 max_mp = 50
 current_mp = 50
-strength = 10
-intelligence = 9
-vitality = 9
-dexterity = 9
-faith = 9
+strength = 2
+intelligence = 7
+vitality = 4
+dexterity = 2
+faith = 3
 speed = 9
 experience = 0
-experience_to_level = 100
-abilities = Array[ExtResource("1_8lian")]([])
+experience_to_level = 120
+abilities = Array[ExtResource("1_8lian")]([ExtResource("2_y2fqs")])
 metadata/_custom_type_script = "uid://bgmc65osxl4eh"

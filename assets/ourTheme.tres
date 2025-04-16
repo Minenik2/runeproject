@@ -1,6 +1,8 @@
-[gd_resource type="Theme" load_steps=5 format=3 uid="uid://detis17yiamg3"]
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://detis17yiamg3"]
 
 [ext_resource type="FontFile" uid="uid://d22tpxinmhb64" path="res://assets/font/cute-mono/retro-pixel-cute-mono.ttf" id="1_suvlp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_suvlp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suvlp"]
 content_margin_top = 5.0
@@ -31,6 +33,7 @@ corner_radius_bottom_left = 5
 
 [resource]
 Button/fonts/font = ExtResource("1_suvlp")
+Button/styles/focus = SubResource("StyleBoxEmpty_suvlp")
 Label/font_sizes/font_size = 32
 Label/fonts/font = ExtResource("1_suvlp")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_suvlp")

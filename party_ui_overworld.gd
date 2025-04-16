@@ -24,3 +24,8 @@ func initialize(party_members_array: Array):
 		icon.icon_pressed.connect(Callable(self, "_on_party_icon_pressed"))
 		
 		add_child(icon)
+
+func update_status():
+	for i in range(party_members.size()):
+		var icon = get_child(i)
+		icon.set_combatant(party_members[i])

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=31 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -10,9 +10,13 @@
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="3_ppyta"]
 [ext_resource type="Script" uid="uid://b72qh86nt2i56" path="res://party_ui_overworld.gd" id="4_0m0f1"]
 [ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="4_00tp4"]
+[ext_resource type="AudioStream" uid="uid://clxpy25src11l" path="res://assets/audio/unlock.ogg" id="4_uty7l"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="4_ykrsh"]
 [ext_resource type="PackedScene" uid="uid://i5bss45dqgbu" path="res://assets/dungeon/door.tscn" id="5_ykrsh"]
 [ext_resource type="AudioStream" uid="uid://bljuo67nyr5q2" path="res://assets/audio/step.ogg" id="8_5tkv4"]
+[ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="8_mhym6"]
+[ext_resource type="Script" uid="uid://ecs37pgyltxp" path="res://statsUI.gd" id="9_a3se8"]
+[ext_resource type="AudioStream" uid="uid://d2c5o3hi1eyfi" path="res://assets/audio/uiHit.ogg" id="10_a3se8"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xersf"]
 
@@ -24,6 +28,18 @@ region = Rect2(0, 0, 512, 512)
 shader = ExtResource("2_vbegm")
 shader_parameter/player_pos = Vector2(0, 0)
 shader_parameter/reveal_radius = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uty7l"]
+texture = ExtResource("8_mhym6")
+modulate_color = Color(0.45, 0.4176, 0.207, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3se8"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.05, 0.05, 0.05, 0.823529)
+corner_radius_bottom_left = 10
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ppyta"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -64,6 +80,10 @@ player = NodePath("../player")
 maze_reset_scene = ExtResource("2_xersf")
 enemy_scene = ExtResource("3_77dp3")
 gridmap = NodePath("../GridMap")
+
+[node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator"]
+stream = ExtResource("4_uty7l")
+volume_db = -20.0
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -175,6 +195,151 @@ anchor_bottom = 0.157
 offset_right = -4.12
 offset_bottom = -4.28
 
+[node name="menuUI" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_uty7l")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabBar" type="TabBar" parent="UI/menuUI/VBoxContainer"]
+layout_mode = 2
+current_tab = 0
+tab_count = 2
+tab_0/title = "Stats"
+tab_1/title = "Spells"
+script = ExtResource("9_a3se8")
+
+[node name="statsPanel" type="HBoxContainer" parent="UI/menuUI/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="strength" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="intelligence" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="vitality" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="dexterity" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="faith" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="speed" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="class" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Exit Menu"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+stretch_mode = 5
+
+[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "hero name"
+horizontal_alignment = 1
+
+[node name="lvl" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Lvl: 2"
+horizontal_alignment = 1
+
+[node name="exp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Exp 50/100"
+horizontal_alignment = 1
+
+[node name="hp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Hp: 30/100"
+horizontal_alignment = 1
+
+[node name="Mp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 22
+text = "Mp: 30/100"
+horizontal_alignment = 1
+
+[node name="uiHit" type="AudioStreamPlayer2D" parent="UI/menuUI"]
+stream = ExtResource("10_a3se8")
+panning_strength = 0.0
+
+[node name="depthUI" type="Label" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 44.0
+grow_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_a3se8")
+text = "Depth: 1"
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_g14j6")
 
@@ -238,3 +403,6 @@ script = ExtResource("4_ykrsh")
 
 [node name="door" parent="." instance=ExtResource("5_ykrsh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44325, 0.50771, 0.501451)
+
+[connection signal="tab_changed" from="UI/menuUI/VBoxContainer/TabBar" to="UI/menuUI/VBoxContainer/TabBar" method="_on_tab_changed"]
+[connection signal="pressed" from="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer/Button" to="UI/menuUI/VBoxContainer/TabBar" method="_on_button_pressed"]

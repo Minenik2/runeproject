@@ -24,6 +24,7 @@ func _ready():
 	print_maze()  # Debug output
 
 func generate_maze():
+	$unlock.play()
 	maze = []
 	explored_tiles = []  # Reset explored tiles properly
 	for x in width:

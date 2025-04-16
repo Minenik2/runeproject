@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b7p7rh2wnumgn"]
+[gd_scene load_steps=7 format=3 uid="uid://b7p7rh2wnumgn"]
 
 [ext_resource type="Script" uid="uid://dfr3hmw61xbic" path="res://assets/dungeon/enemy.gd" id="1_4gyqm"]
 [ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="1_7k104"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_qi2p4"]
+[ext_resource type="AudioStream" uid="uid://bljuo67nyr5q2" path="res://assets/audio/step.ogg" id="4_c8yjc"]
+[ext_resource type="AudioStream" uid="uid://cmkdoxbt27r3q" path="res://assets/audio/combatencounter.ogg" id="5_afhhq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4gyqm"]
 
@@ -10,11 +12,6 @@
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_4gyqm")
-grid_size = null
-turn_speed = null
-collision_check_distance = null
-move_speed = null
-rotate_speed = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_4gyqm")
@@ -26,6 +23,17 @@ script = ExtResource("3_qi2p4")
 
 [node name="Timer" type="Timer" parent="."]
 autostart = true
+
+[node name="enemyStep" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_c8yjc")
+volume_db = -20.0
+pitch_scale = 0.27
+max_distance = 50.0
+
+[node name="combatEncounter" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("5_afhhq")
+volume_db = -15.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

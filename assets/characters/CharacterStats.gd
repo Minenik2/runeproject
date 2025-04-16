@@ -3,17 +3,17 @@ extends Resource
 class_name CharacterStats
 
 enum CHARACTER_CLASS {
-	WARRIOR,    # High HP/Strength
-	MAGE,       # High MP/Intelligence
-	ROGUE,      # High Dexterity/Speed
-	CLERIC,     # Balanced Faith/Vitality
-	PALADIN     # Hybrid Strength/Faith
+	Warrior,    # High HP/Strength
+	Arcanist,       # High MP/Intelligence
+	Rogue,      # High Dexterity/Speed
+	Cleric,     # Balanced Faith/Vitality
+	Vampire     # Hybrid Strength/Faith
 }
 
 @export_category("Basic Info")
 @export var character_name: String = "Unnamed"
 @export var battle_sprite: Texture
-@export var character_class: CHARACTER_CLASS = CHARACTER_CLASS.WARRIOR
+@export var character_class: CHARACTER_CLASS = CHARACTER_CLASS.Warrior
 
 @export_category("Window Stats")
 @export var level: int = 1
@@ -57,8 +57,8 @@ func _init():
 
 func calculate_derived_stats():
 	# HP/MP Formulas
-	max_hp = floor(max_hp + ((vitality + (strength * 0.5)) / 10))
-	max_mp = floor(max_mp + ((intelligence + faith) / 10))
+	max_hp = floor((vitality + (strength * 0.5)) * 10)
+	max_mp = floor((intelligence + faith) * 10)
 	
 	# Offensive Stats
 	attack_power = floor(
@@ -118,120 +118,12 @@ func calculate_derived_stats():
 	current_hp = min(current_hp, max_hp)
 	current_mp = min(current_mp, max_mp)
 
-
-func get_class_modifiers() -> Dictionary:
-	match character_class:
-		CHARACTER_CLASS.WARRIOR:
-			return {
-				"hp_mod": 1.3,
-				"mp_mod": 0.7,
-				"str_mod": 0.4,       # Bonus to physical attacks
-				"int_mod": -0.3,      # Penalty to magic
-				"dex_mod": -0.1,
-				"vit_mod": 0.2,
-				"fai_mod": -0.2,
-				"growth_bonus": {
-					"strength": 1.6,  # 60% stronger growth
-					"vitality": 1.3,
-					"speed": 0.8      # Warriors are slower
-				},
-				"armor_penalty": 0.0  # Can wear heavy armor
-			}
-		
-		CHARACTER_CLASS.MAGE:
-			return {
-				"hp_mod": 0.6,
-				"mp_mod": 1.8,
-				"str_mod": -0.4,
-				"int_mod": 0.5,      # Strong magic focus
-				"dex_mod": 0.1,
-				"vit_mod": -0.2,
-				"fai_mod": 0.1,
-				"growth_bonus": {
-					"intelligence": 1.8,
-					"faith": 1.2,
-					"dexterity": 1.1
-				},
-				"spell_power": 1.25   # Bonus to spell damage
-			}
-		
-		CHARACTER_CLASS.ROGUE:
-			return {
-				"hp_mod": 0.9,
-				"mp_mod": 0.9,
-				"str_mod": 0.1,
-				"int_mod": -0.1,
-				"dex_mod": 0.5,      # Extreme agility focus
-				"vit_mod": -0.1,
-				"fai_mod": -0.3,
-				"growth_bonus": {
-					"dexterity": 2.0, # Double dex growth
-					"speed": 1.5,
-					"strength": 0.7
-				},
-				"crit_bonus": {       # Special rogue crits
-					"chance": 0.10,   # +10% base
-					"multiplier": 0.5  # +50% damage
-				}
-			}
-		
-		CHARACTER_CLASS.CLERIC:
-			return {
-				"hp_mod": 1.1,
-				"mp_mod": 1.3,
-				"str_mod": -0.1,
-				"int_mod": 0.2,
-				"dex_mod": -0.2,
-				"vit_mod": 0.3,
-				"fai_mod": 0.4,       # Strong faith focus
-				"growth_bonus": {
-					"faith": 1.7,
-					"vitality": 1.4,
-					"intelligence": 1.2
-				},
-				"healing_power": 1.3, # Better healing
-				"undead_damage": 1.5  # Bonus vs undead
-			}
-		
-		CHARACTER_CLASS.PALADIN:
-			return {
-				"hp_mod": 1.2,
-				"mp_mod": 1.1,
-				"str_mod": 0.3,
-				"int_mod": -0.1,
-				"dex_mod": -0.3,
-				"vit_mod": 0.4,
-				"fai_mod": 0.3,       # Hybrid warrior/cleric
-				"growth_bonus": {
-					"strength": 1.3,
-					"faith": 1.4,
-					"vitality": 1.3
-				},
-				"holy_power": 1.2,    # Holy damage bonus
-				"armor_penalty": -0.1 # Reduced dodge penalty
-			}
-		
-		_: # Default (Adventurer)
-			return {
-				"hp_mod": 1.0,
-				"mp_mod": 1.0,
-				"growth_bonus": {
-					"strength": 1.0,
-					"intelligence": 1.0,
-					"vitality": 1.0,
-					"dexterity": 1.0,
-					"faith": 1.0,
-					"speed": 1.0
-				}
-			}
-
 func calculate_exp_to_level() -> int:
-	# Exponential curve with class adjustment
 	var experience_to_level = experience_to_level + 100
-	match character_class:
-		CHARACTER_CLASS.WARRIOR: return experience_to_level * 0.9    # Warriors level slightly faster
-		CHARACTER_CLASS.MAGE: return experience_to_level * 1.1       # Mages need more XP
-		_: return experience_to_level
+	if level % 10 == 0:
+		experience_to_level += 1000
+	
+	return experience_to_level
 
 
 func gain_exp(amount: int) -> bool:
@@ -247,14 +139,17 @@ func level_up():
 	experience_to_level = calculate_exp_to_level()
 	
 	# Class-based stat growth
-	var growth_bonus = get_class_modifiers().get("growth_bonus", {})
-	
-	strength += roundi((randi() % 3 + 1) * growth_bonus.get("strength", 1.0))
-	vitality += roundi((randi() % 2 + 1) * growth_bonus.get("vitality", 1.0))
-	intelligence += roundi((randi() % 3 + 1) * growth_bonus.get("intelligence", 1.0))
-	dexterity += roundi((randi() % 2 + 1) * growth_bonus.get("dexterity", 1.0))
-	faith += roundi((randi() % 2 + 1) * growth_bonus.get("faith", 1.0))
-	speed += roundi((randi() % 2 + 1) * growth_bonus.get("speed", 1.0))
+	match character_class:
+		CHARACTER_CLASS.Warrior:
+			strength += randi_range(1, 2)
+		CHARACTER_CLASS.Arcanist:
+			intelligence += randi_range(1, 2)
+		CHARACTER_CLASS.Rogue:
+			dexterity += randi_range(1, 2)
+		CHARACTER_CLASS.Cleric:
+			faith += randi_range(1, 2)
+		CHARACTER_CLASS.Vampire:
+			speed += randi_range(1, 2)
 	
 	calculate_derived_stats()  # Recalculate everything
 	
@@ -286,5 +181,5 @@ func is_alive() -> bool:
 
 # Calculate initiative for turn order (higher is better)
 func calculate_initiative() -> int:
-	combat_initiative = speed + randi() % 5 # Add small random variance
+	combat_initiative = speed + randi() % 6 # Add small random variance
 	return combat_initiative  

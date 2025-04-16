@@ -1,26 +1,26 @@
 [gd_resource type="Resource" script_class="CharacterStats" load_steps=4 format=3 uid="uid://dshds0e6iq1s4"]
 
-[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_783kt"]
-[ext_resource type="Texture2D" uid="uid://d00t1yfxrgj88" path="res://assets/art/miku.png" id="1_mfda3"]
-[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_783kt"]
+[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_2vpro"]
+[ext_resource type="Texture2D" uid="uid://d00t1yfxrgj88" path="res://assets/art/miku.png" id="1_sq11x"]
+[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_2vpro"]
 
 [resource]
-script = ExtResource("2_783kt")
+script = ExtResource("2_2vpro")
 character_name = "Lirae"
-battle_sprite = ExtResource("1_mfda3")
-character_class = 1
+battle_sprite = ExtResource("1_sq11x")
+character_class = 4
 level = 1
 max_hp = 100
 current_hp = 100
 max_mp = 50
 current_mp = 50
-strength = 10
-intelligence = 9
-vitality = 9
-dexterity = 9
-faith = 9
-speed = 9
+strength = 4
+intelligence = 5
+vitality = 6
+dexterity = 7
+faith = 7
+speed = 11
 experience = 0
 experience_to_level = 100
-abilities = Array[ExtResource("1_783kt")]([])
+abilities = Array[ExtResource("1_2vpro")]([])
 metadata/_custom_type_script = "uid://bgmc65osxl4eh"

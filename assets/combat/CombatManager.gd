@@ -27,17 +27,19 @@ var current_ability
 
 func _ready() -> void:
 	start_combat()
+	randomize()
 
 func start_combat():
 	for c in memberRes:
 		c.is_ally = true
+		c.calculate_derived_stats()
 		if not c.is_dead:
 			aliveMembers.append(c)
 	
 	enemiesRes = GameManager.enemiesRes
 	
 	for i in range(enemiesRes.size()):
-		enemiesRes[i] = enemiesRes[i].duplicate(true)
+		enemiesRes[i] = enemiesRes[i]
 		enemiesRes[i].is_ally = false
 	
 	# Add them into the turn order
@@ -117,7 +119,15 @@ func _on_special_button_2_pressed() -> void:
 		
 		# Connect the hover signal
 		button.mouse_entered.connect(func():
-			description.text = ability.description
+			description.text = ""
+			if ability.mp_cost > 0:
+				description.text += "Mp cost: %s, " % ability.mp_cost
+			if ability.sp_cost > 0:
+				description.text += "Sp cost: %s, " % ability.sp_cost
+			if ability.hp_cost > 0:
+				description.text += "Hp cost: %s, " % ability.hp_cost
+			
+			description.text += ability.description
 		)
 
 		# Connect the mouse_exited to clear or reset the label
@@ -149,6 +159,7 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		var attacker = turnOrder[0]
 		var damage = attacker.attack_power
 		var defense = enemy_data.defense
+		print(attacker.character_name, attacker.critical_chance)
 		var is_crit = randf() < attacker.critical_chance
 		
 		# damage defense calculation
@@ -158,10 +169,8 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		if current_ability:
 			# If it's a damage type ability, apply ability power
 			if current_ability.type == 0:  # if the type is damage
-				damage = current_ability.calculate_scaled_power(attacker)
-				
+				damage = current_ability.calculate_scaled_power(attacker) + attacker.magic_power
 			attacker.current_mp -= current_ability.mp_cost
-			current_ability = null
 			
 			# hide special menu
 			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
@@ -169,6 +178,7 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		else:
 			# Regular attack
 			damage = attacker.attack_power
+		print("attack damage: ", damage, attacker.character_name)
 		
 		# add variation to damage
 		var variation = randf_range(0.8, 1.2)
@@ -180,18 +190,20 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 			damage *= attacker.critical_multiplier
 		else:
 			$hit.play()
-
-		print("%s attacks %s for %d damage!" % [attacker.character_name, enemy_data.character_name, damage])
 		
-		# Color formatting
-		var attacker_color = "[color=green]" if attacker.is_ally else "[color=crimson]"
-		var target_color = "[color=green]" if enemy_data.is_ally else "[color=crimson]"
-
-		var message = "Turn %s: %s%s[/color] attacks %s%s[/color] for [color=red]%d[/color] damage!" % [
-			turn, attacker_color, attacker.character_name,
-			target_color, enemy_data.character_name,
-			damage
-		]
+		var message = ""
+		
+		if current_ability:
+			message = "Turn %s: [color=green]%s[/color] casts [color=yellow]%s[/color] on [color=crimson]%s[/color] for [color=red]%d[/color] damage!" % [
+					turn, attacker.character_name, current_ability.name,
+					enemy_data.character_name, damage
+				]
+			current_ability = null
+		else:
+			message = "Turn %s: [color=green]%s[/color] attacks [color=crimson]%s[/color] for [color=red]%d[/color] damage!" % [
+					turn, attacker.character_name,
+					enemy_data.character_name, damage
+				]
 		
 		if is_crit:
 			message += " [color=yellow](CRITICAL!)[/color]"
@@ -418,6 +430,19 @@ func _on_back_button_pressed() -> void:
 func _on_ability_button_pressed(ability) -> void:
 	# You can now handle the logic for using the ability
 	print("Using ability: ", ability.name)
+	if ability.mp_cost > turnOrder[0].current_mp:
+		$invalid.play()
+		message_panel.add_message("Cannot use ability: %s - not enought mp" % ability.name)
+		return
+	if ability.sp_cost > Database.current_sp:
+		$invalid.play()
+		message_panel.add_message("Cannot use ability: %s - not enought sp" % ability.name)
+		return
+	if ability.hp_cost > turnOrder[0].current_hp:
+		$invalid.play()
+		message_panel.add_message("Cannot use ability: %s - not enought hp" % ability.name)
+		return
+		
 	message_panel.add_message("Using ability: %s - choose a target" % ability.name)
 	current_ability = ability  # store the selected ability
 	

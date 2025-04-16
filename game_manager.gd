@@ -24,8 +24,8 @@ func combat_ended():
 	if current_enemy:
 		current_enemy.queue_free()
 		current_enemy = null
-
-	$UI/PartyUIOverworld.upda
+		
+	get_node("/root/Node3D/UI/PartyUIOverworld").update_status()
 	get_tree().paused = false
 
 func spawn_random_enemies():
@@ -34,15 +34,27 @@ func spawn_random_enemies():
 	var randomi = randi_range(0,2)
 	
 	if randomi == 2:
-		enemiesRes.append(preload("res://assets/characters/enemies/goblin.tres"))  # Add goblin to the array.
-		enemiesRes.append(preload("res://assets/characters/enemies/goblin.tres"))  # Add another goblin to the array.
+		enemiesRes.append(create_goblin(3))  # Add goblin to the array.
+		enemiesRes.append(create_goblin(3))  # Add another goblin to the array.
 		giveXP = 50  # Set XP for this encounter.
 	else:
-		enemiesRes.append(preload("res://assets/characters/enemies/goblin.tres"))
+		enemiesRes.append(create_goblin(5))
 		giveXP = 25
 	
 	return enemiesRes
 	
+func create_goblin(stat):
+	var goblin = preload("res://assets/characters/enemies/goblin.tres").duplicate(true)
+	goblin.strength = stat
+	goblin.intelligence = stat
+	goblin.vitality = stat
+	goblin.dexterity = stat
+	goblin.faith = stat
+	goblin.speed = stat
+	
+	goblin.calculate_derived_stats()
+	return goblin
+
 func get_xp_for_enouncter():
 	return giveXP * randf_range(0.8, 1.2)
 

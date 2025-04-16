@@ -38,6 +38,7 @@ func move_forward():
 
 	# Check for collision before moving
 	if not is_wall_in_front():
+		$enemyStep.play()
 		target_position = new_position
 		is_moving = true
 
@@ -81,4 +82,5 @@ func _on_timer_timeout() -> void:
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
+		$combatEncounter.play()
 		GameManager.make_combat(self)
