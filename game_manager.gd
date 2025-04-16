@@ -25,14 +25,15 @@ func combat_ended():
 		current_enemy.queue_free()
 		current_enemy = null
 
+	$UI/PartyUIOverworld.upda
 	get_tree().paused = false
 
 func spawn_random_enemies():
 	var enemiesRes: Array[CharacterStats] = []
 	
-	var randomi = randi_range(0,1)
+	var randomi = randi_range(0,2)
 	
-	if randomi == 1:
+	if randomi == 2:
 		enemiesRes.append(preload("res://assets/characters/enemies/goblin.tres"))  # Add goblin to the array.
 		enemiesRes.append(preload("res://assets/characters/enemies/goblin.tres"))  # Add another goblin to the array.
 		giveXP = 50  # Set XP for this encounter.
@@ -44,3 +45,18 @@ func spawn_random_enemies():
 	
 func get_xp_for_enouncter():
 	return giveXP * randf_range(0.8, 1.2)
+
+var sfx_player: AudioStreamPlayer
+var victory = preload("res://assets/audio/victory.ogg")
+
+func _ready():
+	sfx_player = AudioStreamPlayer.new()
+	add_child(sfx_player)
+
+func play_sfx(stream: AudioStream):
+	sfx_player.stream = stream
+	sfx_player.play()
+	
+func play_victory():
+	sfx_player.volume_db = -20
+	play_sfx(victory)

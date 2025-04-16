@@ -14,7 +14,7 @@ extends Node
 @onready var description: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/description"
 
 # Combat Variables
-@export var memberRes: Array[CharacterStats] = []
+var memberRes: Array[CharacterStats] = Database.memberRes
 @export var enemiesRes: Array[CharacterStats] = []
 
 var aliveMembers = []
@@ -24,11 +24,6 @@ var current_member_index = 0
 var turnOrder = []
 var turn = 1
 var current_ability
-
-
-# Resource paths
-const CHARACTER_PATH = "res://assets/characters/heroes/"
-const ENEMY_PATH = "res://assets/characters/enemies/"
 
 func _ready() -> void:
 	start_combat()
@@ -87,14 +82,6 @@ func calculate_turn_order():
 		_enemy_take_turn()
 	else:
 		current_player_info.set_member(turnOrder[0])
-
-	
-
-func _set_current_member_display(member_name: String):
-	current_member_display.clear()  # Remove previous sprite if needed
-	var sprite = Sprite2D.new()
-	sprite.texture = load(CHARACTER_PATH + member_name + ".png")
-	current_member_display.add_child(sprite)
 
 #
 # ACTION BUTTON FUNCTIONS
@@ -156,13 +143,16 @@ func _on_special_button_2_pressed() -> void:
 
 func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 	if targeting_mode and event is InputEventMouseButton and event.pressed:
-		$hit.play()
 		var enemy_data = enemy_sprite.get_meta("enemy_data")
 		
 		# Damage calculation
 		var attacker = turnOrder[0]
 		var damage = attacker.attack_power
+		var defense = enemy_data.defense
 		var is_crit = randf() < attacker.critical_chance
+		
+		# damage defense calculation
+		damage = max(damage * 0.1,damage - defense)
 		
 		# ability damage implementation
 		if current_ability:
@@ -186,7 +176,10 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		damage = int(damage)  # Optional, if you want whole numbers
 
 		if is_crit:
+			$crit.play()
 			damage *= attacker.critical_multiplier
+		else:
+			$hit.play()
 
 		print("%s attacks %s for %d damage!" % [attacker.character_name, enemy_data.character_name, damage])
 		
@@ -211,7 +204,10 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 
 		# Flash sprite and show damage
 		_flash_sprite(enemy_sprite)
-		_show_damage_number(damage, enemy_sprite.global_position, ui)
+		if is_crit:
+			_show_crit_damage_number(damage, enemy_sprite.global_position, ui)
+		else:
+			_show_damage_number(damage, enemy_sprite.global_position, ui)
 
 		if enemy_data.current_hp <= 0:
 			print(enemy_data.character_name, " is defeated!")
@@ -242,13 +238,13 @@ func _highlight_enemies(active: bool):
 		
 func _check_combat_end():
 	if enemiesRes.is_empty():
-		$victory.play()
+		GameManager.play_victory()
 		for c in memberRes:
 			c.gain_exp(GameManager.get_xp_for_enouncter())
 			
 		print("Combat is over! You win!")
 		message_panel.add_message("[color=green]Victory! All enemies defeated![/color]")
-		await get_tree().create_timer(1.5).timeout  # Let the message sit for a bit
+		#await get_tree().create_timer(1.5).timeout  # Let the message sit for a bit
 		_end_combat()  # This will remove this combat scene from the tree
 
 #
@@ -258,7 +254,7 @@ func _check_combat_end():
 func _enemy_take_turn():
 	var enemy = turnOrder[0]
 	
-	$enemyHit.play()
+	
 
 	# Pick a random party member
 	var target_index = randi() % aliveMembers.size()
@@ -269,7 +265,10 @@ func _enemy_take_turn():
 	var is_crit = randf() < enemy.critical_chance
 
 	if is_crit:
+		$enemyCrit.play()
 		damage *= enemy.critical_multiplier
+	else:
+		$enemyHit.play()
 
 	print("%s attacks %s for %d damage!" % [enemy.character_name, target.character_name, damage])
 
@@ -366,6 +365,19 @@ func _show_damage_number(amount: int, position: Vector2, parent: Control):
 	
 	var tween = create_tween()
 	tween.tween_property(label, "position:y", position.y - 30, 0.6)
+	tween.tween_property(label, "modulate:a", 0, 0.6)
+	tween.connect("finished", Callable(label, "queue_free"))
+
+func _show_crit_damage_number(amount: int, position: Vector2, parent: Control):
+	var label = Label.new()
+	label.text = str(amount) + "!"
+	label.modulate = Color(1, 1, 0)  # Yellow for crit
+	label.add_theme_font_size_override("font_size", 28)
+	label.position = position
+	parent.add_child(label)
+	
+	var tween = create_tween()
+	tween.tween_property(label, "position:y", position.y - 40, 0.6)
 	tween.tween_property(label, "modulate:a", 0, 0.6)
 	tween.connect("finished", Callable(label, "queue_free"))
 

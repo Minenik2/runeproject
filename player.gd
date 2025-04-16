@@ -51,6 +51,7 @@ func move_forward():
 	if not is_wall_in_front():
 		target_position = new_position
 		is_moving = true
+		$AudioStreamPlayer3D.play()
 
 func rotate_left():
 	target_rotation += deg_to_rad(turn_speed)

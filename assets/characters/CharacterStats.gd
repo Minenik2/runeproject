@@ -56,21 +56,19 @@ func _init():
 	calculate_derived_stats()
 
 func calculate_derived_stats():
-	# HP/MP Formulas (non-linear scaling)
-	max_hp = floor(max_hp + (((vitality * 10) + (level * vitality * 0.7) + (strength * 0.5)) / 10))
-	max_mp = floor(max_mp + (((intelligence * 8) + (faith * 5) + (level * (intelligence + faith) * 0.2)) / 10))
+	# HP/MP Formulas
+	max_hp = floor(max_hp + ((vitality + (strength * 0.5)) / 10))
+	max_mp = floor(max_mp + ((intelligence + faith) / 10))
 	
-	# Offensive Stats (with diminishing returns)
+	# Offensive Stats
 	attack_power = floor(
-		strength * 1.8 + 
-		dexterity * 0.5 + 
-		(level * 0.3) * (1 + strength * 0.01)
+		strength + 
+		dexterity
 	)
 	
 	magic_power = floor(
-		intelligence * 2.2 + 
-		faith * 1.3 + 
-		(level * 0.25) * (1 + (intelligence + faith) * 0.008)
+		intelligence + 
+		faith
 	)
 	
 	# Accuracy and Evasion (competing stats)
@@ -85,16 +83,13 @@ func calculate_derived_stats():
 	# Defense Formulas (armor and magic resistance)
 	defense = floor(
 		vitality * 1.4 + 
-		strength * 0.6 + 
-		(level * 0.4) * (1 + vitality * 0.015) -
-		(dexterity * 0.1)  # Heavy armor reduces dodge
+		strength * 0.6
 	)
 	
 	magic_defense = floor(
 		intelligence * 1.1 + 
 		faith * 1.1 + 
-		vitality * 0.3 +
-		(level * 0.35) * (1 + (intelligence + faith) * 0.01)
+		vitality * 0.3
 	)
 	
 	# Evasion and Criticals
