@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CharacterStats" load_steps=3 format=3 uid="uid://bxh50s4ref45l"]
+[gd_resource type="Resource" script_class="CharacterStats" load_steps=4 format=3 uid="uid://bxh50s4ref45l"]
 
 [ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="1_hmicb"]
+[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_kh63a"]
 [ext_resource type="Texture2D" uid="uid://bqtqcw0cg2r2l" path="res://assets/art/goblin.png" id="1_nnla3"]
 
 [resource]
@@ -21,4 +22,5 @@ faith = 9
 speed = 9
 experience = 0
 experience_to_level = 100
+abilities = Array[ExtResource("1_kh63a")]([])
 metadata/_custom_type_script = "uid://bgmc65osxl4eh"

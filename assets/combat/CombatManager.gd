@@ -4,23 +4,27 @@ extends Node
 # Node References
 @onready var current_member_display = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"
 @onready var action_menu = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"
-@onready var enemy_container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyGroup"
+@onready var enemy_container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyPanel/enemyGroup"
 @onready var party_ui: GridContainer = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"
 @onready var message_panel: Panel = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/messagePanel"
 @onready var current_player_info: PanelContainer = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"
 @onready var turn_indicator: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/turnIndicator"
 @onready var canvas_layer: CanvasLayer = $"../CanvasLayer"
 @onready var ui: Control = $"../CanvasLayer/UI"
+@onready var description: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/description"
 
 # Combat Variables
-var party_members = ["player", "miku", "felipe", "mio"]
-var enemies = ["goblin", "goblin"]
-var memberRes = []
-var enemiesRes = []
+@export var memberRes: Array[CharacterStats] = []
+@export var enemiesRes: Array[CharacterStats] = []
+
+var aliveMembers = []
 var targeting_mode = false
+var ally_targeting_mode = false
 var current_member_index = 0
 var turnOrder = []
 var turn = 1
+var current_ability
+
 
 # Resource paths
 const CHARACTER_PATH = "res://assets/characters/heroes/"
@@ -30,17 +34,16 @@ func _ready() -> void:
 	start_combat()
 
 func start_combat():
-	# Load party members
-	for member_name in party_members:
-		var member = load(CHARACTER_PATH + member_name + ".tres")
-		member.is_ally = true
-		memberRes.append(member)
-		
-	# Load enemies
-	for enemy_name in enemies:
-		var enemy = load(ENEMY_PATH + enemy_name + ".tres").duplicate()
-		enemy.is_ally = false
-		enemiesRes.append(enemy)
+	for c in memberRes:
+		c.is_ally = true
+		if not c.is_dead:
+			aliveMembers.append(c)
+	
+	enemiesRes = GameManager.enemiesRes
+	
+	for i in range(enemiesRes.size()):
+		enemiesRes[i] = enemiesRes[i].duplicate(true)
+		enemiesRes[i].is_ally = false
 	
 	# Add them into the turn order
 	calculate_turn_order()
@@ -72,13 +75,20 @@ func calculate_turn_order():
 	turnOrder.sort_custom(func(a, b):
 		return a.combat_initiative > b.combat_initiative)
 
-	# visualise turn order
-	current_player_info.set_member(turnOrder[0])
-
 	# Print for debug — now stable and correct
 	print("=== Turn Order ===")
 	for c in turnOrder:
 		print(c.character_name, " (Initiative: ", c.combat_initiative, ")")
+
+	# Wait one frame so visuals/turn order UI update
+	await get_tree().process_frame
+
+	if not turnOrder[0].is_ally:
+		_enemy_take_turn()
+	else:
+		current_player_info.set_member(turnOrder[0])
+
+	
 
 func _set_current_member_display(member_name: String):
 	current_member_display.clear()  # Remove previous sprite if needed
@@ -109,18 +119,24 @@ func _on_special_button_2_pressed() -> void:
 	# Remove all existing buttons
 	for child in container.get_children():
 		child.queue_free()
-	
-	var source_button = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton"
-	var source_font = source_button.get_theme()
 
 	# Create a button for each ability
 	for ability in abilities:
 		var button = Button.new()
 		button.text = ability.name
-		button.add_theme_font_override("font", source_font)
 		
 		# Use a lambda function to call _on_ability_button_pressed with the specific ability
 		button.pressed.connect(func(): _on_ability_button_pressed(ability))
+		
+		# Connect the hover signal
+		button.mouse_entered.connect(func():
+			description.text = ability.description
+		)
+
+		# Connect the mouse_exited to clear or reset the label
+		button.mouse_exited.connect(func():
+			description.text = ""
+		)
 		
 		# Add the button to the special menu
 		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".add_child(button)
@@ -134,6 +150,10 @@ func _on_special_button_2_pressed() -> void:
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".show()
 	
+#
+# ATTACKING ENEMIES
+#
+
 func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 	if targeting_mode and event is InputEventMouseButton and event.pressed:
 		$hit.play()
@@ -143,6 +163,27 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		var attacker = turnOrder[0]
 		var damage = attacker.attack_power
 		var is_crit = randf() < attacker.critical_chance
+		
+		# ability damage implementation
+		if current_ability:
+			# If it's a damage type ability, apply ability power
+			if current_ability.type == 0:  # if the type is damage
+				damage = current_ability.calculate_scaled_power(attacker)
+				
+			attacker.current_mp -= current_ability.mp_cost
+			current_ability = null
+			
+			# hide special menu
+			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		else:
+			# Regular attack
+			damage = attacker.attack_power
+		
+		# add variation to damage
+		var variation = randf_range(0.8, 1.2)
+		damage = damage * variation
+		damage = int(damage)  # Optional, if you want whole numbers
 
 		if is_crit:
 			damage *= attacker.critical_multiplier
@@ -153,8 +194,8 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 		var attacker_color = "[color=green]" if attacker.is_ally else "[color=crimson]"
 		var target_color = "[color=green]" if enemy_data.is_ally else "[color=crimson]"
 
-		var message = "%s%s[/color] attacks %s%s[/color] for [color=red]%d[/color] damage!" % [
-			attacker_color, attacker.character_name,
+		var message = "Turn %s: %s%s[/color] attacks %s%s[/color] for [color=red]%d[/color] damage!" % [
+			turn, attacker_color, attacker.character_name,
 			target_color, enemy_data.character_name,
 			damage
 		]
@@ -179,6 +220,9 @@ func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
 			enemiesRes.erase(enemy_data)
 			turnOrder.erase(enemy_data)
 		
+		# update ui important for specail abilities
+		party_ui.update_status()
+		
 		# Move attacker to end of turnOrder
 		turnOrder.push_back(turnOrder.pop_front())
 		
@@ -199,23 +243,26 @@ func _highlight_enemies(active: bool):
 func _check_combat_end():
 	if enemiesRes.is_empty():
 		$victory.play()
+		for c in memberRes:
+			c.gain_exp(GameManager.get_xp_for_enouncter())
+			
 		print("Combat is over! You win!")
 		message_panel.add_message("[color=green]Victory! All enemies defeated![/color]")
-		
+		await get_tree().create_timer(1.5).timeout  # Let the message sit for a bit
+		_end_combat()  # This will remove this combat scene from the tree
+
+#
+# ENEMY AI
+#
+
 func _enemy_take_turn():
 	var enemy = turnOrder[0]
 	
 	$enemyHit.play()
-	
-	# Safety check — skip if no party members
-	if memberRes.is_empty():
-		print("No party members left — game over")
-		message_panel.add_message("[color=crimson]The party has fallen...[/color]")
-		return
 
 	# Pick a random party member
-	var target_index = randi() % memberRes.size()
-	var target = memberRes[target_index]
+	var target_index = randi() % aliveMembers.size()
+	var target = aliveMembers[target_index]
 
 	# Damage calculation
 	var damage = enemy.attack_power
@@ -230,8 +277,8 @@ func _enemy_take_turn():
 	var attacker_color = "[color=crimson]"
 	var target_color = "[color=green]"
 
-	var message = "%s%s[/color] strikes %s%s[/color] for [color=red]%d[/color] damage!" % [
-		attacker_color, enemy.character_name,
+	var message = "Turn %s: %s%s[/color] strikes %s%s[/color] for [color=red]%d[/color] damage!" % [
+		turn, attacker_color, enemy.character_name,
 		target_color, target.character_name,
 		damage
 	]
@@ -252,10 +299,11 @@ func _enemy_take_turn():
 
 	# Check if party member died
 	if target.current_hp <= 0:
+		target.current_hp = 0
+		target.is_dead = true
 		print(target.character_name, " has fallen!")
-		message_panel.add_message("[color=crimson]%s[/color] has fallen!" % target.character_name)
-		memberRes.erase(target)
-		party_ui.update_party(memberRes)  # Assuming your PartyUI has a way to refresh
+		message_panel.add_message("[color=green]%s[/color] has fallen!" % target.character_name)
+		aliveMembers.erase(target)
 	
 	party_ui.update_status()
 
@@ -266,6 +314,15 @@ func _enemy_take_turn():
 	_announce_next_turn()
 
 func _announce_next_turn():
+	if aliveMembers.is_empty():
+		message_panel.add_message("[color=crimson]The party has fallen...[/color]")
+		# TODO MAKE ENDING
+		return
+	
+	if turnOrder[0].is_dead:
+		# Move enemy to end of turnOrder
+		turnOrder.push_back(turnOrder.pop_front())
+	
 	turn += 1
 	turn_indicator.text = "Turn %s" % turn
 	
@@ -338,6 +395,10 @@ func _reset_position(initial_position: Vector2):
 
 
 func _on_back_button_pressed() -> void:
+	targeting_mode = false
+	ally_targeting_mode = false
+	_highlight_enemies(false)
+	
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 	
@@ -345,8 +406,67 @@ func _on_back_button_pressed() -> void:
 func _on_ability_button_pressed(ability) -> void:
 	# You can now handle the logic for using the ability
 	print("Using ability: ", ability.name)
-	# Add your code for handling the ability here
+	message_panel.add_message("Using ability: %s - choose a target" % ability.name)
+	current_ability = ability  # store the selected ability
 	
-	# After using the ability, return to the action menu
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+	if ability.target_type == 0:
+		targeting_mode = true
+		_highlight_enemies(true)
+	elif ability.target_type == 1:
+		ally_targeting_mode = true
+	
+# the player presses the party member icon
+func _on_party_ui_party_member_pressed(member: Variant) -> void:
+	if ally_targeting_mode:
+		var caster = turnOrder[0]
+		var ability = current_ability
+
+		# Consume MP
+		caster.current_mp -= ability.mp_cost
+
+		# Hide menus
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+
+		# Calculate heal amount
+		var heal_amount = ability.calculate_scaled_power(caster)
+		var variation = randf_range(0.8, 1.2)
+		heal_amount *= variation
+		heal_amount = int(heal_amount)  # If you want whole numbers
+
+		# Clamp healing so it doesn't overheal
+		member.current_hp = min(member.current_hp + heal_amount, member.max_hp)
+
+		# Message
+		var message = "Turn %s: [color=green]%s[/color] uses [color=yellow]%s[/color] on [color=green]%s[/color], restoring [color=lime]%d[/color] HP!" % [
+			turn, caster.character_name, ability.name, member.character_name, heal_amount
+		]
+		message_panel.add_message(message)
+
+		# Play heal sound effect (if you have one)
+		$heal.play()
+
+		# Flash the target icon
+		party_ui.flash_heal(member, heal_amount)
+		#party_ui.show_spell_cast(caster, member, current_ability)
+
+		# Reset targeting state
+		current_ability = null
+		ally_targeting_mode = false
+
+		# Update UI
+		party_ui.update_status()
+
+		# Move caster to end of turn order
+		turnOrder.push_back(turnOrder.pop_front())
+
+		# Announce next turn
+		_announce_next_turn()
+
+		# Check for end of combat (optional, in case you have win/lose conditions)
+		_check_combat_end()
+		
+func _end_combat():
+	GameManager.combat_ended()
+	print("Combat ended — returning to overworld.")
+	$"..".queue_free()  # This will remove this combat scene from the tree

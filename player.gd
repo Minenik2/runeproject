@@ -43,6 +43,7 @@ func _process(delta):
 		update_direction() # Update direction only after rotation is finished
 
 func move_forward():
+	#make_combat()
 	var new_position = global_transform.origin + direction * grid_size
 	#print("moving to: ", new_position)
 
@@ -86,3 +87,6 @@ func interact_with_object():
 
 	if result.has("collider") and result.collider.has_method("interact"):
 		result.collider.interact()  # Call interact() on the hit object
+
+	
+	

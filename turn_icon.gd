@@ -1,5 +1,6 @@
 extends VBoxContainer
 
+signal icon_pressed(combatant)
 var combatant = null  # Store the combatant in the TurnIcon
 
 # Set the combatant (called from the Party component)
@@ -19,3 +20,7 @@ func update_mp(current, max):
 # Function to get the stored combatant
 func get_combatant():
 	return combatant
+
+
+func _on_name_label_pressed() -> void:
+	emit_signal("icon_pressed", combatant)

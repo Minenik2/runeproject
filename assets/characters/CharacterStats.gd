@@ -47,6 +47,7 @@ var critical_chance: float
 var critical_multiplier: float
 var combat_initiative : int
 var is_ally: bool
+var is_dead: bool = false
 
 # Initialize with default values
 func _init():
@@ -56,8 +57,8 @@ func _init():
 
 func calculate_derived_stats():
 	# HP/MP Formulas (non-linear scaling)
-	max_hp = floor(max_hp + (vitality * 10) + (level * vitality * 0.7) + (strength * 0.5))
-	max_mp = floor(max_mp + (intelligence * 8) + (faith * 5) + (level * (intelligence + faith) * 0.2))
+	max_hp = floor(max_hp + (((vitality * 10) + (level * vitality * 0.7) + (strength * 0.5)) / 10))
+	max_mp = floor(max_mp + (((intelligence * 8) + (faith * 5) + (level * (intelligence + faith) * 0.2)) / 10))
 	
 	# Offensive Stats (with diminishing returns)
 	attack_power = floor(
@@ -231,15 +232,16 @@ func get_class_modifiers() -> Dictionary:
 
 func calculate_exp_to_level() -> int:
 	# Exponential curve with class adjustment
-	var base_exp = pow(level, 2) * 100
+	var experience_to_level = experience_to_level + 100
 	match character_class:
-		CHARACTER_CLASS.WARRIOR: return base_exp * 0.9    # Warriors level slightly faster
-		CHARACTER_CLASS.MAGE: return base_exp * 1.1       # Mages need more XP
-		_: return base_exp
+		CHARACTER_CLASS.WARRIOR: return experience_to_level * 0.9    # Warriors level slightly faster
+		CHARACTER_CLASS.MAGE: return experience_to_level * 1.1       # Mages need more XP
+		_: return experience_to_level
 
 
 func gain_exp(amount: int) -> bool:
 	experience += amount
+	print(character_name, " gained ", amount, " xp. Total ", experience, "/", experience_to_level)
 	if experience >= experience_to_level:
 		level_up()
 		return true
@@ -247,7 +249,7 @@ func gain_exp(amount: int) -> bool:
 
 func level_up():
 	level += 1
-	experience -= calculate_exp_to_level()
+	experience_to_level = calculate_exp_to_level()
 	
 	# Class-based stat growth
 	var growth_bonus = get_class_modifiers().get("growth_bonus", {})
@@ -261,9 +263,10 @@ func level_up():
 	
 	calculate_derived_stats()  # Recalculate everything
 	
-	# Heal on level up
-	current_hp = max_hp
-	current_mp = max_mp
+	# Heal on level up if not dead
+	if not is_dead:
+		current_hp = max_hp
+		current_mp = max_mp
 	
 	print("%s leveled up to %d!" % [character_name, level])
 

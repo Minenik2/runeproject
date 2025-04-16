@@ -52,6 +52,8 @@ func update_minimap():
 
 	# Show enemies
 	for enemy in labyrinth_generator.enemies:
+		if not is_instance_valid(enemy):
+			continue
 		var enemy_tile = world_to_tile(enemy.global_position)
 		var relative_pos = enemy_tile - player_tile
 		if abs(relative_pos.x) <= 5 and abs(relative_pos.y) <= 5:
@@ -120,7 +122,6 @@ func reset_minimap():
 	reveal_tiles_around(player_tile)
 
 	get_markers()
-	print("current markers", markers)
 
 func get_markers():
 	# Free only the markers that were added
@@ -133,7 +134,6 @@ func get_markers():
 	# Get fresh objects in the new minimap context
 	var map_objects = get_tree().get_nodes_in_group("minimap_objects")
 	for item in map_objects:
-		print(item.minimap_icon, icons)
 		var new_marker = icons[item.minimap_icon].duplicate()
 		dungeon_map.add_child(new_marker)
 		new_marker.show()

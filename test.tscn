@@ -178,6 +178,7 @@ mesh = SubResource("BoxMesh_8uh7m")
 
 [node name="player" type="CharacterBody3D" parent="." groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, 0.5)
+collision_layer = 2
 script = ExtResource("1_37kl0")
 
 [node name="Camera3D" type="Camera3D" parent="player"]

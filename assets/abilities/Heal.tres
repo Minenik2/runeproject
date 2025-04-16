@@ -6,10 +6,11 @@
 script = ExtResource("1_5dw3s")
 name = "Heal"
 description = "Restore an ally's HP."
-type = "heak"
-target_type = "ally"
+type = 1
+target_type = 1
 power = 20
 crit_chance = 0.0
 mp_cost = 7
 sp_cost = 0
 hp_cost = 0
+scaling_stat = 5

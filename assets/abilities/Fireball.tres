@@ -6,10 +6,11 @@
 script = ExtResource("1_4o32s")
 name = "Fireball"
 description = "A ball of flame that scorches an enemy."
-type = "attack"
-target_type = "enemy"
+type = 0
+target_type = 0
 power = 30
 crit_chance = 0.0
 mp_cost = 8
 sp_cost = 0
 hp_cost = 0
+scaling_stat = 2

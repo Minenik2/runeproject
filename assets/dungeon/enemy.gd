@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends Area3D
 
 @export var grid_size: float = 1.0
 @export var turn_speed: float = 90.0 # Degrees per turn
@@ -77,3 +77,8 @@ func _on_timer_timeout() -> void:
 
 	# Restart the timer
 	move_timer.start()
+
+
+func _on_body_entered(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		GameManager.make_combat(self)

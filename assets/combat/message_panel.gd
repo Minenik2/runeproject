@@ -16,10 +16,11 @@ func add_message(text: String) -> void:
 	_update_log()
 
 func _update_log() -> void:
-	message_log.clear()
-	for message in messages:
-		message_log.append_text(message + "\n")
+	if message_log:
+		message_log.clear()
+		for message in messages:
+			message_log.append_text(message + "\n")
 
-	# Auto-scroll to bottom
-	await get_tree().process_frame
-	message_log.scroll_to_line(message_log.get_line_count() - 1)
+		# Auto-scroll to bottom
+		await get_tree().process_frame
+		message_log.scroll_to_line(message_log.get_line_count() - 1)

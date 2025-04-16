@@ -251,6 +251,8 @@ func spawn_maze_reset_object():
 func spawn_enemies(num_enemies: int):
 	# Remove old enemies
 	for enemy in enemies:
+		if not is_instance_valid(enemy):
+			continue
 		enemy.queue_free()
 	enemies.clear()
 

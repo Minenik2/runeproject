@@ -23,3 +23,5 @@ text = "HP"
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "MP"
+
+[connection signal="pressed" from="nameLabel" to="." method="_on_name_label_pressed"]
