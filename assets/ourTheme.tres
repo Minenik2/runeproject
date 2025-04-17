@@ -1,8 +1,31 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://detis17yiamg3"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://detis17yiamg3"]
 
 [ext_resource type="FontFile" uid="uid://d22tpxinmhb64" path="res://assets/font/cute-mono/retro-pixel-cute-mono.ttf" id="1_suvlp"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_suvlp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d0g6d"]
+bg_color = Color(0.71, 0.328967, 0.213, 0)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j0e1c"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.58, 0.56956, 0.2668, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gfqe5"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.111533, 0.021, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w3rg5"]
+content_margin_left = 10.0
+content_margin_right = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suvlp"]
 content_margin_top = 5.0
@@ -36,6 +59,10 @@ Button/fonts/font = ExtResource("1_suvlp")
 Button/styles/focus = SubResource("StyleBoxEmpty_suvlp")
 Label/font_sizes/font_size = 32
 Label/fonts/font = ExtResource("1_suvlp")
+TabBar/styles/tab_focus = SubResource("StyleBoxFlat_d0g6d")
+TabBar/styles/tab_selected = SubResource("StyleBoxFlat_j0e1c")
+TabContainer/styles/tab_focus = SubResource("StyleBoxFlat_gfqe5")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_w3rg5")
 VScrollBar/styles/grabber = SubResource("StyleBoxFlat_suvlp")
 VScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_ctrpp")
 VScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_ctrpp")

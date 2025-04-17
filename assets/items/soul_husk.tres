@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Item" load_steps=2 format=3 uid="uid://boepj6ltscwmy"]
+
+[ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/items.gd" id="1_m81uf"]
+
+[resource]
+script = ExtResource("1_m81uf")
+item_name = "Soul Husk"
+description = "A brittle, hollow fragment of something once alive. It offers a fleeting surge of strength, though it gnaws at the bearer’s sanity."
+item_type = 0
+value = 30
+amount_held = 0
+hp_restore = 0
+mp_restore = 0
+increase_level = true
+metadata/_custom_type_script = "uid://bunhfmmp28vn0"

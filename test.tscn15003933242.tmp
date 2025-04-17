@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=31 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -17,10 +17,6 @@
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="8_mhym6"]
 [ext_resource type="Script" uid="uid://ecs37pgyltxp" path="res://statsUI.gd" id="9_a3se8"]
 [ext_resource type="AudioStream" uid="uid://d2c5o3hi1eyfi" path="res://assets/audio/uiHit.ogg" id="10_a3se8"]
-[ext_resource type="PackedScene" uid="uid://b1b3lid226cna" path="res://assets/ui/party_showcase_ui.tscn" id="11_vxl6d"]
-[ext_resource type="AudioStream" uid="uid://cr3op4lwgxp2o" path="res://assets/audio/heal.ogg" id="12_4uo0j"]
-[ext_resource type="AudioStream" uid="uid://dtbblox45rcl7" path="res://assets/audio/invalid.ogg" id="12_45l4g"]
-[ext_resource type="PackedScene" uid="uid://cjdqbv4gdlm0x" path="res://assets/ui/inventory_ui.tscn" id="12_eski5"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xersf"]
 
@@ -219,10 +215,9 @@ grow_vertical = 2
 [node name="TabBar" type="TabBar" parent="UI/menuUI/VBoxContainer"]
 layout_mode = 2
 current_tab = 0
-tab_count = 3
+tab_count = 2
 tab_0/title = "Stats"
 tab_1/title = "Spells"
-tab_2/title = "Inventory"
 script = ExtResource("9_a3se8")
 
 [node name="statsPanel" type="HBoxContainer" parent="UI/menuUI/VBoxContainer"]
@@ -283,6 +278,10 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
+[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+layout_mode = 2
+text = "Exit Menu"
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -327,85 +326,50 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="spellPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer"]
+[node name="spellPanel" type="HBoxContainer" parent="UI/menuUI/VBoxContainer"]
 visible = false
 layout_mode = 2
-size_flags_vertical = 3
 
-[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel"]
-layout_mode = 2
-text = "Choose a spell"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel"]
-layout_mode = 2
-
-[node name="hbox" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer"]
+[node name="hbox" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CharactersContainer" type="GridContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/hbox"]
+[node name="CharactersContainer" type="GridContainer" parent="UI/menuUI/VBoxContainer/spellPanel/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
-columns = 3
+columns = 5
 
-[node name="SpellsContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer"]
+[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer/spellPanel/hbox"]
+layout_mode = 2
+text = "Exit Menu"
+
+[node name="SpellsContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/SpellsContainer"]
-visible = false
+[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel/SpellsContainer"]
 layout_mode = 2
 size_flags_vertical = 1
 text = "hero name"
 horizontal_alignment = 1
 
-[node name="CancelSpellButton" type="Button" parent="UI/menuUI/VBoxContainer/spellPanel"]
+[node name="TargetsContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel/TargetsContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "hero name"
+horizontal_alignment = 1
+
+[node name="CancelButton" type="Button" parent="UI/menuUI/VBoxContainer/spellPanel"]
 visible = false
 layout_mode = 2
 text = "Cancel spell"
 
-[node name="inventoryPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="title" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
-layout_mode = 2
-
-[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="partyShowcaseUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("11_vxl6d")]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="inventoryUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("12_eski5")]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer"]
-layout_mode = 2
-text = "Exit Menu"
-
 [node name="uiHit" type="AudioStreamPlayer2D" parent="UI/menuUI"]
 stream = ExtResource("10_a3se8")
-panning_strength = 0.0
-
-[node name="uiHeal" type="AudioStreamPlayer2D" parent="UI/menuUI"]
-stream = ExtResource("12_4uo0j")
-pitch_scale = 1.6
-panning_strength = 0.0
-
-[node name="invalid" type="AudioStreamPlayer2D" parent="UI/menuUI"]
-stream = ExtResource("12_45l4g")
-volume_db = -5.0
 panning_strength = 0.0
 
 [node name="depthUI" type="Label" parent="UI"]
@@ -484,5 +448,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44325, 0.50771, 0.501451)
 
 [connection signal="party_member_pressed" from="UI/PartyUIOverworld" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_ui_overworld_party_member_pressed"]
 [connection signal="tab_changed" from="UI/menuUI/VBoxContainer/TabBar" to="UI/menuUI/VBoxContainer/TabBar" method="_on_tab_changed"]
-[connection signal="pressed" from="UI/menuUI/VBoxContainer/spellPanel/CancelSpellButton" to="UI/menuUI/VBoxContainer/TabBar" method="_on_cancel_spell_button_pressed"]
-[connection signal="pressed" from="UI/menuUI/VBoxContainer/Button" to="UI/menuUI/VBoxContainer/TabBar" method="_on_button_pressed"]
+[connection signal="pressed" from="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer/Button" to="UI/menuUI/VBoxContainer/TabBar" method="_on_button_pressed"]
+[connection signal="pressed" from="UI/menuUI/VBoxContainer/spellPanel/hbox/Button" to="UI/menuUI/VBoxContainer/TabBar" method="_on_button_pressed"]

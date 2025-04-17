@@ -57,8 +57,8 @@ func _init():
 
 func calculate_derived_stats():
 	# HP/MP Formulas
-	max_hp = floor((vitality + (strength * 0.5)) * 10)
-	max_mp = floor((intelligence + faith) * 10)
+	max_hp = floor((vitality + (strength * 0.5)) * 5)
+	max_mp = floor((intelligence + faith))
 	
 	# Offensive Stats
 	attack_power = floor(

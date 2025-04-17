@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends GridContainer
 
 signal party_member_pressed(member)
 var party_members = []
@@ -33,5 +33,5 @@ func update_status():
 		var icon = get_child(i)
 		icon.set_combatant(party_members[i])
 
-func _on_party_icon_pressed(member):
-	emit_signal("party_member_pressed", member)
+func _on_party_icon_pressed(member, sender):
+	emit_signal("party_member_pressed", member, sender)

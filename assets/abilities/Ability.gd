@@ -8,6 +8,7 @@ enum TARGETING_TYPE {
 
 enum TYPE {
 	DAMAGE,
+	HEAL,
 	BUFF,
 }
 

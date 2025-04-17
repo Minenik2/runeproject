@@ -1,6 +1,7 @@
 extends VBoxContainer
+const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
 
-signal icon_pressed(combatant)
+signal icon_pressed(combatant, sender)
 var combatant = null  # Store the combatant in the TurnIcon
 
 # Set the combatant (called from the Party component)
@@ -25,6 +26,25 @@ func update_lvl(current):
 func get_combatant():
 	return combatant
 
+func show_heal(heal_amount):
+	# Spawn healing popup
+	var heal_label = FLOATING_DAMAGE_LABEL.instantiate()
+	
+	heal_label.set_heal(heal_amount)
+
+	$nameLabel.add_child(heal_label)
+
+func show_damage(damage_amount):
+	# Spawn healing popup
+	var heal_label = FLOATING_DAMAGE_LABEL.instantiate()
+	heal_label.global_position = self.get_global_position()
+	
+	heal_label.set_damage(damage_amount)
+
+	# Add to the PopupLayer CanvasLayer instead of current_scene
+	var popup_layer = $"../../.."
+	popup_layer.add_child(heal_label)
+
 
 func _on_name_label_pressed() -> void:
-	emit_signal("icon_pressed", combatant)
+	emit_signal("icon_pressed", combatant, self)
