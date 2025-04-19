@@ -19,7 +19,7 @@ func _ready():
 
 func _input(event):
 	if event is InputEventKey and event.pressed and not is_moving:
-		if event.is_action_pressed("up"):
+		if event.is_action("up"):
 			move_forward()
 		elif event.is_action_pressed("left"):
 			rotate_left()

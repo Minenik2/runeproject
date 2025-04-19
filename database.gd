@@ -74,7 +74,7 @@ func roll_chest_loot():
 	# Increase item's held amount
 	item.amount_held += quantity
 
-	var message = "%s DROP: You found %d x %s!" % [rarity.capitalize(), quantity, item.item_name]
+	var message = "%s DROP: You found %d x %s!" % [rarity.to_upper(), quantity, item.item_name]
 	print(message)
 	
 	return {

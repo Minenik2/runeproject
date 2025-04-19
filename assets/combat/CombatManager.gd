@@ -90,15 +90,19 @@ func calculate_turn_order():
 #
 
 func _on_attack_button_pressed() -> void:
+	Music.play_ui_hit_combat()
 	print("Attack pressed — choose a target")
 	message_panel.add_message("Attack pressed — choose a target")
 	targeting_mode = true
 	_highlight_enemies(true)
 
 func _on_item_button_pressed() -> void:
-	print("item!")
+	Music.play_ui_hit_combat()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".show()
 
 func _on_special_button_2_pressed() -> void:
+	Music.play_ui_hit_combat()
 	var current_member = turnOrder[0]
 	var abilities = current_member.abilities
 	
@@ -310,6 +314,7 @@ func _enemy_take_turn():
 
 	# Check if party member died
 	if target.current_hp <= 0:
+		Music.play_death()
 		target.current_hp = 0
 		target.is_dead = true
 		print(target.character_name, " has fallen!")
@@ -327,7 +332,20 @@ func _enemy_take_turn():
 func _announce_next_turn():
 	if aliveMembers.is_empty():
 		message_panel.add_message("[color=crimson]The party has fallen...[/color]")
-		# TODO MAKE ENDING
+		
+		var fade_overlay = $"../CanvasLayer/UI/defeatFade"
+		# Show and fade in the overlay
+		fade_overlay.visible = true
+		fade_overlay.modulate.a = 0.0  # Start transparent
+
+		var tween = create_tween()
+		tween.tween_property(fade_overlay, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
+		# After fade, restart the scene
+		tween.tween_callback(func():
+			var current_scene = get_tree().current_scene
+			current_scene.reload_current_scene()
+		)
 		return
 	
 	if turnOrder[0].is_dead:
@@ -419,15 +437,18 @@ func _reset_position(initial_position: Vector2):
 
 
 func _on_back_button_pressed() -> void:
+	Music.play_ui_hit_combat()
 	targeting_mode = false
 	ally_targeting_mode = false
 	_highlight_enemies(false)
 	
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 	
 # Function to handle the ability use when the button is pressed
 func _on_ability_button_pressed(ability) -> void:
+	Music.play_ui_hit_combat()
 	targeting_mode = false
 	_highlight_enemies(false)
 	
@@ -527,3 +548,7 @@ func _end_combat():
 	GameManager.combat_ended()
 	print("Combat ended — returning to overworld.")
 	$"..".queue_free()  # This will remove this combat scene from the tree
+
+
+func _on_inventory_ui_item_hovered(item: Variant) -> void:
+	description.text = item.effectText()

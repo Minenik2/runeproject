@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://4u35d5dndusb"]
+[gd_scene load_steps=20 format=3 uid="uid://4u35d5dndusb"]
 
 [ext_resource type="AudioStream" uid="uid://qpvvq3rtio1i" path="res://assets/audio/hit.ogg" id="2_6foyy"]
 [ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/partyUi.gd" id="2_grv6n"]
@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://dtbblox45rcl7" path="res://assets/audio/invalid.ogg" id="8_ee53f"]
 [ext_resource type="AudioStream" uid="uid://cr3op4lwgxp2o" path="res://assets/audio/heal.ogg" id="8_q0k0i"]
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="9_0h1rr"]
+[ext_resource type="PackedScene" uid="uid://cjdqbv4gdlm0x" path="res://assets/ui/inventory_ui.tscn" id="10_q0k0i"]
 [ext_resource type="AudioStream" uid="uid://0qsxaydpq6fa" path="res://assets/audio/crit.ogg" id="11_es4uf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_djmn3"]
@@ -170,6 +171,26 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Item"
 
+[node name="itemMenu" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -25.0
+offset_right = 100.0
+offset_bottom = 25.0
+grow_vertical = 2
+
+[node name="inventoryUI" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu" instance=ExtResource("10_q0k0i")]
+layout_mode = 2
+
+[node name="backButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Back"
+
 [node name="specialMenu" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
 visible = false
 layout_mode = 1
@@ -296,9 +317,23 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="defeatFade" type="ColorRect" parent="CanvasLayer/UI"]
+visible = false
+z_index = 11
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton" to="CombatManager" method="_on_attack_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton" to="CombatManager" method="_on_special_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu" method="_on_special_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton" to="CombatManager" method="_on_item_button_pressed"]
+[connection signal="item_hovered" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CombatManager" method="_on_inventory_ui_item_hovered"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
 [connection signal="party_member_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" to="CombatManager" method="_on_party_ui_party_member_pressed"]

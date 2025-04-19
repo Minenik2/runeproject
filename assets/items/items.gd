@@ -31,3 +31,15 @@ func use(target):
 	amount_held -= 1
 	
 	print(item_name, " used on ", target.character_name)
+
+func effectText():
+	var effect = ""
+	
+	if hp_restore > 0:
+		effect += "Restores %s health points upon use. " % hp_restore
+	if mp_restore > 0:
+		effect += "Restores %s mana points upon use. " % mp_restore
+	if increase_level:
+		effect += "Increases level by 1 upon use. "
+	
+	return effect

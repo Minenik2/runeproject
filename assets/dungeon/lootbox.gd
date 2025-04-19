@@ -33,9 +33,8 @@ func _on_area_3d_body_exited(body: Node3D) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if player_in_range and event.is_action_pressed("interact"):
-		Music.play_chestOpen()
-		
 		var message = Database.roll_chest_loot()
+		Music.play_chestOpen(message.rarity)
 		
 		var floating_message = MESSAGE_LABEL.instantiate()
 		popup.add_child(floating_message)

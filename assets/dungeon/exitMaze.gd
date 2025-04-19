@@ -21,11 +21,11 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if body is CharacterBody3D and body.is_in_group("player"):
+		if tooltip.text == "Press SPACE to decent":
+			tooltip.hide()
 		player_in_range = false
 		player_ref = null
 		$Sprite3D.show()
-		if tooltip.text == "Press SPACE to decent":
-			tooltip.hide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if player_in_range and event.is_action_pressed("interact"):
