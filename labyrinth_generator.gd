@@ -7,6 +7,7 @@ extends Node
 @export var maze_reset_scene: PackedScene  # Assign your .tscn file here
 @export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
 @export var gridmap: GridMap  # Assign your GridMap node in the Inspector
+@export var chest_scene: PackedScene  # Assign your chest scene in the inspector
 
 var maze = []  # 2D array to store walls & paths
 var directions = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
@@ -16,12 +17,18 @@ var tile_scale = 1  # Scale factor
 var maze_reset_instance: Node3D  # To store the instance of the reset object
 var explored_tiles = []  # Stores explored tiles for fog of war
 var enemies = []  # Store enemy instances
+var chests = [] # store chests instances
 
 func _ready():
+	generate_new_maze()
+	
+# this function is called by mazeExit everytime the player wants to decent
+func generate_new_maze():
 	generate_maze()
 	build_maze()
 	spawn_enemies(3)
-	print_maze()  # Debug output
+	spawn_chests(2)  # Spawn 2 chests as a test
+	#print_maze()  # Debug output
 
 func generate_maze():
 	$unlock.play()
@@ -300,3 +307,54 @@ func spawn_enemies(num_enemies: int):
 	# You can print a warning if not all enemies were spawned
 	if enemies.size() < num_enemies:
 		print("Only spawned %d out of %d enemies due to space constraints." % [enemies.size(), num_enemies])
+
+# function to spawn chests
+func spawn_chests(num_chests: int):
+	# Remove old chests
+	for chest in chests:
+		if not is_instance_valid(chest):
+			continue
+		chest.queue_free()
+	chests.clear()
+
+	var min_distance = 4
+	var attempts_per_chest = 30
+	var placed_positions = []
+
+	for i in range(num_chests):
+		var attempts = 0
+		var found = false
+
+		while attempts < attempts_per_chest and not found:
+			var spawn_pos = find_random_open_space()
+			var too_close = false
+
+			# Check distance from player
+			if spawn_point.distance_to(spawn_pos) < min_distance:
+				too_close = true
+
+			# Check distance from other chests
+			for pos in placed_positions:
+				if pos.distance_to(spawn_pos) < min_distance:
+					too_close = true
+					break
+
+			if not too_close:
+				found = true
+				placed_positions.append(spawn_pos)
+
+				var chest = chest_scene.instantiate()
+				print("chest spawned at ", spawn_pos)
+				chest.global_position = Vector3(
+					(spawn_pos.x + 0.5) * tile_scale,
+					0.8,
+					(spawn_pos.y + 0.5) * tile_scale
+				)
+				add_child(chest)
+				chests.append(chest)
+
+			attempts += 1
+
+	# You can print a warning if not all chests were spawned
+	if chests.size() < num_chests:
+		print("Only spawned %d out of %d chests due to space constraints." % [chests.size(), num_chests])

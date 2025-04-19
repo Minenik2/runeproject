@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkv7wt2id7gd7"]
+[gd_scene load_steps=6 format=3 uid="uid://bkv7wt2id7gd7"]
 
 [ext_resource type="AudioStream" uid="uid://byo6ohf6pxmp1" path="res://assets/audio/ost.ogg" id="1_mtm71"]
+[ext_resource type="Script" uid="uid://tt5eqhgwp7ds" path="res://assets/audio/GlobalSoundPlayer.gd" id="2_iabng"]
+[ext_resource type="AudioStream" uid="uid://d2c5o3hi1eyfi" path="res://assets/audio/uiHit.ogg" id="2_t3oww"]
+[ext_resource type="AudioStream" uid="uid://clxpy25src11l" path="res://assets/audio/unlock.ogg" id="4_bcbs6"]
+[ext_resource type="AudioStream" uid="uid://c1bjcbkhnrkb6" path="res://assets/audio/chest_open.ogg" id="5_m0e7c"]
 
 [node name="music" type="AudioStreamPlayer"]
 process_mode = 3
@@ -8,3 +12,18 @@ stream = ExtResource("1_mtm71")
 volume_db = -25.0
 autoplay = true
 parameters/looping = true
+script = ExtResource("2_iabng")
+
+[node name="uiHit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_t3oww")
+volume_db = -10.0
+
+[node name="movedInExit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_bcbs6")
+volume_db = -25.0
+pitch_scale = 2.0
+
+[node name="chestOpen" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_m0e7c")
+volume_db = -20.0
+pitch_scale = 2.0

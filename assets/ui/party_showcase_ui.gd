@@ -1,7 +1,11 @@
 extends GridContainer
 
-signal party_member_pressed(member)
+signal party_member_pressed(member, sender)
+signal sendt_message(message) # this signal is to send a message that can be either placed on a tooltip, or combat log
 var party_members = []
+var targetSelectable = false
+
+var selectedItem
 
 func _ready() -> void:
 	for c in Database.memberRes:
@@ -35,3 +39,29 @@ func update_status():
 
 func _on_party_icon_pressed(member, sender):
 	emit_signal("party_member_pressed", member, sender)
+
+func _on_inventory_ui_item_pressed(item: Variant) -> void:
+	Music.play_ui_hit()
+	if targetSelectable and selectedItem == item:
+		targetSelectable = false
+		selectedItem = null
+		
+		emit_signal("sendt_message", "Select an item")
+		
+		clear_highlights()
+	else:
+		targetSelectable = true
+		selectedItem = item
+		
+		var message = "Currently selected: %s - Chose target" % item.item_name
+		emit_signal("sendt_message", message)
+		
+		highlight_all()
+
+func highlight_all():
+	for icon in get_children():
+		icon.highlight(true)
+
+func clear_highlights():
+	for icon in get_children():
+		icon.highlight(false)

@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://cr7bb2ijry5v"]
+
+[ext_resource type="Script" uid="uid://c0xb57uk3tfjy" path="res://assets/dungeon/lootbox.gd" id="1_lcadn"]
+[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="2_ct06u"]
+[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_h27pv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tmc66"]
+
+[node name="lootbox" type="Node3D"]
+script = ExtResource("1_lcadn")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("2_ct06u")
+script = ExtResource("3_h27pv")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_tmc66")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

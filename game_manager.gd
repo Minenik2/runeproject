@@ -4,7 +4,7 @@ const COMBAT_SCENE = preload("res://assets/combat/combatScene.tscn")
 var current_enemy: Node = null
 var giveXP = 100
 
-var enemiesRes = []
+var enemiesRes: Array[CharacterStats] = []
 
 func make_combat(enemy: Node):
 	# When the player touches an enemy or enters a zone, transition to combat
@@ -26,11 +26,11 @@ func combat_ended():
 		current_enemy = null
 		
 	get_node("/root/Node3D/UI/PartyUIOverworld").update_status()
+	get_node("/root/Node3D/UI/menuUI/VBoxContainer/TabBar").update_status()
+	
 	get_tree().paused = false
 
 func spawn_random_enemies():
-	var enemiesRes: Array[CharacterStats] = []
-	
 	var randomi = randi_range(0,2)
 	
 	if randomi == 2:

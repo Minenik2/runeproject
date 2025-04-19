@@ -20,3 +20,4 @@ collision_mask = 3
 shape = SubResource("BoxShape3D_tmc66")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

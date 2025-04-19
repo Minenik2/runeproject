@@ -4,7 +4,10 @@ var targetAlly: bool = false
 var selectedSpell
 var currentCaster
 
+var selectedMemberVisual = Database.memberRes[0] # user clicked on a member
+
 const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
+@onready var party_showcase_ui: GridContainer = $"../inventoryPanel/HBoxContainer/partyShowcaseUI"
 
 func _ready() -> void:
 	for c in Database.memberRes:
@@ -30,6 +33,7 @@ func _update_visible_panel(tab: int):
 
 func _on_character_button_pressed(c):
 	$"../../uiHit".play()
+	selectedMemberVisual = c
 	populate_stats(c)
 
 func populate_stats(c):
@@ -55,11 +59,11 @@ func populate_stats(c):
 func _on_tab_changed(tab: int) -> void:
 	$"../../uiHit".play()
 	_update_visible_panel(tab)
+	update_status()
 
 func _input(event):
 	if event.is_action_pressed("pause"):  # ui_cancel is Esc by default
 		$"../../uiHit".play()
-		populate_stats(Database.memberRes[0])
 		update_status()
 		var menu_ui = $"../.."
 		menu_ui.visible = not menu_ui.visible
@@ -71,14 +75,21 @@ func _on_button_pressed() -> void:
 
 func _on_party_ui_overworld_party_member_pressed(member: Variant) -> void:
 	$"../../uiHit".play()
-	populate_stats(member)
+	selectedMemberVisual = member
 	update_status()
 	$"../..".show()
 
 func update_status():
+	populate_stats(selectedMemberVisual)
+	
+	$"../../../PartyUIOverworld".update_status()
+	
 	for i in range(Database.memberRes.size()):
 		var icon = $"../spellPanel/HBoxContainer/hbox/CharactersContainer".get_child(i)
 		icon.set_combatant(Database.memberRes[i])
+	
+	$"../inventoryPanel/HBoxContainer/partyShowcaseUI".update_status()
+	$"../inventoryPanel/HBoxContainer/inventoryUI".update_inventory()
 
 #
 # SPELL MENU SYSTEM
@@ -86,6 +97,12 @@ func update_status():
 
 func _on_party_icon_pressed(c, sender):
 	if targetAlly:
+		# check if dead
+		if c.is_dead:
+			$"../../invalid".play()
+			$"../spellPanel/info".text = "Cannot use on the dead"
+			return
+		
 		# check if max health, for healing
 		if c.current_hp == c.max_hp:
 			$"../../invalid".play()
@@ -175,3 +192,72 @@ func _on_cancel_spell_button_pressed() -> void:
 	
 	$"../spellPanel/info".text = "Choose a spell"
 	$"../spellPanel/CancelSpellButton".hide()
+
+
+func _on_inventory_ui_item_hovered(item: Variant) -> void:
+	$"../inventoryPanel/title".text = item.description
+	$"../inventoryPanel/info".text = ""
+	if item.hp_restore > 0:
+		$"../inventoryPanel/info".text += "Restores %s health points upon use. " % item.hp_restore
+	if item.mp_restore > 0:
+		$"../inventoryPanel/info".text += "Restores %s mana points upon use. " % item.mp_restore
+	if item.increase_level:
+		$"../inventoryPanel/info".text += "Increases level by 1 upon use. "
+
+
+func _on_party_showcase_ui_party_member_pressed(member: Variant, sender) -> void:
+	if party_showcase_ui.targetSelectable:
+		# if the party ui is pressed while a item has been selected
+		if party_showcase_ui.selectedItem:
+			var item = party_showcase_ui.selectedItem
+	
+			# Check if this item restores HP or MP, and if the target is already at max for both
+			var restores_hp = item.hp_restore > 0
+			var restores_mp = item.mp_restore > 0
+			var hp_full = member.current_hp == member.max_hp
+			var mp_full = member.current_mp == member.max_mp
+			
+			# Block if trying to heal a dead person
+			if member.is_dead and (restores_hp or restores_mp or item.increase_level):
+				$"../../invalid".play()
+				$"../inventoryPanel/tooltip".text = "Cannot use on the dead"
+				return
+					
+			# If the item restores either HP or MP, and both are already full, block it
+			if (restores_hp or restores_mp) and ((restores_hp and hp_full) and (restores_mp and mp_full)):
+				$"../../invalid".play()
+				$"../inventoryPanel/tooltip".text = "Target has max HP and MP"
+				return
+			elif restores_hp and hp_full and not restores_mp:
+				$"../../invalid".play()
+				$"../inventoryPanel/tooltip".text = "Target has max HP"
+				return
+			elif restores_mp and mp_full and not restores_hp:
+				$"../../invalid".play()
+				$"../inventoryPanel/tooltip".text = "Target has max MP"
+				return
+			
+			# Apply item effects
+			if restores_hp:
+				sender.show_heal(item.hp_restore)
+			if restores_mp:
+				sender.show_heal(item.mp_restore) # TODO: color this blue
+			if item.increase_level:
+				sender.show_heal(1) # TODO: color this purple
+			
+			$"../../uiHeal".play()
+			
+			party_showcase_ui.selectedItem.use(member)
+			if party_showcase_ui.selectedItem.amount_held < 1:
+				party_showcase_ui.selectedItem = null
+				party_showcase_ui.targetSelectable = false
+				$"../inventoryPanel/tooltip".text = "Select an item"
+				party_showcase_ui.clear_highlights()
+		
+		party_showcase_ui.update_status()
+		$"../inventoryPanel/HBoxContainer/inventoryUI".update_inventory()
+	
+
+
+func _on_party_showcase_ui_sendt_message(message: Variant) -> void:
+	$"../inventoryPanel/tooltip".text = message

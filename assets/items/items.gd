@@ -25,4 +25,9 @@ func use(target):
 		target.current_hp = min(target.current_hp + hp_restore, target.max_hp)
 	if mp_restore > 0:
 		target.current_mp = min(target.current_mp + mp_restore, target.max_mp)
+	if increase_level:
+		target.level_up()
+	
+	amount_held -= 1
+	
 	print(item_name, " used on ", target.character_name)

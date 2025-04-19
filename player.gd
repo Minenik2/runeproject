@@ -17,15 +17,15 @@ func _ready():
 	target_position = global_transform.origin
 	target_rotation = rotation.y
 
-func _unhandled_input(event):
+func _input(event):
 	if event is InputEventKey and event.pressed and not is_moving:
-		if event.keycode == KEY_W:
+		if event.is_action_pressed("up"):
 			move_forward()
-		elif event.keycode == KEY_A:
+		elif event.is_action_pressed("left"):
 			rotate_left()
-		elif event.keycode == KEY_D:
+		elif event.is_action_pressed("right"):
 			rotate_right()
-		elif event.keycode == KEY_E:  # Press 'E' to interact
+		elif event.is_action_pressed("interact"):  # Press 'E' to interact
 			interact_with_object()
 
 func _process(delta):

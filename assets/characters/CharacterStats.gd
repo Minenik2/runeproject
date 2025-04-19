@@ -114,14 +114,14 @@ func calculate_derived_stats():
 	defense *= strength_vitality_bonus
 	magic_defense *= int_faith_bonus
 	
-	# Ensure current values don't exceed new maxima
+	# make sure values down overdo
 	current_hp = min(current_hp, max_hp)
 	current_mp = min(current_mp, max_mp)
 
 func calculate_exp_to_level() -> int:
-	var experience_to_level = experience_to_level + 100
-	if level % 10 == 0:
-		experience_to_level += 1000
+	experience_to_level = experience_to_level + 5
+	if level % 11 == 0:
+		experience_to_level = experience_to_level / 2
 	
 	return experience_to_level
 
@@ -136,6 +136,11 @@ func gain_exp(amount: int) -> bool:
 
 func level_up():
 	level += 1
+	# check if the target leveled up naturally or by other means such as using an item
+	if experience >= experience_to_level:
+		experience =  experience - experience_to_level
+	else:
+		experience = 0
 	experience_to_level = calculate_exp_to_level()
 	
 	# Class-based stat growth
@@ -151,14 +156,23 @@ func level_up():
 		CHARACTER_CLASS.Vampire:
 			speed += randi_range(1, 2)
 	
+	var current_max_hp = max_hp
+	var current_max_mp = max_mp
+	
 	calculate_derived_stats()  # Recalculate everything
 	
-	# Heal on level up if not dead
+	# increase health because of level up if not dead
 	if not is_dead:
-		current_hp = max_hp
-		current_mp = max_mp
+		current_hp += max_hp - current_max_hp
+		current_mp += max_mp - current_max_mp
+		current_hp = min(current_hp, max_hp)
+		current_mp = min(current_mp, max_mp)
 	
 	print("%s leveled up to %d!" % [character_name, level])
+	
+	# final check to see if the target has xp to level again in case of a huge xp surge
+	if experience >= experience_to_level:
+		level_up()
 
 
 # Helper methods

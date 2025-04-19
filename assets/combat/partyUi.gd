@@ -129,7 +129,7 @@ func show_spell_cast(caster, target, spell):
 				spell_tween.tween_property(spell_label, "modulate:a", 0, 0.7)
 				spell_tween.tween_callback(Callable(spell_label, "queue_free"))
 
-func _on_party_icon_pressed(member):
+func _on_party_icon_pressed(member, sender):
 	print("You clicked on: ", member.character_name)
 	emit_signal("party_member_pressed", member)
 	# Here you could also check if targeting_mode is active, for healing, buffs, etc.

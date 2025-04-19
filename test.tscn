@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=30 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -7,11 +7,10 @@
 [ext_resource type="Shader" uid="uid://ciam46qh5kw37" path="res://fogwar.gdshader" id="2_vbegm"]
 [ext_resource type="PackedScene" uid="uid://bi2sk57rml81p" path="res://assets/dungeon/exitMaze.tscn" id="2_xersf"]
 [ext_resource type="PackedScene" uid="uid://b7p7rh2wnumgn" path="res://assets/dungeon/enemy.tscn" id="3_77dp3"]
-[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="3_ppyta"]
 [ext_resource type="Script" uid="uid://b72qh86nt2i56" path="res://party_ui_overworld.gd" id="4_0m0f1"]
 [ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="4_00tp4"]
+[ext_resource type="PackedScene" uid="uid://cr7bb2ijry5v" path="res://assets/dungeon/lootbox.tscn" id="4_pdf00"]
 [ext_resource type="AudioStream" uid="uid://clxpy25src11l" path="res://assets/audio/unlock.ogg" id="4_uty7l"]
-[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="4_ykrsh"]
 [ext_resource type="PackedScene" uid="uid://i5bss45dqgbu" path="res://assets/dungeon/door.tscn" id="5_ykrsh"]
 [ext_resource type="AudioStream" uid="uid://bljuo67nyr5q2" path="res://assets/audio/step.ogg" id="8_5tkv4"]
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="8_mhym6"]
@@ -64,17 +63,9 @@ fog_light_color = Color(0.932796, 0.851745, 0.749393, 1)
 fog_light_energy = 0.02
 fog_density = 0.1
 
-[sub_resource type="BoxMesh" id="BoxMesh_8uh7m"]
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_37kl0"]
 radius = 0.1
 height = 0.5
-
-[sub_resource type="BoxMesh" id="BoxMesh_37kl0"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_ykrsh"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_37kl0"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -84,6 +75,7 @@ player = NodePath("../player")
 maze_reset_scene = ExtResource("2_xersf")
 enemy_scene = ExtResource("3_77dp3")
 gridmap = NodePath("../GridMap")
+chest_scene = ExtResource("4_pdf00")
 
 [node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator"]
 stream = ExtResource("4_uty7l")
@@ -334,6 +326,7 @@ size_flags_vertical = 3
 
 [node name="info" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "Choose a spell"
 horizontal_alignment = 1
 
@@ -372,15 +365,15 @@ visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="title" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+[node name="tooltip" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
 layout_mode = 2
-
-[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
-layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Choose an item"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 2
 
 [node name="partyShowcaseUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("11_vxl6d")]
 layout_mode = 2
@@ -389,6 +382,20 @@ size_flags_horizontal = 3
 [node name="inventoryUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("12_eski5")]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="title" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+custom_minimum_size = Vector2(10, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="Button" type="Button" parent="UI/menuUI/VBoxContainer"]
 layout_mode = 2
@@ -418,13 +425,42 @@ grow_horizontal = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_a3se8")
 text = "Depth: 1"
 
+[node name="tooltip_middle" type="Label" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -22.0
+offset_right = 20.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.79, 0.79, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.866667)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 10
+text = "Press Space To Decent"
+horizontal_alignment = 1
+
+[node name="text_popup" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_g14j6")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(6.30802, 0, 0, 0, 0.321505, 0, 0, 0, 7.27489, 0, -0.22543, 0)
-visible = false
-mesh = SubResource("BoxMesh_8uh7m")
 
 [node name="player" type="CharacterBody3D" parent="." groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, 0.5)
@@ -447,24 +483,6 @@ stream = ExtResource("8_5tkv4")
 pitch_scale = 2.22
 panning_strength = 0.0
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.865016, 0)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(5.63923, 0, 0, 0, 1, 0, 0, 0, 0.155275, 0.0865254, 0.195592, -3.62108)
-visible = false
-mesh = SubResource("BoxMesh_37kl0")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.85436, 0)
-visible = false
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
-mesh = SubResource("BoxMesh_ykrsh")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_37kl0")
-
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource("2_8uh7m")
 cell_size = Vector3(1, 1, 1)
@@ -474,15 +492,14 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.112526, 0.690989, 0.590426)
-texture = ExtResource("3_ppyta")
-script = ExtResource("4_ykrsh")
-
 [node name="door" parent="." instance=ExtResource("5_ykrsh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44325, 0.50771, 0.501451)
 
 [connection signal="party_member_pressed" from="UI/PartyUIOverworld" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_ui_overworld_party_member_pressed"]
 [connection signal="tab_changed" from="UI/menuUI/VBoxContainer/TabBar" to="UI/menuUI/VBoxContainer/TabBar" method="_on_tab_changed"]
 [connection signal="pressed" from="UI/menuUI/VBoxContainer/spellPanel/CancelSpellButton" to="UI/menuUI/VBoxContainer/TabBar" method="_on_cancel_spell_button_pressed"]
+[connection signal="party_member_pressed" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/partyShowcaseUI" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_showcase_ui_party_member_pressed"]
+[connection signal="sendt_message" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/partyShowcaseUI" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_showcase_ui_sendt_message"]
+[connection signal="item_hovered" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/inventoryUI" to="UI/menuUI/VBoxContainer/TabBar" method="_on_inventory_ui_item_hovered"]
+[connection signal="item_pressed" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/inventoryUI" to="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/partyShowcaseUI" method="_on_inventory_ui_item_pressed"]
 [connection signal="pressed" from="UI/menuUI/VBoxContainer/Button" to="UI/menuUI/VBoxContainer/TabBar" method="_on_button_pressed"]

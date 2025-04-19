@@ -45,6 +45,12 @@ func show_damage(damage_amount):
 	var popup_layer = $"../../.."
 	popup_layer.add_child(heal_label)
 
+func highlight(enable: bool):
+	if enable:
+		$nameLabel.add_theme_color_override("font_color", Color(1, 1, 0)) # Yellow
+	else:
+		$nameLabel.add_theme_color_override("font_color", Color(1, 1, 1)) # White
+
 
 func _on_name_label_pressed() -> void:
 	emit_signal("icon_pressed", combatant, self)
