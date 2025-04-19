@@ -19,15 +19,26 @@ var explored_tiles = []  # Stores explored tiles for fog of war
 var enemies = []  # Store enemy instances
 var chests = [] # store chests instances
 
+var enemiesCounter = 3
+var chestCounter = 2
+
 func _ready():
 	generate_new_maze()
 	
 # this function is called by mazeExit everytime the player wants to decent
 func generate_new_maze():
+	if Database.depth % 3 == 0:
+		width += 1
+	if Database.depth % 6 == 0:
+		height += 1
+	if Database.depth % 10 == 0:
+		enemiesCounter += 1
+		chestCounter += 1
+	
 	generate_maze()
 	build_maze()
-	spawn_enemies(3)
-	spawn_chests(2)  # Spawn 2 chests as a test
+	spawn_enemies(enemiesCounter)
+	spawn_chests(chestCounter)  # Spawn 2 chests as a test
 	#print_maze()  # Debug output
 
 func generate_maze():

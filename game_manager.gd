@@ -5,6 +5,7 @@ var current_enemy: Node = null
 var giveXP = 100
 
 var enemiesRes: Array[CharacterStats] = []
+var enemyStrength = 5
 
 func make_combat(enemy: Node):
 	# When the player touches an enemy or enters a zone, transition to combat
@@ -33,12 +34,15 @@ func combat_ended():
 func spawn_random_enemies():
 	var randomi = randi_range(0,2)
 	
+	if Database.depth % 5 == 0:
+		enemyStrength += 1
+	
 	if randomi == 2:
-		enemiesRes.append(create_goblin(3))  # Add goblin to the array.
-		enemiesRes.append(create_goblin(3))  # Add another goblin to the array.
+		enemiesRes.append(create_goblin(enemyStrength - 2))  # Add goblin to the array.
+		enemiesRes.append(create_goblin(enemyStrength - 2))  # Add another goblin to the array.
 		giveXP = 50  # Set XP for this encounter.
 	else:
-		enemiesRes.append(create_goblin(5))
+		enemiesRes.append(create_goblin(enemyStrength))
 		giveXP = 25
 	
 	return enemiesRes
