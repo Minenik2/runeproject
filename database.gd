@@ -19,6 +19,21 @@ var enemiesRes: Array[CharacterStats] = [] # current enemy combat enemies
 var depth: int = 1
 var current_sp = 0
 
+# labyrinth
+var labWidth = 10
+var labHeight = 10
+var enemiesCounter = 3
+var chestCounter = 2
+
+# game manager
+var enemyStrength = 5
+var giveXP = 25 # amount xp a mob gives
+
+# Pity counters
+var rare_pity_counter = 1
+var legendary_pity_counter = 1
+
+
 var inventory: Array[Item] = [
 	BLOODLETTING_DRAUGHT, 
 	FLESHKNITTER, 
@@ -56,14 +71,20 @@ var pull_rates = {
 func roll_chest_loot():
 	var roll = randf_range(0, 100)
 	var rarity = ""
+	
+	rare_pity_counter += 1
+	legendary_pity_counter += 1
 
 	# Determine rarity by cumulative probability ranges
-	if roll < pull_rates["legendary"]:
+	if roll < pull_rates["legendary"] or legendary_pity_counter >= 60:
 		rarity = "legendary"
-	elif roll < pull_rates["legendary"] + pull_rates["rare"]:
+		legendary_pity_counter = 0
+	elif roll < pull_rates["legendary"] + pull_rates["rare"] or rare_pity_counter >= 10:
 		rarity = "rare"
+		rare_pity_counter = 0
 	else:
 		rarity = "common"
+		
 
 	# Shuffle and pick a drop from the chosen pool
 	loot_table[rarity].shuffle()
@@ -82,5 +103,26 @@ func roll_chest_loot():
 		"rarity": rarity
 	}
 		
-	
+func reset_game():
+	# Reset game variables
+	depth = 1
+	current_sp = 0
+	# labyrinth
+	labWidth = 10
+	labHeight = 10
+	enemiesCounter = 3
+	chestCounter = 2
+	# game msnager
+	enemyStrength = 5
+
+	# Reset inventory quantities
+	for item in inventory:
+		item.amount_held = 0
+
+	# Reset party members' stats (assuming CharacterStats has HP and status)
+	for member in memberRes:
+		member.reset_stats()
+
+	# Clear enemies
+	enemiesRes.clear()
 	

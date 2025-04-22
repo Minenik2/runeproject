@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://dher1vlweh5eo"]
+
+[ext_resource type="Texture2D" uid="uid://ddpjvc4xw8we3" path="res://assets/tileset/bricks.png" id="1_36hoy"]
+[ext_resource type="Texture2D" uid="uid://wp3apt40sdgj" path="res://assets/tileset/bricks_n.png" id="2_7ogip"]
+
+[resource]
+albedo_color = Color(0.743787, 0.76, 0.6384, 0.85098)
+albedo_texture = ExtResource("1_36hoy")
+normal_enabled = true
+normal_texture = ExtResource("2_7ogip")
+uv1_scale = Vector3(10, 10, 0)
+texture_filter = 0

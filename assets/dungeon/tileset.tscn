@@ -1,4 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3mxlemimtv0f"]
+[gd_scene load_steps=6 format=3 uid="uid://d3mxlemimtv0f"]
+
+[ext_resource type="Material" uid="uid://dher1vlweh5eo" path="res://assets/tileset/mat_bricks.tres" id="1_mg1h3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_d3e1p"]
 size = Vector3(2, 0.1, 2)
@@ -18,6 +20,7 @@ size = Vector3(2.00659, 2.06, 2.03084)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 mesh = SubResource("BoxMesh_d3e1p")
 skeleton = NodePath("floor")
+surface_material_override/0 = ExtResource("1_mg1h3")
 
 [node name="floor" type="StaticBody3D" parent="floor"]
 

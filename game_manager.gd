@@ -1,11 +1,15 @@
 extends Node
 
 const COMBAT_SCENE = preload("res://assets/combat/combatScene.tscn")
+@onready var maze_generator: Node = get_node("/root/Node3D/labyrinth_generator")
+@onready var depth_ui: Label = get_node("/root/Node3D/UI/depthUI")
+@onready var minimap: Control = get_node("/root/Node3D/UI/Minimap")
+@onready var player_ref = get_node("/root/Node3D/player")
 var current_enemy: Node = null
-var giveXP = 100
 
 var enemiesRes: Array[CharacterStats] = []
-var enemyStrength = 5
+var giveXP = Database.giveXP
+
 
 func make_combat(enemy: Node):
 	# When the player touches an enemy or enters a zone, transition to combat
@@ -33,17 +37,18 @@ func combat_ended():
 
 func spawn_random_enemies():
 	var randomi = randi_range(0,2)
+	var enemyStrength = Database.enemyStrength
 	
 	if Database.depth % 5 == 0:
-		enemyStrength += 1
+		Database.enemyStrength += 1
 	
 	if randomi == 2:
 		enemiesRes.append(create_goblin(enemyStrength - 2))  # Add goblin to the array.
 		enemiesRes.append(create_goblin(enemyStrength - 2))  # Add another goblin to the array.
-		giveXP = 50  # Set XP for this encounter.
+		giveXP = Database.giveXP * 2  # Set XP for this encounter.
 	else:
 		enemiesRes.append(create_goblin(enemyStrength))
-		giveXP = 25
+		giveXP = Database.giveXP
 	
 	return enemiesRes
 	
@@ -76,3 +81,13 @@ func play_sfx(stream: AudioStream):
 func play_victory():
 	sfx_player.volume_db = -20
 	play_sfx(victory)
+
+func generate_new_maze():
+	enemiesRes.clear()
+	depth_ui.text = "Depth: %s" % Database.depth
+	player_ref.is_moving = false
+	maze_generator.generate_new_maze()
+	minimap.reset_minimap()
+	
+	
+	

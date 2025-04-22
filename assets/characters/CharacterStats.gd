@@ -49,11 +49,32 @@ var combat_initiative : int
 var is_ally: bool
 var is_dead: bool = false
 
+# Baseline stats for resets
+var base_strength: int
+var base_intelligence: int
+var base_vitality: int
+var base_dexterity: int
+var base_faith: int
+var base_speed: int
+var base_abilities: Array[Ability]
+var base_experience_to_level: int
+
 # Initialize with default values
 func _init():
 	current_hp = max_hp
 	current_mp = max_mp
 	calculate_derived_stats()
+	
+func setup_base_stats():
+	# Save baseline values
+	base_strength = strength
+	base_intelligence = intelligence
+	base_vitality = vitality
+	base_dexterity = dexterity
+	base_faith = faith
+	base_speed = speed
+	base_abilities = abilities.duplicate()
+	base_experience_to_level = experience_to_level
 
 func calculate_derived_stats():
 	# HP/MP Formulas
@@ -197,3 +218,31 @@ func is_alive() -> bool:
 func calculate_initiative() -> int:
 	combat_initiative = speed + randi() % 6 # Add small random variance
 	return combat_initiative  
+
+func reset_stats():
+	# Reset level and experience
+	level = 1
+	experience = 0
+	experience_to_level = base_experience_to_level
+
+	# Reset core stats to base values
+	strength = base_strength
+	intelligence = base_intelligence
+	vitality = base_vitality
+	dexterity = base_dexterity
+	faith = base_faith
+	speed = base_speed
+
+	# Reset abilities if desired
+	abilities = base_abilities.duplicate()
+
+	# Recalculate derived stats
+	calculate_derived_stats()
+
+	# Restore HP/MP to proper level 1 maximums
+	current_hp = max_hp
+	current_mp = max_mp
+
+	is_dead = false
+
+	print(character_name, "'s stats have been reset.")

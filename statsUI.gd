@@ -146,10 +146,10 @@ func _clear_spell_buttons():
 func _on_spell_button_pressed(caster, spell):
 	var char_container = $"../spellPanel/HBoxContainer/hbox/CharactersContainer"
 	
-	for child in char_container.get_children():
-		if child is Button:
-			# Found the button — highlight it
-			child.modulate = Color(1, 1, 0)  # Yellow
+	if caster.is_dead:
+		$"../../invalid".play()
+		$"../spellPanel/info".text = "Caster is dead"
+		return
 	
 	if spell.target_type == 1:
 		if not _check_if_enough_resources(spell, caster):

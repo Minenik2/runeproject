@@ -61,7 +61,7 @@ tonemap_mode = 2
 fog_enabled = true
 fog_light_color = Color(0.932796, 0.851745, 0.749393, 1)
 fog_light_energy = 0.02
-fog_density = 0.1
+fog_density = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_37kl0"]
 radius = 0.1

@@ -1,6 +1,10 @@
-[gd_resource type="MeshLibrary" load_steps=9 format=3 uid="uid://5gkxpqldmndh"]
+[gd_resource type="MeshLibrary" load_steps=11 format=3 uid="uid://5gkxpqldmndh"]
+
+[ext_resource type="Material" uid="uid://dher1vlweh5eo" path="res://assets/tileset/mat_bricks.tres" id="1_dctvd"]
+[ext_resource type="Material" uid="uid://ifuogb7gpsyf" path="res://assets/tileset/mat_floor.tres" id="1_jrpul"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_loybx"]
+material = ExtResource("1_jrpul")
 size = Vector3(2, 0.1, 2)
 
 [sub_resource type="Image" id="Image_xx8ft"]
@@ -19,6 +23,7 @@ image = SubResource("Image_xx8ft")
 data = PackedVector3Array(-1, 0.05, 1, 1, 0.05, 1, -1, -0.05, 1, 1, 0.05, 1, 1, -0.05, 1, -1, -0.05, 1, 1, 0.05, -1, -1, 0.05, -1, 1, -0.05, -1, -1, 0.05, -1, -1, -0.05, -1, 1, -0.05, -1, 1, 0.05, 1, 1, 0.05, -1, 1, -0.05, 1, 1, 0.05, -1, 1, -0.05, -1, 1, -0.05, 1, -1, 0.05, -1, -1, 0.05, 1, -1, -0.05, -1, -1, 0.05, 1, -1, -0.05, 1, -1, -0.05, -1, 1, 0.05, 1, -1, 0.05, 1, 1, 0.05, -1, -1, 0.05, 1, -1, 0.05, -1, 1, 0.05, -1, -1, -0.05, 1, 1, -0.05, 1, -1, -0.05, -1, 1, -0.05, 1, 1, -0.05, -1, -1, -0.05, -1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_fcvr3"]
+material = ExtResource("1_dctvd")
 size = Vector3(2, 2, 2)
 
 [sub_resource type="Image" id="Image_dctvd"]

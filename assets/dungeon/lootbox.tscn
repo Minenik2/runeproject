@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cr7bb2ijry5v"]
 
 [ext_resource type="Script" uid="uid://c0xb57uk3tfjy" path="res://assets/dungeon/lootbox.gd" id="1_lcadn"]
-[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="2_ct06u"]
+[ext_resource type="Texture2D" uid="uid://b8qdaxplh56al" path="res://assets/art/chest.png" id="2_lcadn"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_h27pv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tmc66"]
@@ -10,7 +10,9 @@
 script = ExtResource("1_lcadn")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-texture = ExtResource("2_ct06u")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+modulate = Color(1, 1, 1, 0.784314)
+texture = ExtResource("2_lcadn")
 script = ExtResource("3_h27pv")
 
 [node name="Area3D" type="Area3D" parent="."]

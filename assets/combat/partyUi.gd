@@ -1,7 +1,11 @@
 extends GridContainer 
 
 signal party_member_pressed(member)
+signal party_member_item_heal_completed(target, item)
 var party_members = []
+var targetSelectable = false
+
+var selectedItem
 
 # Initialize party UI with party members
 func initialize(party_members_array: Array):
@@ -130,6 +134,78 @@ func show_spell_cast(caster, target, spell):
 				spell_tween.tween_callback(Callable(spell_label, "queue_free"))
 
 func _on_party_icon_pressed(member, sender):
-	print("You clicked on: ", member.character_name)
+	print("You clicked on: ", member.character_name, sender)
 	emit_signal("party_member_pressed", member)
 	# Here you could also check if targeting_mode is active, for healing, buffs, etc.
+	if targetSelectable and selectedItem:
+		var item = selectedItem
+	
+		# Check if this item restores HP or MP, and if the target is already at max for both
+		var restores_hp = item.hp_restore > 0
+		var restores_mp = item.mp_restore > 0
+		var hp_full = member.current_hp == member.max_hp
+		var mp_full = member.current_mp == member.max_mp
+		
+		# Block if trying to heal a dead person
+		if member.is_dead and (restores_hp or restores_mp or item.increase_level):
+			$"../../../../../../CombatManager/invalid".play()
+			$"../PanelContainer/HBoxContainer/description".text = "Cannot use on the dead"
+			return
+				
+		# If the item restores either HP or MP, and both are already full, block it
+		if (restores_hp or restores_mp) and ((restores_hp and hp_full) and (restores_mp and mp_full)):
+			$"../../../../../../CombatManager/invalid".play()
+			$"../PanelContainer/HBoxContainer/description".text = "Target has max HP and MP"
+			return
+		elif restores_hp and hp_full and not restores_mp:
+			$"../../../../../../CombatManager/invalid".play()
+			$"../PanelContainer/HBoxContainer/description".text = "Target has max HP"
+			return
+		elif restores_mp and mp_full and not restores_hp:
+			$"../../../../../../CombatManager/invalid".play()
+			$"../PanelContainer/HBoxContainer/description".text = "Target has max MP"
+			return
+		
+		# Apply item effects
+		if restores_hp:
+			sender.show_heal(item.hp_restore)
+		if restores_mp:
+			sender.show_heal(item.mp_restore) # TODO: color this blue
+		if item.increase_level:
+			sender.show_heal(1) # TODO: color this purple
+		
+		$"../../../../../../CombatManager/heal".play()
+		# send to combat manager for updating turn order
+		emit_signal("party_member_item_heal_completed", member, selectedItem)
+		
+		selectedItem.use(member)
+		if selectedItem.amount_held < 1:
+			selectedItem = null
+			targetSelectable = false
+			clear_highlights()
+	
+		update_status()
+		$"../itemMenu/inventoryUI".update_inventory()
+		
+
+func highlight_all():
+	for icon in get_children():
+		icon.highlight(true)
+
+func clear_highlights():
+	for icon in get_children():
+		icon.highlight(false)
+
+
+func _on_inventory_ui_item_pressed(item: Variant) -> void:
+	if item.item_type == 0:
+		Music.play_ui_hit_combat()
+		highlight_all()
+		targetSelectable = true
+		selectedItem = item
+
+
+func _on_back_button_pressed() -> void:
+	selectedItem = null
+	targetSelectable = false
+	clear_highlights()

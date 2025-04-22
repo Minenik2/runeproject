@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://ifuogb7gpsyf"]
+
+[ext_resource type="Texture2D" uid="uid://ctidgry2hpqa6" path="res://assets/tileset/floor.png" id="1_enptc"]
+[ext_resource type="Texture2D" uid="uid://pid3k5hyqlh0" path="res://assets/tileset/floor_n.png" id="2_3j8fu"]
+
+[resource]
+albedo_color = Color(0.7644, 0.751146, 0.610012, 0.803922)
+albedo_texture = ExtResource("1_enptc")
+normal_enabled = true
+normal_texture = ExtResource("2_3j8fu")
+uv1_scale = Vector3(10, 10, 0)
+texture_filter = 0

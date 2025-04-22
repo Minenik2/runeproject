@@ -6,6 +6,7 @@ var party_members = []
 func _ready() -> void:
 	for c in Database.memberRes:
 		c.calculate_derived_stats()
+		c.setup_base_stats()
 	
 	initialize(Database.memberRes)
 

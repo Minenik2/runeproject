@@ -83,6 +83,10 @@ func calculate_turn_order():
 	if not turnOrder[0].is_ally:
 		_enemy_take_turn()
 	else:
+		while turnOrder[0].is_dead:
+			# Move dead ally to end of turnOrder
+			turnOrder.push_back(turnOrder.pop_front())
+		
 		current_player_info.set_member(turnOrder[0])
 
 #
@@ -98,6 +102,9 @@ func _on_attack_button_pressed() -> void:
 
 func _on_item_button_pressed() -> void:
 	Music.play_ui_hit_combat()
+	targeting_mode = false
+	ally_targeting_mode = false
+	_highlight_enemies(false)
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".show()
 
@@ -105,6 +112,10 @@ func _on_special_button_2_pressed() -> void:
 	Music.play_ui_hit_combat()
 	var current_member = turnOrder[0]
 	var abilities = current_member.abilities
+	
+	targeting_mode = false
+	ally_targeting_mode = false
+	_highlight_enemies(false)
 	
 	# Clear any previous buttons in the special menu (if any)
 	var container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu"
@@ -261,7 +272,28 @@ func _check_combat_end():
 		print("Combat is over! You win!")
 		message_panel.add_message("[color=green]Victory! All enemies defeated![/color]")
 		#await get_tree().create_timer(1.5).timeout  # Let the message sit for a bit
+		GameManager.combat_ended()
 		_end_combat()  # This will remove this combat scene from the tree
+	
+	if aliveMembers.is_empty():
+		message_panel.add_message("[color=crimson]The party has fallen...[/color]")
+		
+		var fade_overlay = $"../CanvasLayer/UI/defeatFade"
+		# Show and fade in the overlay
+		fade_overlay.visible = true
+		fade_overlay.modulate.a = 0.0  # Start transparent
+
+		var tween = create_tween()
+		tween.tween_property(fade_overlay, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
+		Database.reset_game()
+		GameManager.combat_ended()
+
+		# After fade, restart the scene
+		tween.tween_callback(func():
+			GameManager.generate_new_maze()
+			_end_combat()
+		)
 
 #
 # ENEMY AI
@@ -330,26 +362,12 @@ func _enemy_take_turn():
 	_announce_next_turn()
 
 func _announce_next_turn():
+	# if the party is dead return the _check_combat_end function will end the combat
 	if aliveMembers.is_empty():
-		message_panel.add_message("[color=crimson]The party has fallen...[/color]")
-		
-		var fade_overlay = $"../CanvasLayer/UI/defeatFade"
-		# Show and fade in the overlay
-		fade_overlay.visible = true
-		fade_overlay.modulate.a = 0.0  # Start transparent
-
-		var tween = create_tween()
-		tween.tween_property(fade_overlay, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-
-		# After fade, restart the scene
-		tween.tween_callback(func():
-			var current_scene = get_tree().current_scene
-			current_scene.reload_current_scene()
-		)
 		return
 	
-	if turnOrder[0].is_dead:
-		# Move enemy to end of turnOrder
+	while turnOrder[0].is_dead:
+		# Move dead ally to end of turnOrder
 		turnOrder.push_back(turnOrder.pop_front())
 	
 	turn += 1
@@ -544,11 +562,43 @@ func _on_party_ui_party_member_pressed(member: Variant) -> void:
 		# Check for end of combat (optional, in case you have win/lose conditions)
 		_check_combat_end()
 		
+		
 func _end_combat():
-	GameManager.combat_ended()
 	print("Combat ended — returning to overworld.")
 	$"..".queue_free()  # This will remove this combat scene from the tree
 
 
 func _on_inventory_ui_item_hovered(item: Variant) -> void:
 	description.text = item.effectText()
+
+
+func _on_party_ui_party_member_item_heal_completed(target, item) -> void:
+	
+	var message = "Turn %s: [color=green]%s[/color] uses [color=yellow]%s[/color] on [color=green]%s[/color]" % [
+		turn, turnOrder[0].character_name, item.item_name, target.character_name
+	]
+	
+	# Message on screen
+	if item.hp_restore > 0:
+		message += ", restoring [color=lime]%d[/color] HP" % item.hp_restore
+	if item.mp_restore > 0:
+		message += ", restoring [color=blue]%d[/color] MP" % item.mp_restore
+	
+	message_panel.add_message(message)
+	
+	# reset the targeting of allies
+	party_ui.targetSelectable = false
+	party_ui.clear_highlights()
+	
+	# Hide menus
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
+	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+	
+	# Move caster to end of turn order
+	turnOrder.push_back(turnOrder.pop_front())
+
+	# Announce next turn
+	_announce_next_turn()
+
+	# Check for end of combat (optional, in case you have win/lose conditions)
+	_check_combat_end()

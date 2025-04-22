@@ -1,8 +1,8 @@
 extends Node
 
 @export var player: CharacterBody3D
-@export var width: int = 10  # Maze width
-@export var height: int = 10  # Maze height
+@export var width: int = Database.labWidth  # Maze width
+@export var height: int = Database.labHeight  # Maze height
 @export var grid_size: float = 2.0  # World space size per tile
 @export var maze_reset_scene: PackedScene  # Assign your .tscn file here
 @export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
@@ -19,8 +19,8 @@ var explored_tiles = []  # Stores explored tiles for fog of war
 var enemies = []  # Store enemy instances
 var chests = [] # store chests instances
 
-var enemiesCounter = 3
-var chestCounter = 2
+var enemiesCounter = Database.enemiesCounter
+var chestCounter = Database.chestCounter
 
 func _ready():
 	generate_new_maze()
@@ -28,12 +28,17 @@ func _ready():
 # this function is called by mazeExit everytime the player wants to decent
 func generate_new_maze():
 	if Database.depth % 3 == 0:
-		width += 1
+		Database.labWidth += 1
 	if Database.depth % 6 == 0:
-		height += 1
+		Database.labHeight += 1
 	if Database.depth % 10 == 0:
-		enemiesCounter += 1
-		chestCounter += 1
+		Database.enemiesCounter += 1
+		Database.chestCounter += 1
+	
+	width = Database.labWidth
+	height = Database.labHeight
+	enemiesCounter = Database.enemiesCounter
+	chestCounter = Database.chestCounter
 	
 	generate_maze()
 	build_maze()

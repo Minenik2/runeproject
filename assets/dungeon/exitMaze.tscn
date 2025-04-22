@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bi2sk57rml81p"]
 
-[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="1_ssom6"]
+[ext_resource type="Texture2D" uid="uid://bwprgu6ceyrip" path="res://assets/art/exit.png" id="2_db2qc"]
 [ext_resource type="Script" uid="uid://botma03tjgoqt" path="res://assets/dungeon/exitMaze.gd" id="3_1dbcc"]
 [ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_gsvhn"]
 
@@ -10,7 +10,8 @@
 script = ExtResource("3_1dbcc")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-texture = ExtResource("1_ssom6")
+modulate = Color(0.2304, 0.72, 0.6384, 0.784314)
+texture = ExtResource("2_db2qc")
 script = ExtResource("3_gsvhn")
 
 [node name="Area3D" type="Area3D" parent="."]
