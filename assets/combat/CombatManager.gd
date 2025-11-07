@@ -13,6 +13,9 @@ extends Node
 @onready var ui: Control = $"../CanvasLayer/UI"
 @onready var description: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/description"
 
+@onready var target_component: Node = $targetComponent
+
+
 # Combat Variables
 var memberRes: Array[CharacterStats] = Database.memberRes
 @export var enemiesRes: Array[CharacterStats] = []
@@ -52,10 +55,12 @@ func start_combat():
 		child.queue_free()
 
 	for enemy_data in enemiesRes:
-		var enemy_sprite = TextureRect.new()
+		var enemy_sprite = load("res://assets/combat/enemies/enemyIcon.tscn").instantiate()
 		enemy_sprite.texture = enemy_data.battle_sprite
 		enemy_sprite.set_meta("enemy_data", enemy_data)
 		enemy_sprite.connect("gui_input", Callable(self, "_on_enemy_clicked").bind(enemy_sprite))
+		enemy_sprite.connect("gui_input", Callable(target_component, "_on_enemy_clicked").bind(enemy_sprite))
+		target_component.connect("newtarget", Callable(enemy_sprite, "hideTarget"))
 		enemy_container.add_child(enemy_sprite)
 
 func calculate_turn_order():

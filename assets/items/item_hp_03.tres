@@ -1,15 +1,11 @@
 [gd_resource type="Resource" script_class="Item" load_steps=2 format=3 uid="uid://cx4j1mj5jcf8h"]
 
-[ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/items.gd" id="1_o3isc"]
+[ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/items.gd" id="1_o7hyg"]
 
 [resource]
-script = ExtResource("1_o3isc")
+script = ExtResource("1_o7hyg")
 item_name = "Medicinal Herb"
 description = "A brittle, ash-gray herb said to grow only where the dead refuse to rest. Its bitter leaves dull pain and close wounds, though some claim to hear distant whispers after consuming it."
-item_type = 0
 value = 5
-amount_held = 0
 hp_restore = 3
-mp_restore = 0
-increase_level = false
 metadata/_custom_type_script = "uid://bunhfmmp28vn0"

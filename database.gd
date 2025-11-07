@@ -6,12 +6,12 @@ const FELIPE = preload("res://assets/characters/heroes/felipe.tres")
 const LIRAE = preload("res://assets/characters/heroes/lirae.tres")
 
 # healing items
-const BLOODLETTING_DRAUGHT = preload("res://assets/items/bloodletting_draught.tres")
-const FLESHKNITTER = preload("res://assets/items/fleshknitter.tres")
-const MEDICINAL_HERB = preload("res://assets/items/medicinal_herb.tres")
+const BLOODLETTING_DRAUGHT = preload("res://assets/items/item_hp_01.tres")
+const FLESHKNITTER = preload("res://assets/items/item_hp_02.tres")
+const MEDICINAL_HERB = preload("res://assets/items/item_hp_03.tres")
 
 # level icrease unique
-const SOUL_HUSK = preload("res://assets/items/soul_husk.tres")
+const SOUL_HUSK = preload("res://assets/items/item_xp_01.tres")
 
 var memberRes: Array[CharacterStats] = [BUN, MIO, FELIPE, LIRAE] # current party member in players party
 
@@ -63,8 +63,8 @@ var loot_table = {
 }
 
 var pull_rates = {
-	"legendary": 0.6,    # 0.6%
-	"rare": 5.1,   # 5.1%
+	"legendary": 10,    # 0.6%
+	"rare": 30,   # 5.1%
 	"common": 94.3    # 94.3%
 }
 

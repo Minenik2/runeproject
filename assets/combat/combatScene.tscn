@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://4u35d5dndusb"]
+[gd_scene load_steps=21 format=3 uid="uid://4u35d5dndusb"]
 
 [ext_resource type="AudioStream" uid="uid://qpvvq3rtio1i" path="res://assets/audio/hit.ogg" id="2_6foyy"]
 [ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/partyUi.gd" id="2_grv6n"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cf6fy5syqiiij" path="res://assets/art/background.jpg" id="3_gy4r3"]
 [ext_resource type="Resource" uid="uid://bxh50s4ref45l" path="res://assets/characters/enemies/goblin.tres" id="3_hppiq"]
 [ext_resource type="Script" uid="uid://dasqvyhpjqf0m" path="res://assets/combat/current_player_info.gd" id="4_de3ys"]
+[ext_resource type="Script" uid="uid://lu3hbxw06v1f" path="res://assets/combat/target_component.gd" id="4_sbkx3"]
 [ext_resource type="Script" uid="uid://rk4wd8tk1s3a" path="res://assets/combat/CombatManager.gd" id="4_ys864"]
 [ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="6_sbkx3"]
 [ext_resource type="Script" uid="uid://xj8s5k1fynpc" path="res://assets/combat/message_panel.gd" id="6_va6jy"]
@@ -37,6 +38,9 @@ process_mode = 3
 [node name="CombatManager" type="Node" parent="."]
 script = ExtResource("4_ys864")
 enemiesRes = Array[ExtResource("6_sbkx3")]([ExtResource("3_hppiq"), ExtResource("3_hppiq")])
+
+[node name="targetComponent" type="Node" parent="CombatManager"]
+script = ExtResource("4_sbkx3")
 
 [node name="hit" type="AudioStreamPlayer2D" parent="CombatManager"]
 stream = ExtResource("2_6foyy")
