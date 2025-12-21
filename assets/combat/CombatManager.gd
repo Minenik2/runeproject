@@ -15,6 +15,8 @@ extends Node
 
 @onready var target_component: Node = $targetComponent
 
+# ui
+var enemy_container_ui: Array[TextureRect]
 
 # Combat Variables
 var memberRes: Array[CharacterStats] = Database.memberRes
@@ -54,14 +56,21 @@ func start_combat():
 	for child in enemy_container.get_children():
 		child.queue_free()
 
+	var firstTarget = true
+
 	for enemy_data in enemiesRes:
 		var enemy_sprite = load("res://assets/combat/enemies/enemyIcon.tscn").instantiate()
 		enemy_sprite.texture = enemy_data.battle_sprite
 		enemy_sprite.set_meta("enemy_data", enemy_data)
-		enemy_sprite.connect("gui_input", Callable(self, "_on_enemy_clicked").bind(enemy_sprite))
+		enemy_container_ui.append(enemy_sprite)
 		enemy_sprite.connect("gui_input", Callable(target_component, "_on_enemy_clicked").bind(enemy_sprite))
 		target_component.connect("newtarget", Callable(enemy_sprite, "hideTarget"))
 		enemy_container.add_child(enemy_sprite)
+	
+		if firstTarget:
+			target_component.currentTarget = enemy_sprite
+			enemy_sprite.showTarget()
+			firstTarget = false
 
 func calculate_turn_order():
 	# Combine all combatants
@@ -99,11 +108,19 @@ func calculate_turn_order():
 #
 
 func _on_attack_button_pressed() -> void:
-	Music.play_ui_hit_combat()
-	print("Attack pressed — choose a target")
-	message_panel.add_message("Attack pressed — choose a target")
-	targeting_mode = true
-	_highlight_enemies(true)
+	#Music.play_ui_hit_combat()
+	$playerAttackComponent.attack($targetComponent.currentTarget,current_ability,turnOrder,turn,message_panel,enemiesRes,enemy_container_ui)
+	# update ui important for specail abilities
+	party_ui.update_status()
+	
+	# Move attacker to end of turnOrder
+	turnOrder.push_back(turnOrder.pop_front())
+	
+	# Announce next turn and trigger enemy AI if needed
+	_announce_next_turn()
+	
+	# check for combat end
+	_check_combat_end()
 
 func _on_item_button_pressed() -> void:
 	Music.play_ui_hit_combat()
@@ -166,103 +183,6 @@ func _on_special_button_2_pressed() -> void:
 	
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".show()
-	
-#
-# ATTACKING ENEMIES
-#
-
-func _on_enemy_clicked(event: InputEvent, enemy_sprite: TextureRect):
-	if targeting_mode and event is InputEventMouseButton and event.pressed:
-		var enemy_data = enemy_sprite.get_meta("enemy_data")
-		
-		# Damage calculation
-		var attacker = turnOrder[0]
-		var damage = attacker.attack_power
-		var defense = enemy_data.defense
-		print(attacker.character_name, attacker.critical_chance)
-		var is_crit = randf() < attacker.critical_chance
-		
-		# damage defense calculation
-		damage = max(damage * 0.1,damage - defense)
-		
-		# ability damage implementation
-		if current_ability:
-			# If it's a damage type ability, apply ability power
-			if current_ability.type == 0:  # if the type is damage
-				damage = current_ability.calculate_scaled_power(attacker) + attacker.magic_power
-			attacker.current_mp -= current_ability.mp_cost
-			
-			# hide special menu
-			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
-		else:
-			# Regular attack
-			damage = attacker.attack_power
-		print("attack damage: ", damage, attacker.character_name)
-		
-		# add variation to damage
-		var variation = randf_range(0.8, 1.2)
-		damage = damage * variation
-		damage = int(damage)  # Optional, if you want whole numbers
-
-		if is_crit:
-			$crit.play()
-			damage *= attacker.critical_multiplier
-		else:
-			$hit.play()
-		
-		var message = ""
-		
-		if current_ability:
-			message = "Turn %s: [color=green]%s[/color] casts [color=yellow]%s[/color] on [color=crimson]%s[/color] for [color=red]%d[/color] damage!" % [
-					turn, attacker.character_name, current_ability.name,
-					enemy_data.character_name, damage
-				]
-			current_ability = null
-		else:
-			message = "Turn %s: [color=green]%s[/color] attacks [color=crimson]%s[/color] for [color=red]%d[/color] damage!" % [
-					turn, attacker.character_name,
-					enemy_data.character_name, damage
-				]
-		
-		if is_crit:
-			message += " [color=yellow](CRITICAL!)[/color]"
-		
-		message_panel.add_message(message)
-		
-		# Apply damage
-		enemy_data.current_hp -= damage
-		print("%s's HP: %d/%d" % [enemy_data.character_name, enemy_data.current_hp, enemy_data.max_hp])
-
-		# Flash sprite and show damage
-		_flash_sprite(enemy_sprite)
-		if is_crit:
-			_show_crit_damage_number(damage, enemy_sprite.global_position, ui)
-		else:
-			_show_damage_number(damage, enemy_sprite.global_position, ui)
-
-		if enemy_data.current_hp <= 0:
-			print(enemy_data.character_name, " is defeated!")
-			message_panel.add_message("[color=crimson]%s[/color] is defeated!" % [enemy_data.character_name])
-			enemy_sprite.queue_free()
-			enemiesRes.erase(enemy_data)
-			turnOrder.erase(enemy_data)
-		
-		# update ui important for specail abilities
-		party_ui.update_status()
-		
-		# Move attacker to end of turnOrder
-		turnOrder.push_back(turnOrder.pop_front())
-		
-		# Announce next turn and trigger enemy AI if needed
-		_announce_next_turn()
-
-		targeting_mode = false
-		_highlight_enemies(false)
-		
-		# check for combat end
-		_check_combat_end()
-	
 	
 func _highlight_enemies(active: bool):
 	for enemy in enemy_container.get_children():
@@ -390,49 +310,10 @@ func _announce_next_turn():
 	if not turnOrder[0].is_ally:
 		_enemy_take_turn()
 
-func _flash_sprite(sprite: TextureRect):
-	var tween = create_tween()
-	
-	# Turn invisible
-	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.05)
-	# Back to visible
-	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.05)
-	# Invisible again
-	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 0), 0.05)
-	# Final return to normal
-	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.1)
-	
-	tween.tween_callback(Callable(sprite, "_reset_modulate")) # Reset at end
-
 # Helper function on the enemy sprite to reset modulate
 func _reset_modulate():
 	return Color(1, 1, 1)
 	
-func _show_damage_number(amount: int, position: Vector2, parent: Control):
-	var label = Label.new()
-	label.text = str(amount)
-	label.modulate = Color(1, 0.2, 0.2)
-	label.add_theme_font_size_override("font_size", 24)
-	label.position = position
-	parent.add_child(label)
-	
-	var tween = create_tween()
-	tween.tween_property(label, "position:y", position.y - 30, 0.6)
-	tween.tween_property(label, "modulate:a", 0, 0.6)
-	tween.connect("finished", Callable(label, "queue_free"))
-
-func _show_crit_damage_number(amount: int, position: Vector2, parent: Control):
-	var label = Label.new()
-	label.text = str(amount) + "!"
-	label.modulate = Color(1, 1, 0)  # Yellow for crit
-	label.add_theme_font_size_override("font_size", 28)
-	label.position = position
-	parent.add_child(label)
-	
-	var tween = create_tween()
-	tween.tween_property(label, "position:y", position.y - 40, 0.6)
-	tween.tween_property(label, "modulate:a", 0, 0.6)
-	tween.connect("finished", Callable(label, "queue_free"))
 
 # Function to shake the screen (parent or CanvasLayer)
 func shake_screen(intensity: float, duration: float):
