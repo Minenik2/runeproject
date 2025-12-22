@@ -1,6 +1,6 @@
 extends GridContainer 
 
-signal party_member_pressed(member)
+signal party_member_pressed(member, icon: turnIcon)
 signal party_member_item_heal_completed(target, item)
 var party_members = []
 var targetSelectable = false
@@ -133,9 +133,14 @@ func show_spell_cast(caster, target, spell):
 				spell_tween.tween_property(spell_label, "modulate:a", 0, 0.7)
 				spell_tween.tween_callback(Callable(spell_label, "queue_free"))
 
+func getIconByMember(member: CharacterStats):
+	for i in range(party_members.size()):
+		if party_members[i] == member:
+			return get_child(i)
+
 func _on_party_icon_pressed(member, sender):
 	print("You clicked on: ", member.character_name, sender)
-	emit_signal("party_member_pressed", member)
+	emit_signal("party_member_pressed", member, getIconByMember(member))
 	# Here you could also check if targeting_mode is active, for healing, buffs, etc.
 	if targetSelectable and selectedItem:
 		var item = selectedItem
@@ -150,7 +155,6 @@ func _on_party_icon_pressed(member, sender):
 		# send to combat manager for updating turn order
 		emit_signal("party_member_item_heal_completed", member, selectedItem)
 		
-		selectedItem.use(member)
 		if selectedItem.amount_held < 1:
 			selectedItem = null
 			targetSelectable = false
@@ -168,6 +172,9 @@ func clear_highlights():
 	for icon in get_children():
 		icon.highlight(false)
 
+func updateAllBuff():
+	for icon in get_children():
+		icon.updateBuffList()
 
 func _on_inventory_ui_item_pressed(item: Variant) -> void:
 	if item.item_type == 0:

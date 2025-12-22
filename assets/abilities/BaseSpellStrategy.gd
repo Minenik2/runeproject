@@ -1,9 +1,10 @@
 extends Resource
-class_name Ability
+class_name BaseSpellStrategy
 
 enum TARGETING_TYPE {
 	ENEMY,
 	ALLY,
+	SELFCAST
 }
 
 enum TYPE {
@@ -56,3 +57,20 @@ func calculate_scaled_power(character) -> float:
 	
 	var scaled_power = power + (scaling_value * 0.006)
 	return scaled_power
+
+# checks if the ability is possible to be casts
+func checkCost(caster: CharacterStats) -> Array:
+	if mp_cost > caster.current_mp:
+		return [false, "Cannot use ability: %s - not enought mp" % name]
+	if sp_cost > Database.current_sp:
+		return [false, "Cannot use ability: %s - not enought sp" % name]
+	if hp_cost > caster.current_hp:
+		return [false, "Cannot use spell: %s - not enought hp" % name]
+	return [true]
+
+func cast(caster: CharacterStats, reciever: CharacterStats, characterIcon: turnIcon, enemy_sprite: enemyIcon) -> Array:
+	return [false, "This spell does nothing"]
+
+func combatText():
+	return "doing nothing"
+	

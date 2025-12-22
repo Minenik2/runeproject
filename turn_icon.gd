@@ -1,9 +1,10 @@
 class_name turnIcon
 extends VBoxContainer
 const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
+const BUFF_ICON = preload("res://assets/abilities/buffs/buffIcon.tscn")
 
 signal icon_pressed(combatant, sender)
-var combatant = null  # Store the combatant in the TurnIcon
+var combatant: CharacterStats = null  # Store the combatant in the TurnIcon
 
 # Set the combatant (called from the Party component)
 func set_combatant(combatant):
@@ -12,6 +13,7 @@ func set_combatant(combatant):
 	update_mp(combatant.current_mp, combatant.max_mp)
 	update_lvl(combatant.level)
 	self.combatant = combatant  # Store the combatant for later access
+	updateBuffList()
 
 # Update the health label
 func update_health(current, max):
@@ -55,3 +57,12 @@ func highlight(enable: bool):
 
 func _on_name_label_pressed() -> void:
 	emit_signal("icon_pressed", combatant, self)
+
+func updateBuffList():
+	var children = $buffList.get_children()
+	for c in children:
+		c.queue_free()
+	for buff in combatant.stat_buffs:
+		var buffTexture = BUFF_ICON.instantiate()
+		buffTexture.tooltip_strings.append(buff.tooltip())
+		$buffList.add_child(buffTexture)

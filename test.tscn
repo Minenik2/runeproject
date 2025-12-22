@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=34 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -11,7 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="4_00tp4"]
 [ext_resource type="PackedScene" uid="uid://cr7bb2ijry5v" path="res://assets/dungeon/lootbox.tscn" id="4_pdf00"]
 [ext_resource type="AudioStream" uid="uid://clxpy25src11l" path="res://assets/audio/unlock.ogg" id="4_uty7l"]
+[ext_resource type="Script" uid="uid://dc4x0f3dg8sll" path="res://assets/dungeon/genAlgos/carve_path.gd" id="5_dwqlq"]
+[ext_resource type="Script" uid="uid://dii80c25kcpju" path="res://labyrinth_builder.gd" id="5_eski5"]
 [ext_resource type="PackedScene" uid="uid://i5bss45dqgbu" path="res://assets/dungeon/door.tscn" id="5_ykrsh"]
+[ext_resource type="Script" uid="uid://cf1y7g0lt0hju" path="res://assets/dungeon/genAlgos/prims_algo.gd" id="6_15c7i"]
+[ext_resource type="Script" uid="uid://bypx0eer85jv6" path="res://assets/dungeon/genAlgos/room_based_algo.gd" id="7_xpeyw"]
 [ext_resource type="AudioStream" uid="uid://bljuo67nyr5q2" path="res://assets/audio/step.ogg" id="8_5tkv4"]
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="8_mhym6"]
 [ext_resource type="Script" uid="uid://ecs37pgyltxp" path="res://statsUI.gd" id="9_a3se8"]
@@ -69,13 +73,29 @@ height = 0.5
 
 [node name="Node3D" type="Node3D"]
 
-[node name="labyrinth_generator" type="Node" parent="." node_paths=PackedStringArray("player", "gridmap")]
+[node name="labyrinth_generator" type="Node" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("1_ehkex")
 player = NodePath("../player")
 maze_reset_scene = ExtResource("2_xersf")
 enemy_scene = ExtResource("3_77dp3")
-gridmap = NodePath("../GridMap")
 chest_scene = ExtResource("4_pdf00")
+
+[node name="generators" type="Node" parent="labyrinth_generator"]
+
+[node name="carve_path" type="Node" parent="labyrinth_generator/generators"]
+script = ExtResource("5_dwqlq")
+
+[node name="prims_algo" type="Node" parent="labyrinth_generator/generators"]
+script = ExtResource("6_15c7i")
+
+[node name="room_based_algo" type="Node" parent="labyrinth_generator/generators"]
+script = ExtResource("7_xpeyw")
+
+[node name="labyrinth_builder" type="Node" parent="labyrinth_generator" node_paths=PackedStringArray("gridmap")]
+script = ExtResource("5_eski5")
+gridmap = NodePath("../../GridMap")
+
+[node name="labyrinth_decorator" type="Node" parent="labyrinth_generator"]
 
 [node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator"]
 stream = ExtResource("4_uty7l")

@@ -1,16 +1,11 @@
-[gd_resource type="Resource" script_class="Ability" load_steps=2 format=3 uid="uid://b6mf70la20wqx"]
+[gd_resource type="Resource" script_class="DamageSpellStrategy" load_steps=2 format=3 uid="uid://b6mf70la20wqx"]
 
-[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_4o32s"]
+[ext_resource type="Script" uid="uid://cj10yyxrnyo7o" path="res://assets/abilities/DamageSpellStrategy.gd" id="1_4o32s"]
 
 [resource]
 script = ExtResource("1_4o32s")
 name = "Fireball"
 description = "A ball of flame that scorches an enemy."
-type = 0
-target_type = 0
 power = 30
-crit_chance = 0.0
 mp_cost = 8
-sp_cost = 0
-hp_cost = 0
 scaling_stat = 2

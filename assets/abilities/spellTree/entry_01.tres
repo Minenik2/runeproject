@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SpellUnlockEntry" load_steps=3 format=3 uid="uid://nj22cyvugl1v"]
+
+[ext_resource type="Resource" uid="uid://derr1767eka5t" path="res://assets/abilities/Strike.tres" id="1_gm3nx"]
+[ext_resource type="Script" uid="uid://m3bmuxser6y6" path="res://assets/abilities/spellTree/spellUnlockEntry.gd" id="1_mni1l"]
+
+[resource]
+script = ExtResource("1_mni1l")
+ability = ExtResource("1_gm3nx")
+metadata/_custom_type_script = "uid://m3bmuxser6y6"

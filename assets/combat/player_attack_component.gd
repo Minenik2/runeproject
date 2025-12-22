@@ -1,13 +1,12 @@
 extends Node
 
-func attack(enemy_sprite: enemyIcon, current_ability: Ability, turnOrder: Array[CharacterStats], turn, message_panel, enemiesRes,enemy_container_ui: Array[enemyIcon]):
+func attack(enemy_sprite: enemyIcon, current_ability: BaseSpellStrategy, turnOrder: Array[CharacterStats], turn, message_panel, enemiesRes,enemy_container_ui: Array[enemyIcon]):
 	var enemy_data = enemy_sprite.get_meta("enemy_data")
 		
 	# Damage calculation
 	var attacker = turnOrder[0]
 	var damage = attacker.attack_power
 	var defense = enemy_data.defense
-	print(attacker.character_name, attacker.critical_chance)
 	var is_crit = randf() < attacker.critical_chance
 	
 	# damage defense calculation
@@ -15,10 +14,12 @@ func attack(enemy_sprite: enemyIcon, current_ability: Ability, turnOrder: Array[
 	
 	# ability damage implementation
 	if current_ability:
-		# If it's a damage type ability, apply ability power
-		if current_ability.type == 0:  # if the type is damage
-			damage = ceil(current_ability.calculate_scaled_power(attacker) + attacker.magic_power)
-		attacker.current_mp -= current_ability.mp_cost
+		var castSpell = current_ability.cast(attacker, enemy_data, null, enemy_sprite)
+		if !castSpell[0]:
+			$"../invalid".play()
+			message_panel.add_message(castSpell[1])
+			return
+		damage = castSpell[2]
 	else:
 		# Regular attack
 		damage = attacker.attack_power

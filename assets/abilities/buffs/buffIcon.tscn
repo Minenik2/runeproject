@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://boqs0m4o7nmyp"]
+
+[ext_resource type="Texture2D" uid="uid://j77ajpex2u83" path="res://assets/art/player_navigator.png" id="1_yqngk"]
+[ext_resource type="Script" uid="uid://coqwnstoj346c" path="res://addons/tooltips_pro/scripts/tooltip_trigger.gd" id="2_qy3c3"]
+
+[node name="BuffIcon" type="TextureRect"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_yqngk")
+script = ExtResource("2_qy3c3")
+tooltip_template_path = "res://addons/tooltips_pro/examples/tooltip_templates/!tooltip_template_default.tscn"

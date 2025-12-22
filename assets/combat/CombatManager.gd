@@ -239,8 +239,6 @@ func _check_combat_end():
 
 func _enemy_take_turn():
 	var enemy = turnOrder[0]
-	
-	
 
 	# Pick a random party member
 	var target_index = randi() % aliveMembers.size()
@@ -362,83 +360,71 @@ func _on_back_button_pressed() -> void:
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 	
 # Function to handle the ability use when the button is pressed
-func _on_ability_button_pressed(ability: Ability) -> void:
+func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 	Music.play_ui_hit_combat()
 	
 	# You can now handle the logic for using the ability
-	print("Using ability: ", ability.name)
-	if ability.mp_cost > turnOrder[0].current_mp:
+	print("Using spell: ", ability.name)
+	var check = ability.checkCost(turnOrder[0])
+	if !check[0]:
 		$invalid.play()
-		message_panel.add_message("Cannot use ability: %s - not enought mp" % ability.name)
-		return
-	if ability.sp_cost > Database.current_sp:
-		$invalid.play()
-		message_panel.add_message("Cannot use ability: %s - not enought sp" % ability.name)
-		return
-	if ability.hp_cost > turnOrder[0].current_hp:
-		$invalid.play()
-		message_panel.add_message("Cannot use ability: %s - not enought hp" % ability.name)
+		message_panel.add_message(check[1])
 		return
 		
-	message_panel.add_message("Using ability: %s" % ability.name)
+	message_panel.add_message("Using spell: %s" % ability.name)
 	
-	if ability.target_type == Ability.TYPE.DAMAGE:
+	if ability.target_type == BaseSpellStrategy.TARGETING_TYPE.ENEMY:
 		$playerAttackComponent.attack($targetComponent.currentTarget,ability,turnOrder,turn,message_panel,enemiesRes,enemy_container_ui)
+		current_ability = null
 		# hide special menu
 		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
 		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 		postAttack()
-	elif ability.target_type == Ability.TYPE.HEAL:
+	elif ability.target_type == BaseSpellStrategy.TARGETING_TYPE.ALLY:
 		ally_targeting_mode = true
 		current_ability = ability
+	elif ability.target_type == BaseSpellStrategy.TARGETING_TYPE.SELFCAST:
+		var castSpell = ability.cast(turnOrder[0], turnOrder[0], null, null)
+		if !castSpell[0]:
+			$invalid.play()
+			message_panel.add_message(castSpell[1])
+			return
+		var message = "Turn %s: [color=green]%s[/color] uses [color=yellow]%s[/color] on herself" % [
+			turn, turnOrder[0].character_name, ability.name
+		]
+		message += ability.combatText()
+		message_panel.add_message(message)
+		$heal.play()
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI".updateAllBuff()
+		current_ability = null
+		# hide special menu
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		postAttack()
 
 #
 # TARGETING ALLIES
 #
 
 # the player presses the party member icon
-func _on_party_ui_party_member_pressed(member: Variant) -> void:
+func _on_party_ui_party_member_pressed(member: CharacterStats, memberIcon: turnIcon) -> void:
 	if ally_targeting_mode:
 		var caster = turnOrder[0]
-		var ability = current_ability
-
-		# if ability type is a healing spell
-		if ability.type == 1:
-			if member.is_dead:
-				$invalid.play()
-				message_panel.add_message("[color=green]%s[/color] is dead!" % member.character_name)
-				return
-			
-			if member.current_hp == member.max_hp:
-				$invalid.play()
-				var errorMessage = "[color=green]%s[/color] is max hp!" % member.character_name
-				message_panel.add_message(errorMessage)
-				return
-			
-			# Calculate heal amount
-			var heal_amount = ability.calculate_scaled_power(caster)
-			var variation = randf_range(0.8, 1.2)
-			heal_amount *= variation
-			heal_amount = int(heal_amount)  # If you want whole numbers
-
-			# Clamp healing so it doesn't overheal
-			member.current_hp = min(member.current_hp + heal_amount, member.max_hp)
-
-			# Message
-			var message = "Turn %s: [color=green]%s[/color] uses [color=yellow]%s[/color] on [color=green]%s[/color], restoring [color=lime]%d[/color] HP!" % [
-				turn, caster.character_name, ability.name, member.character_name, heal_amount
-			]
-			message_panel.add_message(message)
-
-			# Play heal sound effect (if you have one)
-			$heal.play()
-
-			# Flash the target icon
-			party_ui.flash_heal(member, heal_amount)
-			#party_ui.show_spell_cast(caster, member, current_ability)
-
-		# Consume MP
-		caster.current_mp -= ability.mp_cost
+		var spell = current_ability
+		var castSpell = spell.cast(caster, member, memberIcon, null)
+		
+		if !castSpell[0]:
+			$invalid.play()
+			message_panel.add_message(castSpell[1])
+			return
+		
+		$heal.play() # possible to include sound effect in the spell
+		# Message
+		var message = "Turn %s: [color=green]%s[/color] uses [color=yellow]%s[/color] on [color=green]%s[/color]" % [
+			turn, caster.character_name, spell.name, member.character_name
+		]
+		message += castSpell[1]
+		message_panel.add_message(message)
 
 		# Hide menus
 		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
@@ -477,9 +463,6 @@ func _on_party_ui_party_member_item_heal_completed(target, item) -> void:
 	]
 	
 	message += item.combatText()
-	if item.mp_restore > 0:
-		message += ", restoring [color=blue]%d[/color] MP" % item.mp_restore
-	
 	message_panel.add_message(message)
 	
 	# reset the targeting of allies

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterStats" load_steps=5 format=3 uid="uid://b6x42ormjksqg"]
 
 [ext_resource type="Texture2D" uid="uid://u1qj5hvn7ei" path="res://assets/art/felipe.png" id="1_2a0ay"]
-[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/Ability.gd" id="1_8lian"]
+[ext_resource type="Script" uid="uid://biobfaej7mq2j" path="res://assets/abilities/BaseSpellStrategy.gd" id="1_8lian"]
 [ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="2_8lian"]
 [ext_resource type="Resource" uid="uid://b6mf70la20wqx" path="res://assets/abilities/Fireball.tres" id="2_y2fqs"]
 

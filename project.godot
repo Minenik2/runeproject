@@ -38,6 +38,9 @@ Database="*res://assets/database/database.gd"
 GameManager="*res://game_manager.gd"
 Music="*res://assets/audio/music.tscn"
 Gacha="*res://assets/database/gacha.gd"
+TooltipManager="*res://addons/tooltips_pro/scripts/tooltip_manager.gd"
+TooltipPlaceholderVariables="*res://addons/tooltips_pro/scripts/tooltip_placeholder_variables.gd"
+TooltipLinkData="*res://addons/tooltips_pro/scripts/tooltip_link_data.gd"
 
 [display]
 

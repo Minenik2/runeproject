@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="HealthSpellStrategy" load_steps=2 format=3 uid="uid://blx7u8183476b"]
+
+[ext_resource type="Script" uid="uid://bjilar745wm5o" path="res://assets/abilities/HealthSpellStrategy.gd" id="1_f6cms"]
+
+[resource]
+script = ExtResource("1_f6cms")
+name = "Heal"
+description = "Restore an ally's HP."
+type = 1
+target_type = 1
+power = 20
+mp_cost = 7
+scaling_stat = 5
+metadata/_custom_type_script = "uid://bjilar745wm5o"

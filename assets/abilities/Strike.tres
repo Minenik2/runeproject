@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BuffSpellStrategy" load_steps=2 format=3 uid="uid://derr1767eka5t"]
+
+[ext_resource type="Script" uid="uid://ba58oy4065yo2" path="res://assets/abilities/BuffSpellStrategy.gd" id="1_1tjvq"]
+
+[resource]
+script = ExtResource("1_1tjvq")
+buffAmount = 10.0
+name = "Preparation"
+description = "Gain +10 attack damage."
+type = 2
+target_type = 2
+metadata/_custom_type_script = "uid://ba58oy4065yo2"

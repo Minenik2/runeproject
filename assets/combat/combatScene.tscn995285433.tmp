@@ -1,0 +1,354 @@
+[gd_scene load_steps=23 format=3 uid="uid://4u35d5dndusb"]
+
+[ext_resource type="AudioStream" uid="uid://qpvvq3rtio1i" path="res://assets/audio/hit.ogg" id="2_6foyy"]
+[ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/partyUi.gd" id="2_grv6n"]
+[ext_resource type="Texture2D" uid="uid://dli0q6ddy1a3x" path="res://icon.svg" id="2_mt5hy"]
+[ext_resource type="AudioStream" uid="uid://dj7i7mu731lju" path="res://assets/audio/victory.ogg" id="3_djmn3"]
+[ext_resource type="Texture2D" uid="uid://cf6fy5syqiiij" path="res://assets/art/background.jpg" id="3_gy4r3"]
+[ext_resource type="Resource" uid="uid://bxh50s4ref45l" path="res://assets/characters/enemies/goblin.tres" id="3_hppiq"]
+[ext_resource type="Script" uid="uid://dasqvyhpjqf0m" path="res://assets/combat/current_player_info.gd" id="4_de3ys"]
+[ext_resource type="Script" uid="uid://lu3hbxw06v1f" path="res://assets/combat/target_component.gd" id="4_sbkx3"]
+[ext_resource type="Script" uid="uid://rk4wd8tk1s3a" path="res://assets/combat/CombatManager.gd" id="4_ys864"]
+[ext_resource type="Script" uid="uid://s5xb1msdxwwf" path="res://assets/combat/player_attack_component.gd" id="5_v2w8q"]
+[ext_resource type="Script" uid="uid://ewdjwohd8k5m" path="res://assets/combat/toast_component.gd" id="6_5tj64"]
+[ext_resource type="Script" uid="uid://bgmc65osxl4eh" path="res://assets/characters/CharacterStats.gd" id="6_sbkx3"]
+[ext_resource type="Script" uid="uid://xj8s5k1fynpc" path="res://assets/combat/message_panel.gd" id="6_va6jy"]
+[ext_resource type="AudioStream" uid="uid://dtbblox45rcl7" path="res://assets/audio/invalid.ogg" id="8_ee53f"]
+[ext_resource type="AudioStream" uid="uid://cr3op4lwgxp2o" path="res://assets/audio/heal.ogg" id="8_q0k0i"]
+[ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="9_0h1rr"]
+[ext_resource type="PackedScene" uid="uid://cjdqbv4gdlm0x" path="res://assets/ui/inventory_ui.tscn" id="10_q0k0i"]
+[ext_resource type="AudioStream" uid="uid://0qsxaydpq6fa" path="res://assets/audio/crit.ogg" id="11_es4uf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_djmn3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6gwsu"]
+content_margin_left = 20.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.00686, 0.0033, 0.03, 0.662745)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ee53f"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u1auq"]
+texture = ExtResource("9_0h1rr")
+modulate_color = Color(0.15, 0.15, 0.15, 0.905882)
+
+[node name="combatScene" type="Node2D"]
+process_mode = 3
+
+[node name="CombatManager" type="Node" parent="."]
+script = ExtResource("4_ys864")
+enemiesRes = Array[ExtResource("6_sbkx3")]([ExtResource("3_hppiq"), ExtResource("3_hppiq")])
+
+[node name="targetComponent" type="Node" parent="CombatManager"]
+script = ExtResource("4_sbkx3")
+
+[node name="playerAttackComponent" type="Node" parent="CombatManager"]
+script = ExtResource("5_v2w8q")
+
+[node name="toastComponent" type="Node" parent="CombatManager"]
+script = ExtResource("6_5tj64")
+
+[node name="hit" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("2_6foyy")
+panning_strength = 0.0
+
+[node name="heal" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("8_q0k0i")
+pitch_scale = 1.6
+panning_strength = 0.0
+
+[node name="enemyHit" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("2_6foyy")
+pitch_scale = 2.94
+panning_strength = 0.0
+
+[node name="victory" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("3_djmn3")
+volume_db = -5.0
+panning_strength = 0.0
+
+[node name="crit" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("11_es4uf")
+pitch_scale = 4.0
+panning_strength = 0.0
+
+[node name="enemyCrit" type="AudioStreamPlayer2D" parent="CombatManager"]
+stream = ExtResource("11_es4uf")
+panning_strength = 0.0
+
+[node name="invalid" type="AudioStreamPlayer" parent="CombatManager"]
+stream = ExtResource("8_ee53f")
+volume_db = -10.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI"]
+modulate = Color(0.604555, 0.5312, 0.331779, 1)
+z_index = -10
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_gy4r3")
+
+[node name="Enemies" type="GridContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer"]
+layout_mode = 2
+
+[node name="content" type="Panel" parent="CanvasLayer/UI/PanelContainer/VBoxContainer"]
+z_index = 1
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_djmn3")
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6gwsu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="turnIndicator" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+text = "Turn 1"
+
+[node name="description" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "Choose an action"
+autowrap_mode = 2
+
+[node name="actionMenu" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+z_index = 3
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -32.0
+offset_right = 71.0
+offset_bottom = 32.0
+grow_vertical = 2
+
+[node name="attackButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Attack"
+
+[node name="specialButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"]
+texture_filter = 1
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Special"
+
+[node name="itemButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Item"
+
+[node name="itemMenu" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -25.0
+offset_right = 100.0
+offset_bottom = 25.0
+grow_vertical = 2
+
+[node name="inventoryUI" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu" instance=ExtResource("10_q0k0i")]
+layout_mode = 2
+
+[node name="backButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Back"
+
+[node name="specialMenu" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -32.0
+offset_right = 71.0
+offset_bottom = 32.0
+grow_vertical = 2
+
+[node name="backButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Back"
+
+[node name="PartyUI" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -92.0
+offset_right = 320.0
+grow_vertical = 0
+columns = 3
+script = ExtResource("2_grv6n")
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+layout_mode = 2
+text = "JOJO"
+
+[node name="Label2" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+layout_mode = 2
+text = "miku"
+
+[node name="Label3" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+layout_mode = 2
+text = "lol"
+
+[node name="Label4" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
+layout_mode = 2
+text = "fighter"
+
+[node name="currentPlayerInfo" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -157.0
+offset_top = -224.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("4_de3ys")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"]
+layout_mode = 2
+
+[node name="visualRight" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_mt5hy")
+
+[node name="nameLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+layout_mode = 2
+text = "name"
+
+[node name="HPLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+layout_mode = 2
+text = "HP: 23/24"
+
+[node name="enemyPanel" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ee53f")
+
+[node name="enemyGroup" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyPanel"]
+z_index = -1
+texture_filter = 1
+layout_mode = 2
+theme_override_constants/v_separation = -100
+columns = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyPanel/enemyGroup"]
+modulate = Color(1, 0.13, 0.13, 1)
+layout_mode = 2
+texture = ExtResource("2_mt5hy")
+
+[node name="messagePanel" type="Panel" parent="CanvasLayer/UI/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_u1auq")
+script = ExtResource("6_va6jy")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/messagePanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/messagePanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Party" type="Control" parent="CanvasLayer/UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="defeatFade" type="ColorRect" parent="CanvasLayer/UI"]
+visible = false
+z_index = 11
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton" to="CombatManager" method="_on_attack_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton" to="CombatManager" method="_on_special_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu" method="_on_special_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton" to="CombatManager" method="_on_item_button_pressed"]
+[connection signal="item_hovered" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CombatManager" method="_on_inventory_ui_item_hovered"]
+[connection signal="item_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" method="_on_inventory_ui_item_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
+[connection signal="party_member_item_heal_completed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" to="CombatManager" method="_on_party_ui_party_member_item_heal_completed"]
+[connection signal="party_member_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" to="CombatManager" method="_on_party_ui_party_member_pressed"]

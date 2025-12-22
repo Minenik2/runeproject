@@ -4,7 +4,7 @@ extends Control
 @export var player_marker: TextureRect  # The fixed player pointer
 @export var grid_size: float = 1.0  # World space size per tile
 @export var minimap_scale: float = 20.0  # Scale for rendering
-@export var labyrinth_generator: Node  # Reference to the labyrinth generator
+@export var labyrinth_generator: Maze_Generator  # Reference to the labyrinth generator
 @export var player: Node
 @export var zoom: float = 1.5
 
@@ -22,7 +22,7 @@ var markers = {} # keys are the actuall object and the values are the markers as
 func _ready():
 	# Fetch the generated maze from the Labyrinth Generator
 	if labyrinth_generator:
-		maze = labyrinth_generator.maze
+		maze = labyrinth_generator.labMaze.maze
 	else:
 		print("ERROR: Labyrinth Generator not assigned!")
 	get_markers()
@@ -109,7 +109,7 @@ func is_within_bounds(tile):
 	return tile.x >= 0 and tile.x < maze.size() and tile.y >= 0 and tile.y < maze[0].size()
 	
 func reset_minimap():
-	maze = labyrinth_generator.maze
+	maze = labyrinth_generator.labMaze.maze
 	explored_tiles.clear()  # Clear all previous exploration data
 
 	# Make all tiles unexplored at the start

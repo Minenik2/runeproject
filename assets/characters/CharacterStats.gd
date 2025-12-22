@@ -40,7 +40,8 @@ enum CHARACTER_CLASS {
 @export var experience: int = 0
 @export var experience_to_level: int = 100
 
-@export var abilities: Array[Ability] = []
+@export var abilities: Array[BaseSpellStrategy] = []
+@export var spellUnlockEntry: Array[SpellUnlockEntry] = []
 
 # Derived stats (no @export since they're calculated)
 var attack_power: int
@@ -62,7 +63,7 @@ var base_vitality: int
 var base_dexterity: int
 var base_faith: int
 var base_speed: int
-var base_abilities: Array[Ability]
+var base_abilities: Array[BaseSpellStrategy]
 var base_experience_to_level: int
 
 var stat_buffs: Array[StatBuff]
@@ -171,11 +172,11 @@ func calculate_derived_stats():
 	current_mp = min(current_mp, max_mp)
 	
 	for stat_name in stat_multipliers:
-		var cur_property_name: String = stat_name
+		var cur_property_name: String = stat_name.to_lower()
 		set(cur_property_name, get(cur_property_name) * stat_multipliers[stat_name])
 	
 	for stat_name in stat_addends:
-		var cur_property_name: String = stat_name
+		var cur_property_name: String = stat_name.to_lower()
 		set(cur_property_name, get(cur_property_name) + stat_addends[stat_name])
 	
 
@@ -229,6 +230,7 @@ func level_up():
 		current_hp = min(current_hp, max_hp)
 		current_mp = min(current_mp, max_mp)
 	
+	unlock_new_spells() # check if you learned new spells
 	print("%s leveled up to %d!" % [character_name, level])
 	
 	# final check to see if the target has xp to level again in case of a huge xp surge
@@ -296,3 +298,8 @@ func reset_stats():
 	is_dead = false
 
 	print(character_name, "'s stats have been reset.")
+
+func unlock_new_spells():
+	for entry in spellUnlockEntry:
+		if level >= entry.unlock_level and !abilities.has(entry.ability):
+			abilities.append(entry.ability)
