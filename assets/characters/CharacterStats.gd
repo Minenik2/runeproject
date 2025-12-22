@@ -2,6 +2,12 @@
 extends Resource
 class_name CharacterStats
 
+enum BUFFABLE_STATS {
+	max_hp,
+	defense,
+	attack_power
+}
+
 enum CHARACTER_CLASS {
 	Warrior,    # High HP/Strength
 	Arcanist,       # High MP/Intelligence
@@ -59,6 +65,8 @@ var base_speed: int
 var base_abilities: Array[Ability]
 var base_experience_to_level: int
 
+var stat_buffs: Array[StatBuff]
+
 # Initialize with default values
 func _init():
 	current_hp = max_hp
@@ -76,7 +84,30 @@ func setup_base_stats():
 	base_abilities = abilities.duplicate()
 	base_experience_to_level = experience_to_level
 
+func add_buff(buff: StatBuff) -> void:
+	stat_buffs.append(buff)
+	calculate_derived_stats.call_deferred()
+
+func remove_buff(buff: StatBuff) -> void:
+	stat_buffs.erase(buff)
+	calculate_derived_stats.call_deferred()
+
 func calculate_derived_stats():
+	var stat_multipliers: Dictionary = {} # buff amount to multiply included stats by
+	var stat_addends: Dictionary = {} # amount to add to included stats
+	for buff in stat_buffs:
+		var stat_name: String = BUFFABLE_STATS.keys()[buff.stat].to_lower()
+		match buff.buff_type:
+			StatBuff.BuffType.ADD:
+				if not stat_addends.has(stat_name):
+					stat_addends[stat_name] = 0.0
+				stat_addends[stat_name] += buff.buff_amount
+		
+			StatBuff.BuffType.MULTIPLY:
+				if not stat_multipliers.has(stat_name):
+					stat_multipliers[stat_name] = 1.0
+				stat_multipliers[stat_name] += buff.buff_amount
+	
 	# HP/MP Formulas
 	max_hp = floor((vitality + (strength * 0.5)) * 5)
 	max_mp = floor((intelligence + faith))
@@ -138,6 +169,15 @@ func calculate_derived_stats():
 	# make sure values down overdo
 	current_hp = min(current_hp, max_hp)
 	current_mp = min(current_mp, max_mp)
+	
+	for stat_name in stat_multipliers:
+		var cur_property_name: String = stat_name
+		set(cur_property_name, get(cur_property_name) * stat_multipliers[stat_name])
+	
+	for stat_name in stat_addends:
+		var cur_property_name: String = stat_name
+		set(cur_property_name, get(cur_property_name) + stat_addends[stat_name])
+	
 
 func calculate_exp_to_level() -> int:
 	experience_to_level = experience_to_level + 5
@@ -210,6 +250,16 @@ func use_mp(amount: int) -> bool:
 		current_mp -= amount
 		return true
 	return false
+
+# false means that target already has max mp
+func restore_mp(amount: int) -> bool:
+	if current_mp == max_mp:
+		return false
+		
+	current_mp += amount
+	if current_mp > max_mp:
+		current_mp = max_mp
+	return true
 
 func is_alive() -> bool:
 	return current_hp > 0

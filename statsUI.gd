@@ -194,60 +194,24 @@ func _on_cancel_spell_button_pressed() -> void:
 	$"../spellPanel/CancelSpellButton".hide()
 
 
-func _on_inventory_ui_item_hovered(item: Variant) -> void:
+func _on_inventory_ui_item_hovered(item: BaseItemStrategy) -> void:
 	$"../inventoryPanel/title".text = item.description
-	$"../inventoryPanel/info".text = ""
-	if item.hp_restore > 0:
-		$"../inventoryPanel/info".text += "Restores %s health points upon use. " % item.hp_restore
-	if item.mp_restore > 0:
-		$"../inventoryPanel/info".text += "Restores %s mana points upon use. " % item.mp_restore
-	if item.increase_level:
-		$"../inventoryPanel/info".text += "Increases level by 1 upon use. "
+	$"../inventoryPanel/info".text = item.effectText()
 
 
-func _on_party_showcase_ui_party_member_pressed(member: Variant, sender) -> void:
+func _on_party_showcase_ui_party_member_pressed(member: CharacterStats, sender: turnIcon) -> void:
 	if party_showcase_ui.targetSelectable:
 		# if the party ui is pressed while a item has been selected
 		if party_showcase_ui.selectedItem:
 			var item = party_showcase_ui.selectedItem
-	
-			# Check if this item restores HP or MP, and if the target is already at max for both
-			var restores_hp = item.hp_restore > 0
-			var restores_mp = item.mp_restore > 0
-			var hp_full = member.current_hp == member.max_hp
-			var mp_full = member.current_mp == member.max_mp
+			var use_item = item.use(member, sender)
 			
-			# Block if trying to heal a dead person
-			if member.is_dead and (restores_hp or restores_mp or item.increase_level):
+			if !use_item[0]:
 				$"../../invalid".play()
-				$"../inventoryPanel/tooltip".text = "Cannot use on the dead"
+				$"../inventoryPanel/tooltip".text = use_item[1]
 				return
-					
-			# If the item restores either HP or MP, and both are already full, block it
-			if (restores_hp or restores_mp) and ((restores_hp and hp_full) and (restores_mp and mp_full)):
-				$"../../invalid".play()
-				$"../inventoryPanel/tooltip".text = "Target has max HP and MP"
-				return
-			elif restores_hp and hp_full and not restores_mp:
-				$"../../invalid".play()
-				$"../inventoryPanel/tooltip".text = "Target has max HP"
-				return
-			elif restores_mp and mp_full and not restores_hp:
-				$"../../invalid".play()
-				$"../inventoryPanel/tooltip".text = "Target has max MP"
-				return
-			
-			# Apply item effects
-			if restores_hp:
-				sender.show_heal(item.hp_restore)
-			if restores_mp:
-				sender.show_heal(item.mp_restore) # TODO: color this blue
-			if item.increase_level:
-				sender.show_heal(1) # TODO: color this purple
 			
 			$"../../uiHeal".play()
-			
-			party_showcase_ui.selectedItem.use(member)
 			if party_showcase_ui.selectedItem.amount_held < 1:
 				party_showcase_ui.selectedItem = null
 				party_showcase_ui.targetSelectable = false

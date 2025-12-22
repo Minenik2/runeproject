@@ -34,9 +34,10 @@ general/default_playback_type.web=0
 
 [autoload]
 
-Database="*res://database.gd"
+Database="*res://assets/database/database.gd"
 GameManager="*res://game_manager.gd"
 Music="*res://assets/audio/music.tscn"
+Gacha="*res://assets/database/gacha.gd"
 
 [display]
 
@@ -95,8 +96,13 @@ interact={
 ]
 }
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=true

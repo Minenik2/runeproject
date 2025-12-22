@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ManaItemStrategy" load_steps=2 format=3 uid="uid://em12b0k0nyi5"]
+
+[ext_resource type="Script" uid="uid://d0lhytwlfbn0s" path="res://assets/items/resources/ManaItemStrategy.gd" id="1_wjkij"]
+
+[resource]
+script = ExtResource("1_wjkij")
+mp_restore = 5
+item_name = "Litany Phial"
+description = "Within this sealed glass echoes a prayer never finished, and to drink it is to invite something ancient to remember you."
+value = 5
+metadata/_custom_type_script = "uid://d0lhytwlfbn0s"

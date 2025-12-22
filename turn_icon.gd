@@ -1,3 +1,4 @@
+class_name turnIcon
 extends VBoxContainer
 const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
 
@@ -26,11 +27,11 @@ func update_lvl(current):
 func get_combatant():
 	return combatant
 
-func show_heal(heal_amount):
+func show_heal(heal_amount, color=Color(0.229, 0.62, 0.366, 1.0)):
 	# Spawn healing popup
 	var heal_label = FLOATING_DAMAGE_LABEL.instantiate()
 	
-	heal_label.set_heal(heal_amount)
+	heal_label.set_heal(heal_amount, color)
 
 	$nameLabel.add_child(heal_label)
 

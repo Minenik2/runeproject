@@ -16,7 +16,7 @@ extends Node
 @onready var target_component: Node = $targetComponent
 
 # ui
-var enemy_container_ui: Array[TextureRect]
+var enemy_container_ui: Array[enemyIcon]
 
 # Combat Variables
 var memberRes: Array[CharacterStats] = Database.memberRes
@@ -26,7 +26,7 @@ var aliveMembers = []
 var targeting_mode = false
 var ally_targeting_mode = false
 var current_member_index = 0
-var turnOrder = []
+var turnOrder: Array[CharacterStats] = []
 var turn = 1
 var current_ability
 
@@ -60,7 +60,9 @@ func start_combat():
 
 	for enemy_data in enemiesRes:
 		var enemy_sprite = load("res://assets/combat/enemies/enemyIcon.tscn").instantiate()
-		enemy_sprite.texture = enemy_data.battle_sprite
+		enemy_sprite.setTexture(enemy_data.battle_sprite)
+		enemy_sprite.setMaxHP(enemy_data.max_hp)
+		enemy_sprite.setHP(enemy_data.current_hp)
 		enemy_sprite.set_meta("enemy_data", enemy_data)
 		enemy_container_ui.append(enemy_sprite)
 		enemy_sprite.connect("gui_input", Callable(target_component, "_on_enemy_clicked").bind(enemy_sprite))
@@ -93,14 +95,14 @@ func calculate_turn_order():
 
 	# Wait one frame so visuals/turn order UI update
 	await get_tree().process_frame
+	
+	while turnOrder[0].is_dead:
+		# Move dead ally to end of turnOrder
+		turnOrder.push_back(turnOrder.pop_front())
 
 	if not turnOrder[0].is_ally:
 		_enemy_take_turn()
 	else:
-		while turnOrder[0].is_dead:
-			# Move dead ally to end of turnOrder
-			turnOrder.push_back(turnOrder.pop_front())
-		
 		current_player_info.set_member(turnOrder[0])
 
 #
@@ -110,6 +112,10 @@ func calculate_turn_order():
 func _on_attack_button_pressed() -> void:
 	#Music.play_ui_hit_combat()
 	$playerAttackComponent.attack($targetComponent.currentTarget,current_ability,turnOrder,turn,message_panel,enemiesRes,enemy_container_ui)
+	postAttack()
+
+# logic to run after an attack has been made
+func postAttack():
 	# update ui important for specail abilities
 	party_ui.update_status()
 	
@@ -207,6 +213,10 @@ func _check_combat_end():
 		# Show and fade in the overlay
 		fade_overlay.visible = true
 		fade_overlay.modulate.a = 0.0  # Start transparent
+		
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton".disabled = true
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton".disabled = true
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton".disabled = true
 
 		var tween = create_tween()
 		tween.tween_property(fade_overlay, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
@@ -218,6 +228,9 @@ func _check_combat_end():
 		tween.tween_callback(func():
 			GameManager.generate_new_maze()
 			_end_combat()
+			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton".disabled = false
+			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton".disabled = false
+			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton".disabled = false
 		)
 
 #
@@ -342,19 +355,15 @@ func _reset_position(initial_position: Vector2):
 
 func _on_back_button_pressed() -> void:
 	Music.play_ui_hit_combat()
-	targeting_mode = false
 	ally_targeting_mode = false
-	_highlight_enemies(false)
 	
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 	
 # Function to handle the ability use when the button is pressed
-func _on_ability_button_pressed(ability) -> void:
+func _on_ability_button_pressed(ability: Ability) -> void:
 	Music.play_ui_hit_combat()
-	targeting_mode = false
-	_highlight_enemies(false)
 	
 	# You can now handle the logic for using the ability
 	print("Using ability: ", ability.name)
@@ -371,14 +380,17 @@ func _on_ability_button_pressed(ability) -> void:
 		message_panel.add_message("Cannot use ability: %s - not enought hp" % ability.name)
 		return
 		
-	message_panel.add_message("Using ability: %s - choose a target" % ability.name)
-	current_ability = ability  # store the selected ability
+	message_panel.add_message("Using ability: %s" % ability.name)
 	
-	if ability.target_type == 0:
-		targeting_mode = true
-		_highlight_enemies(true)
-	elif ability.target_type == 1:
+	if ability.target_type == Ability.TYPE.DAMAGE:
+		$playerAttackComponent.attack($targetComponent.currentTarget,ability,turnOrder,turn,message_panel,enemiesRes,enemy_container_ui)
+		# hide special menu
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
+		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		postAttack()
+	elif ability.target_type == Ability.TYPE.HEAL:
 		ally_targeting_mode = true
+		current_ability = ability
 
 #
 # TARGETING ALLIES
@@ -464,9 +476,7 @@ func _on_party_ui_party_member_item_heal_completed(target, item) -> void:
 		turn, turnOrder[0].character_name, item.item_name, target.character_name
 	]
 	
-	# Message on screen
-	if item.hp_restore > 0:
-		message += ", restoring [color=lime]%d[/color] HP" % item.hp_restore
+	message += item.combatText()
 	if item.mp_restore > 0:
 		message += ", restoring [color=blue]%d[/color] MP" % item.mp_restore
 	

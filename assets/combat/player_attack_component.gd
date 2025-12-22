@@ -1,6 +1,6 @@
 extends Node
 
-func attack(enemy_sprite: TextureRect, current_ability, turnOrder, turn, message_panel, enemiesRes,enemy_container_ui: Array[TextureRect]):
+func attack(enemy_sprite: enemyIcon, current_ability: Ability, turnOrder: Array[CharacterStats], turn, message_panel, enemiesRes,enemy_container_ui: Array[enemyIcon]):
 	var enemy_data = enemy_sprite.get_meta("enemy_data")
 		
 	# Damage calculation
@@ -17,15 +17,12 @@ func attack(enemy_sprite: TextureRect, current_ability, turnOrder, turn, message
 	if current_ability:
 		# If it's a damage type ability, apply ability power
 		if current_ability.type == 0:  # if the type is damage
-			damage = current_ability.calculate_scaled_power(attacker) + attacker.magic_power
+			damage = ceil(current_ability.calculate_scaled_power(attacker) + attacker.magic_power)
 		attacker.current_mp -= current_ability.mp_cost
-		
-		# hide special menu
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
 	else:
 		# Regular attack
 		damage = attacker.attack_power
+		attacker.restore_mp(3)
 	print("attack damage: ", damage, attacker.character_name)
 	
 	# add variation to damage
@@ -35,7 +32,7 @@ func attack(enemy_sprite: TextureRect, current_ability, turnOrder, turn, message
 
 	if is_crit:
 		$"../crit".play()
-		damage *= attacker.critical_multiplier
+		damage = ceil(damage * attacker.critical_multiplier)
 	else:
 		$"../hit".play()
 	
@@ -46,7 +43,6 @@ func attack(enemy_sprite: TextureRect, current_ability, turnOrder, turn, message
 				turn, attacker.character_name, current_ability.name,
 				enemy_data.character_name, damage
 			]
-		current_ability = null
 	else:
 		message = "Turn %s: [color=green]%s[/color] attacks [color=crimson]%s[/color] for [color=red]%d[/color] damage!" % [
 				turn, attacker.character_name,
@@ -61,9 +57,10 @@ func attack(enemy_sprite: TextureRect, current_ability, turnOrder, turn, message
 	# Apply damage
 	enemy_data.current_hp -= damage
 	print("%s's HP: %d/%d" % [enemy_data.character_name, enemy_data.current_hp, enemy_data.max_hp])
+	enemy_sprite.setHP(enemy_data.current_hp)
 
 	# Flash sprite and show damage
-	_flash_sprite(enemy_sprite)
+	_flash_sprite(enemy_sprite.getTexture())
 	if is_crit:
 		$"../toastComponent".show_crit_damage_number(damage, enemy_sprite.global_position)
 	else:

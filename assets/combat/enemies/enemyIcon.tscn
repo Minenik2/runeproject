@@ -1,9 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://c0nryw1pq0eby"]
+[gd_scene load_steps=5 format=3 uid="uid://c0nryw1pq0eby"]
 
 [ext_resource type="Script" uid="uid://c1qw01ov5ikja" path="res://assets/combat/enemies/enemy_icon.gd" id="1_dnvwi"]
 [ext_resource type="Texture2D" uid="uid://cs3gh5rv5xl4" path="res://assets/art/crosshairLock.png" id="2_6nu5f"]
 
-[node name="enemyIcon" type="TextureRect"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnvwi"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6nu5f"]
+bg_color = Color(0.35, 0, 0, 1)
+
+[node name="enemyIcon" type="VBoxContainer"]
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,9 +28,12 @@ grow_vertical = 2
 scale = Vector2(4, 4)
 script = ExtResource("1_dnvwi")
 
-[node name="selected" type="TextureRect" parent="."]
+[node name="enemyTexture" type="TextureRect" parent="."]
+layout_mode = 2
+
+[node name="selected" type="TextureRect" parent="enemyTexture"]
 visible = false
-z_index = 20
+z_index = 5
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -29,3 +47,32 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_6nu5f")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_dnvwi")
+theme_override_styles/fill = SubResource("StyleBoxFlat_6nu5f")
+value = 50.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="ProgressBar"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -27.0
+offset_top = -22.0
+offset_right = 27.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 11
+text = "HP: 25:50"
+horizontal_alignment = 1
+vertical_alignment = 1

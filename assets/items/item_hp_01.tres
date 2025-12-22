@@ -1,15 +1,11 @@
-[gd_resource type="Resource" script_class="Item" load_steps=2 format=3 uid="uid://cxdqcd8g1rmyf"]
+[gd_resource type="Resource" script_class="HealthItemStrategy" load_steps=2 format=3 uid="uid://cxdqcd8g1rmyf"]
 
-[ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/items.gd" id="1_lbg36"]
+[ext_resource type="Script" uid="uid://bpkxvhr7nqefj" path="res://assets/items/resources/HealthItemStrategy.gd" id="1_r8cgh"]
 
 [resource]
-script = ExtResource("1_lbg36")
-item_name = "Bloodletting Draught"
-description = "A scarlet concoction that mends wounds with eerie speed, leaving a chill in its wake."
-item_type = 0
-value = 10
-amount_held = 0
-hp_restore = 9
-mp_restore = 0
-increase_level = false
-metadata/_custom_type_script = "uid://bunhfmmp28vn0"
+script = ExtResource("1_r8cgh")
+hp_restore = 3
+item_name = "Medicinal Herb"
+description = "A brittle, ash-gray herb said to grow only where the dead refuse to rest. Its bitter leaves dull pain and close wounds, though some claim to hear distant whispers after consuming it."
+value = 5
+metadata/_custom_type_script = "uid://bpkxvhr7nqefj"
