@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="BaseMerchantStrategy" load_steps=4 format=3 uid="uid://dxmcj57q3vp2a"]
+
+[ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/resources/BaseItemStrategy.gd" id="1_typfy"]
+[ext_resource type="Script" uid="uid://b7o0qd0eaioyi" path="res://assets/ui/shop/sellItemMerchant.gd" id="2_n8dlp"]
+[ext_resource type="Script" uid="uid://cpraqaisnoc04" path="res://assets/ui/shop/BaseMerchantStrategy.gd" id="3_5nf4g"]
+
+[resource]
+script = ExtResource("3_5nf4g")
+metadata/_custom_type_script = "uid://cpraqaisnoc04"

@@ -1,29 +1,17 @@
 extends Node
 class_name Maze_Generator
 
-@export var player: CharacterBody3D
-#@export var width: int = Database.labWidth  # Maze width
-#@export var height: int = Database.labHeight  # Maze height
 @export var grid_size: float = 2.0  # World space size per tile
-@export var maze_reset_scene: PackedScene  # Assign your .tscn file here
 @export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
 @export var chest_scene: PackedScene  # Assign your chest scene in the inspector
 
 var labMaze: Labyrinth = Labyrinth.new()
-
-#var maze = labMaze.maze  # 2D array to store walls & paths
-#var spawn_point: Vector2
-#var exit_point: Vector2
-#var tile_scale = 1  # Scale factor
-var maze_reset_instance: Node3D  # To store the instance of the reset object
 var explored_tiles = labMaze.explored_tiles  # Stores explored tiles for fog of war
 var enemies = []  # Store enemy instances
 var chests = [] # store chests instances
 
 var enemiesCounter = Database.enemiesCounter
 var chestCounter = Database.chestCounter
-
-
 
 func _ready():
 	generate_new_maze()
@@ -46,7 +34,7 @@ func generate_new_maze():
 	
 	labMaze = generate_maze(labMaze)
 	$labyrinth_builder.build_maze(labMaze)
-	spawn_player(labMaze)
+	$labyrinth_decorator.spawn_player(labMaze)
 	spawn_enemies(labMaze, enemiesCounter)
 	spawn_chests(labMaze, chestCounter)  # Spawn 2 chests as a test
 	print_maze(labMaze)  # Debug output
@@ -81,27 +69,6 @@ func generate_maze(mazeCube: Labyrinth) -> Labyrinth:
 	mazeCube.maze[mazeCube.exit_point.x][mazeCube.exit_point.y] = 2  # Exit tile (2)
 	
 	return mazeCube
-
-func spawn_maze_reset_object(mazeCube: Labyrinth):
-	if not maze_reset_scene:
-		print("Maze Reset Scene is not assigned!")
-		return
-
-	# Remove the old instance if it exists
-	if maze_reset_instance:  
-		maze_reset_instance.queue_free()
-		maze_reset_instance = null  
-
-	# Instantiate the new reset object
-	maze_reset_instance = maze_reset_scene.instantiate()
-
-	# Add it to the same parent as the gridmap (or use another relevant node)
-	add_child(maze_reset_instance)
-	maze_reset_instance.global_position = Vector3(
-		(mazeCube.exit_point.x + 0.5) * mazeCube.tile_scale, 
-		0.8,  
-		(mazeCube.exit_point.y + 0.5) * mazeCube.tile_scale
-	)
 
 func find_random_open_space(mazeCube: Labyrinth, far_from=null):
 	var open_spaces = []
@@ -142,14 +109,7 @@ func print_maze(mazeCube: Labyrinth):
 				row_string += "x"
 		print(row_string)
 
-func spawn_player(mazeCube: Labyrinth):
-	# Spawn player at calculated spawn point
-	player.global_position = Vector3((mazeCube.spawn_point.x + 0.5) * mazeCube.tile_scale,
-	0.8,
-	(mazeCube.spawn_point.y + 0.5) * mazeCube.tile_scale)
-	
-	# Spawn or move the maze reset object
-	spawn_maze_reset_object(mazeCube)
+
 
 func spawn_enemies(mazeCube: Labyrinth, num_enemies: int):
 	# Remove old enemies

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene load_steps=35 format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://bypx0eer85jv6" path="res://assets/dungeon/genAlgos/room_based_algo.gd" id="7_xpeyw"]
 [ext_resource type="AudioStream" uid="uid://bljuo67nyr5q2" path="res://assets/audio/step.ogg" id="8_5tkv4"]
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="8_mhym6"]
+[ext_resource type="Script" uid="uid://e3umojuith5p" path="res://labyrinth_decorator.gd" id="9_15c7i"]
 [ext_resource type="Script" uid="uid://ecs37pgyltxp" path="res://statsUI.gd" id="9_a3se8"]
 [ext_resource type="AudioStream" uid="uid://d2c5o3hi1eyfi" path="res://assets/audio/uiHit.ogg" id="10_a3se8"]
 [ext_resource type="PackedScene" uid="uid://b1b3lid226cna" path="res://assets/ui/party_showcase_ui.tscn" id="11_vxl6d"]
@@ -73,10 +74,8 @@ height = 0.5
 
 [node name="Node3D" type="Node3D"]
 
-[node name="labyrinth_generator" type="Node" parent="." node_paths=PackedStringArray("player")]
+[node name="labyrinth_generator" type="Node" parent="."]
 script = ExtResource("1_ehkex")
-player = NodePath("../player")
-maze_reset_scene = ExtResource("2_xersf")
 enemy_scene = ExtResource("3_77dp3")
 chest_scene = ExtResource("4_pdf00")
 
@@ -95,7 +94,10 @@ script = ExtResource("7_xpeyw")
 script = ExtResource("5_eski5")
 gridmap = NodePath("../../GridMap")
 
-[node name="labyrinth_decorator" type="Node" parent="labyrinth_generator"]
+[node name="labyrinth_decorator" type="Node" parent="labyrinth_generator" node_paths=PackedStringArray("player")]
+script = ExtResource("9_15c7i")
+maze_reset_scene = ExtResource("2_xersf")
+player = NodePath("../../player")
 
 [node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator"]
 stream = ExtResource("4_uty7l")
@@ -484,6 +486,7 @@ mouse_filter = 2
 environment = SubResource("Environment_g14j6")
 
 [node name="player" type="CharacterBody3D" parent="." groups=["player"]]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, 0.5)
 collision_layer = 2
 script = ExtResource("1_37kl0")

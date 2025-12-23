@@ -1,4 +1,5 @@
 extends CharacterBody3D
+class_name playerREAL
 
 @export var grid_size: float = 1.0
 @export var turn_speed: float = 90.0 # Degrees per turn

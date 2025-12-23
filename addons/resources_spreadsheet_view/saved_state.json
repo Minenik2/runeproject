@@ -1,5 +1,27 @@
 {
   "column_properties": {
+    "res://assets/abilities/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0
+      },
+      "resource_name": {
+        "visibility": 0
+      }
+    },
+    "res://assets/abilities/spellTree/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0
+      },
+      "resource_name": {
+        "visibility": 0
+      }
+    },
     "res://assets/characters/heroes/": {
       "metadata/_custom_type_script": {
         "visibility": 0.0
@@ -37,7 +59,9 @@
   "recent_paths": [
     "res://assets/items/",
     "res://example/Items/items/",
-    "res://assets/characters/heroes/"
+    "res://assets/characters/heroes/",
+    "res://assets/abilities/spellTree/",
+    "res://assets/abilities/"
   ],
   "table_functions": {
     "filter": [
