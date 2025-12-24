@@ -17,3 +17,9 @@ func play_chestOpen(rarity = "common"):
 
 func play_death():
 	$death.play()
+
+func play_shop():
+	$uiShop.play()
+
+func play_invalid():
+	$uiInvalid.play()

@@ -1,13 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://djk82ptcej3wt"]
+[gd_scene load_steps=3 format=3 uid="uid://djk82ptcej3wt"]
 
 [ext_resource type="Script" uid="uid://dduignjvgphrt" path="res://assets/ui/item_icon.gd" id="1_qf1fv"]
+[ext_resource type="Script" uid="uid://coqwnstoj346c" path="res://addons/tooltips_pro/scripts/tooltip_trigger.gd" id="2_aau2i"]
 
 [node name="itemIcon" type="Button"]
 custom_minimum_size = Vector2(0, 35)
-size_flags_vertical = 2
 script = ExtResource("1_qf1fv")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="." node_paths=PackedStringArray("remote_element_node", "overflow_element_node")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,15 @@ offset_right = 10.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
+script = ExtResource("2_aau2i")
+tooltip_template_path = "res://addons/tooltips_pro/examples/tooltip_templates/!tooltip_template_default.tscn"
+tooltip_alignment = 2
+origin = 3
+remote_element_node = NodePath("..")
+offset = Vector2(0, 10)
+overflow_mode = 2
+overflow_bounds = 1
+overflow_element_node = NodePath("..")
 
 [node name="Name" type="Label" parent="HBoxContainer2"]
 layout_mode = 2

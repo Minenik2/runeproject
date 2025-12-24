@@ -8,4 +8,5 @@ hp_restore = 3
 item_name = "Medicinal Herb"
 description = "A brittle, ash-gray herb said to grow only where the dead refuse to rest. Its bitter leaves dull pain and close wounds, though some claim to hear distant whispers after consuming it."
 value = 5
+amount_held = 10
 metadata/_custom_type_script = "uid://bpkxvhr7nqefj"

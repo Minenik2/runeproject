@@ -1,9 +1,18 @@
-[gd_resource type="Resource" script_class="BaseMerchantStrategy" load_steps=4 format=3 uid="uid://dxmcj57q3vp2a"]
+[gd_resource type="Resource" script_class="BaseMerchantStrategy" load_steps=9 format=3 uid="uid://dxmcj57q3vp2a"]
 
 [ext_resource type="Script" uid="uid://bunhfmmp28vn0" path="res://assets/items/resources/BaseItemStrategy.gd" id="1_typfy"]
 [ext_resource type="Script" uid="uid://b7o0qd0eaioyi" path="res://assets/ui/shop/sellItemMerchant.gd" id="2_n8dlp"]
-[ext_resource type="Script" uid="uid://cpraqaisnoc04" path="res://assets/ui/shop/BaseMerchantStrategy.gd" id="3_5nf4g"]
+[ext_resource type="Resource" uid="uid://cxdqcd8g1rmyf" path="res://assets/items/item_hp_01.tres" id="2_sup32"]
+[ext_resource type="Script" uid="uid://cpraqaisnoc04" path="res://assets/audio/BaseMerchantStrategy.gd" id="3_5nf4g"]
+[ext_resource type="Resource" uid="uid://em12b0k0nyi5" path="res://assets/items/item_mp_01.tres" id="3_66dl1"]
+[ext_resource type="Resource" uid="uid://dyd7e2s60e7ol" path="res://assets/items/item_xp_01.tres" id="4_lga15"]
+[ext_resource type="Resource" uid="uid://3e07imwlkw07" path="res://assets/items/item_res_01.tres" id="6_kmork"]
+[ext_resource type="Texture2D" uid="uid://dx3e58j5ryeib" path="res://assets/art/merchant.png" id="8_u4o85"]
 
 [resource]
 script = ExtResource("3_5nf4g")
+texture = ExtResource("8_u4o85")
+legendary_items = Array[ExtResource("1_typfy")]([ExtResource("4_lga15")])
+rare_items = Array[ExtResource("1_typfy")]([ExtResource("6_kmork")])
+common_items = Array[ExtResource("1_typfy")]([ExtResource("2_sup32"), ExtResource("3_66dl1")])
 metadata/_custom_type_script = "uid://cpraqaisnoc04"

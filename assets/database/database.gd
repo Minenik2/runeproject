@@ -5,6 +5,7 @@ const MIO = preload("res://assets/characters/heroes/mio.tres")
 const FELIPE = preload("res://assets/characters/heroes/felipe.tres")
 const LIRAE = preload("res://assets/characters/heroes/lirae.tres")
 
+# //// PLAYER INVENTORY
 # healing items
 #const BLOODLETTING_DRAUGHT = preload("res://assets/items/item_hp_03.tres")
 const MEDICINAL_HERB = preload("res://assets/items/item_hp_01.tres")
@@ -15,6 +16,8 @@ const SOUL_HUSK = preload("res://assets/items/item_xp_01.tres")
 
 # MP restore items
 const LITANY_PHIAL = preload("uid://em12b0k0nyi5")
+# Gold
+var gold = 0
 
 var memberRes: Array[CharacterStats] = [BUN, MIO, FELIPE, LIRAE] # current party member in players party
 
@@ -51,7 +54,9 @@ func reset_game():
 	chestCounter = 2
 	# game msnager
 	enemyStrength = 5
-
+	# inventory currency
+	gold = 0
+	
 	# Reset inventory quantities
 	for item in inventory:
 		item.amount_held = 0

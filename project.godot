@@ -41,6 +41,7 @@ Gacha="*res://assets/database/gacha.gd"
 TooltipManager="*res://addons/tooltips_pro/scripts/tooltip_manager.gd"
 TooltipPlaceholderVariables="*res://addons/tooltips_pro/scripts/tooltip_placeholder_variables.gd"
 TooltipLinkData="*res://addons/tooltips_pro/scripts/tooltip_link_data.gd"
+ShopUi="*res://assets/ui/shop_ui.tscn"
 
 [display]
 

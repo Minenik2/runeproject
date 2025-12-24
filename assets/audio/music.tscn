@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bkv7wt2id7gd7"]
+[gd_scene load_steps=10 format=3 uid="uid://bkv7wt2id7gd7"]
 
 [ext_resource type="AudioStream" uid="uid://byo6ohf6pxmp1" path="res://assets/audio/ost.ogg" id="1_mtm71"]
 [ext_resource type="Script" uid="uid://tt5eqhgwp7ds" path="res://assets/audio/GlobalSoundPlayer.gd" id="2_iabng"]
 [ext_resource type="AudioStream" uid="uid://d2c5o3hi1eyfi" path="res://assets/audio/uiHit.ogg" id="2_t3oww"]
 [ext_resource type="AudioStream" uid="uid://clxpy25src11l" path="res://assets/audio/unlock.ogg" id="4_bcbs6"]
 [ext_resource type="AudioStream" uid="uid://dxqus1dr16wh8" path="res://assets/audio/combatuihit.ogg" id="4_j1sdx"]
+[ext_resource type="AudioStream" uid="uid://dtbblox45rcl7" path="res://assets/audio/invalid.ogg" id="5_bmecn"]
+[ext_resource type="AudioStream" uid="uid://b4t14dvoi780e" path="res://assets/audio/shop/sell.ogg" id="5_hmta4"]
 [ext_resource type="AudioStream" uid="uid://c1bjcbkhnrkb6" path="res://assets/audio/chest_open.ogg" id="5_m0e7c"]
 [ext_resource type="AudioStream" uid="uid://cyuxoj1rn65ua" path="res://assets/audio/death.ogg" id="6_67mlt"]
 
@@ -23,6 +25,15 @@ volume_db = -10.0
 [node name="uiHitCombat" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_j1sdx")
 volume_db = -10.0
+
+[node name="uiInvalid" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_bmecn")
+volume_db = -10.0
+
+[node name="uiShop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_hmta4")
+volume_db = -10.0
+pitch_scale = 1.5
 
 [node name="movedInExit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_bcbs6")
