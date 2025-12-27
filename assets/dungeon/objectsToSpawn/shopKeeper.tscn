@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://dptufts77e5sv"]
+
+[ext_resource type="Script" uid="uid://d0yp5cyq8y4eq" path="res://assets/dungeon/objectsToSpawn/shopKeeper.gd" id="1_trdd5"]
+[ext_resource type="Texture2D" uid="uid://bwprgu6ceyrip" path="res://assets/art/exit.png" id="2_57v4h"]
+[ext_resource type="Script" uid="uid://btu33hbrfcvv5" path="res://assets/dungeon/enemysprite.gd" id="3_k1ia1"]
+[ext_resource type="AudioStream" uid="uid://x25vbb7vhvt6" path="res://assets/audio/shop/enterShop.ogg" id="4_0fnxe"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2dlrk"]
+
+[node name="shopKeeper" type="Area3D"]
+script = ExtResource("1_trdd5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_2dlrk")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+modulate = Color(0.83, 0.67727995, 0.43159997, 1)
+texture = ExtResource("2_57v4h")
+script = ExtResource("3_k1ia1")
+
+[node name="enterShop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_0fnxe")
+volume_db = -8.0
+pitch_scale = 0.6
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

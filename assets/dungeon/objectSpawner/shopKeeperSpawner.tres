@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BaseSpawnStrategy" load_steps=3 format=3 uid="uid://bug54c5o1wfy8"]
+
+[ext_resource type="Script" uid="uid://bl84uu1hohmfi" path="res://assets/dungeon/objectSpawner/BaseSpawnStrategy.gd" id="1_dpbdj"]
+[ext_resource type="PackedScene" uid="uid://dptufts77e5sv" path="res://assets/dungeon/objectsToSpawn/shopKeeper.tscn" id="1_xfpx1"]
+
+[resource]
+script = ExtResource("1_dpbdj")
+object_scene = ExtResource("1_xfpx1")
+object_name = "shop"
+metadata/_custom_type_script = "uid://bl84uu1hohmfi"

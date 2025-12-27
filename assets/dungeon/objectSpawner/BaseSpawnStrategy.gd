@@ -3,8 +3,8 @@ class_name BaseSpawnStrategy
 
 @export var object_scene: PackedScene
 @export var object_name: String = "unamed"
-@export var min_distance = 4
-@export var attempts_per_chest = 30
+@export var min_distance = 4 # min distance between each object
+@export var attempts_per_chest = 30 # how many times to randomly attempt spawn before giving up
 var spawnedObjects = []
 
 # The base for spawning objects into labyrinths
