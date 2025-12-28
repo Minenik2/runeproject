@@ -47,7 +47,15 @@ func update_minimap():
 		for dy in range(-5, 6):
 			var tile = player_tile + Vector2(dx, dy)
 			if is_within_bounds(tile) and explored_tiles.has(tile) and explored_tiles[tile]:
-				var color = Color.WHITE if maze[tile.x][tile.y] == 0 else Color.GRAY
+				# minimap colors
+				var color = Color.WHITE 
+				match maze[tile.x][tile.y]:
+					0:
+						color = Color.WHITE
+					1:
+						color = Color.GRAY
+					2:
+						color = Color.DARK_SEA_GREEN
 				img.set_pixel(dx + 5, dy + 5, color)  # Center player on minimap
 
 	# Show enemies

@@ -4,6 +4,8 @@ class_name Maze_Generator
 @export var grid_size: float = 2.0  # World space size per tile
 @export var enemy_scene: PackedScene  # Assign your enemy scene in the inspector
 @export var chest_scene: PackedScene  # Assign your chest scene in the inspector
+const SHOP_KEEPER_SPAWNER: BaseSpawnStrategy = preload("uid://bug54c5o1wfy8")
+
 
 var labMaze: Labyrinth = Labyrinth.new()
 var explored_tiles = labMaze.explored_tiles  # Stores explored tiles for fog of war
@@ -37,7 +39,10 @@ func generate_new_maze():
 	$labyrinth_decorator.spawn_player(labMaze)
 	spawn_enemies(labMaze, enemiesCounter)
 	spawn_chests(labMaze, chestCounter)  # Spawn 2 chests as a test
-	print_maze(labMaze)  # Debug output
+	SHOP_KEEPER_SPAWNER.despawn_all_objects()
+	if randf() <= 0.5: # 20% chance to spawn shop
+		SHOP_KEEPER_SPAWNER.spawnObject(labMaze, 1, self)
+	#print_maze(labMaze)  # Debug output
 
 func generate_maze(mazeCube: Labyrinth) -> Labyrinth:
 	$unlock.play()
@@ -197,6 +202,8 @@ func spawn_chests(mazeCube: Labyrinth,num_chests: int):
 			if not too_close:
 				found = true
 				placed_positions.append(spawn_pos)
+				
+				mazeCube.maze[int(spawn_pos.x)][int(spawn_pos.y)] = 3
 
 				var chest = chest_scene.instantiate()
 				print("chest spawned at ", spawn_pos)

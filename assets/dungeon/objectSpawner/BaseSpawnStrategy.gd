@@ -11,11 +11,7 @@ var spawnedObjects = []
 
 func spawnObject(mazeCube: Labyrinth,num_chests: int, objectThatSpawns: Node):
 	# Remove old chests
-	for chest in spawnedObjects:
-		if not is_instance_valid(chest):
-			continue
-		chest.queue_free()
-	spawnedObjects.clear()
+	despawn_all_objects()
 
 	var placed_positions = []
 
@@ -40,9 +36,11 @@ func spawnObject(mazeCube: Labyrinth,num_chests: int, objectThatSpawns: Node):
 			if not too_close:
 				found = true
 				placed_positions.append(spawn_pos)
+				
+				mazeCube.maze[int(spawn_pos.x)][int(spawn_pos.y)] = 3
 
 				var chest = object_scene.instantiate()
-				print("chest spawned at ", spawn_pos)
+				print("%s spawned at " % [object_name], spawn_pos)
 				chest.global_position = Vector3(
 					(spawn_pos.x + 0.5) * mazeCube.tile_scale,
 					0.8,
@@ -55,9 +53,16 @@ func spawnObject(mazeCube: Labyrinth,num_chests: int, objectThatSpawns: Node):
 
 	# You can print a warning if not all chests were spawned
 	if spawnedObjects.size() < num_chests:
-		print("Only spawned %d out of %d %d due to space constraints." % [spawnedObjects.size(), num_chests, object_name])
+		print("Only spawned %s out of %s %s due to space constraints." % [spawnedObjects.size(), num_chests, object_name])
 
-func find_random_open_space(mazeCube: Labyrinth, far_from=null):
+func despawn_all_objects():
+	for chest in spawnedObjects:
+		if not is_instance_valid(chest):
+			continue
+		chest.queue_free()
+	spawnedObjects.clear()
+
+func find_random_open_space(mazeCube: Labyrinth, far_from=null) -> Vector2:
 	var open_spaces = []
 	for x in mazeCube.width:
 		for y in mazeCube.height:

@@ -8,10 +8,12 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_2dlrk"]
 
 [node name="shopKeeper" type="Area3D"]
+collision_mask = 3
 script = ExtResource("1_trdd5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_2dlrk")
+debug_color = Color(0.6420146, 0.51623946, 0.26058793, 0.41960785)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 modulate = Color(0.83, 0.67727995, 0.43159997, 1)
@@ -20,7 +22,8 @@ script = ExtResource("3_k1ia1")
 
 [node name="enterShop" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_0fnxe")
-volume_db = -8.0
+volume_db = -15.0
 pitch_scale = 0.6
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_area_3d_body_exited"]

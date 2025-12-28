@@ -42,6 +42,7 @@ TooltipManager="*res://addons/tooltips_pro/scripts/tooltip_manager.gd"
 TooltipPlaceholderVariables="*res://addons/tooltips_pro/scripts/tooltip_placeholder_variables.gd"
 TooltipLinkData="*res://addons/tooltips_pro/scripts/tooltip_link_data.gd"
 ShopUi="*res://assets/ui/shop_ui.tscn"
+UiManager="*res://assets/ui/uiManager/uiManager.gd"
 
 [display]
 

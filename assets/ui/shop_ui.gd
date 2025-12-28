@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 const ITEM_ICON = preload("uid://djk82ptcej3wt")
-const MERCHANT_01 = preload("uid://dxmcj57q3vp2a")
+const MERCHANT_01 = preload("uid://dxmcj57q3vp2a") # just for testing merchants
 
 var currentMerchant: BaseMerchantStrategy
 
@@ -20,10 +20,11 @@ func setUpShop(merchantInv: BaseMerchantStrategy):
 		child.queue_free()
 	currentMerchant = merchantInv
 	for item in merchantInv.merchant_inventory:
-		var newItemUI = ITEM_ICON.instantiate()
-		newItemUI.set_item(item)
-		newItemUI.pressed.connect(on_merchant_buy.bind(item))
-		%listItemUI.add_child(newItemUI)
+		if item.stock > 0:
+			var newItemUI = ITEM_ICON.instantiate()
+			newItemUI.set_item(item)
+			newItemUI.pressed.connect(on_merchant_buy.bind(item))
+			%listItemUI.add_child(newItemUI)
 
 func setUpInventoryPlayer():
 	for child in %listInventoryUI.get_children():
@@ -66,5 +67,11 @@ func on_merchant_buy(item: sellItem):
 
 
 func _on_talk_button_pressed() -> void:
+	Music.play_ui_hit()
 	%dialogue.text = currentMerchant.talk()
-	pass # Replace with function body.
+
+
+func _on_leave_pressed() -> void:
+	Music.play_ui_hit()
+	hide()
+	UiManager.closeUi(self)

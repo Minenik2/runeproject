@@ -83,4 +83,5 @@ func _on_timer_timeout() -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		$combatEncounter.play()
+		UiManager.closeAllUi()
 		GameManager.make_combat(self)
