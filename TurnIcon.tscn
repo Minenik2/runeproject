@@ -1,35 +1,54 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcbkgikp2rkro"]
+[gd_scene load_steps=4 format=3 uid="uid://dcbkgikp2rkro"]
 
 [ext_resource type="Script" uid="uid://df8grtmr854li" path="res://turn_icon.gd" id="1_cqemw"]
+[ext_resource type="Texture2D" uid="uid://dfy37ysoov3dh" path="res://assets/art/ui/uiBox.png" id="1_jts41"]
 
-[node name="TurnIcon" type="VBoxContainer"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wyxt8"]
+texture = ExtResource("1_jts41")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="TurnIcon" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_wyxt8")
 script = ExtResource("1_cqemw")
 
-[node name="lvlLabel" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="lvlLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Lv."
 
-[node name="buffList" type="HBoxContainer" parent="."]
+[node name="buffList" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="nameLabel" type="Button" parent="."]
+[node name="nameLabel" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "test"
 
-[node name="hpLabel" type="Label" parent="."]
+[node name="hpLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "HP"
 
-[node name="mpLabel" type="Label" parent="."]
+[node name="mpLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "MP"
 
-[connection signal="pressed" from="nameLabel" to="." method="_on_name_label_pressed"]
+[connection signal="pressed" from="VBoxContainer/nameLabel" to="." method="_on_name_label_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://4u35d5dndusb"]
+[gd_scene load_steps=29 format=3 uid="uid://4u35d5dndusb"]
 
 [ext_resource type="AudioStream" uid="uid://qpvvq3rtio1i" path="res://assets/audio/hit.ogg" id="2_6foyy"]
 [ext_resource type="Script" uid="uid://dhv6iytq528v7" path="res://assets/combat/partyUi.gd" id="2_grv6n"]
@@ -18,6 +18,11 @@
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="9_0h1rr"]
 [ext_resource type="PackedScene" uid="uid://cjdqbv4gdlm0x" path="res://assets/ui/inventory_ui.tscn" id="10_q0k0i"]
 [ext_resource type="AudioStream" uid="uid://0qsxaydpq6fa" path="res://assets/audio/crit.ogg" id="11_es4uf"]
+[ext_resource type="Texture2D" uid="uid://dfy37ysoov3dh" path="res://assets/art/ui/uiBox.png" id="15_5tj64"]
+[ext_resource type="Texture2D" uid="uid://fmsa13ckh6vl" path="res://assets/art/ui/hp_bar.png" id="17_nsjn4"]
+[ext_resource type="Texture2D" uid="uid://bterasoes1bp6" path="res://assets/art/ui/hp_bar_over.png" id="18_hdfcf"]
+[ext_resource type="Texture2D" uid="uid://bswyceilpow0l" path="res://assets/art/ui/hp_bar_progress.png" id="19_elixp"]
+[ext_resource type="Texture2D" uid="uid://bafqi42sly1b8" path="res://assets/art/ui/mp_bar_progress.png" id="20_qqpl8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_djmn3"]
 
@@ -27,6 +32,15 @@ content_margin_top = 5.0
 content_margin_right = 5.0
 content_margin_bottom = 5.0
 bg_color = Color(0.00686, 0.0033, 0.03, 0.662745)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_08ddm"]
+texture = ExtResource("15_5tj64")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ee53f"]
 
@@ -230,24 +244,8 @@ offset_left = 10.0
 offset_top = -92.0
 offset_right = 320.0
 grow_vertical = 0
-columns = 3
+columns = 4
 script = ExtResource("2_grv6n")
-
-[node name="Label" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
-layout_mode = 2
-text = "JOJO"
-
-[node name="Label2" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
-layout_mode = 2
-text = "miku"
-
-[node name="Label3" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
-layout_mode = 2
-text = "lol"
-
-[node name="Label4" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"]
-layout_mode = 2
-text = "fighter"
 
 [node name="currentPlayerInfo" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
 layout_mode = 1
@@ -260,6 +258,7 @@ offset_left = -157.0
 offset_top = -224.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_08ddm")
 script = ExtResource("4_de3ys")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"]
@@ -267,15 +266,86 @@ layout_mode = 2
 
 [node name="visualRight" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("2_mt5hy")
 
 [node name="nameLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "name"
 
-[node name="HPLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="hp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
-text = "HP: 23/24"
+nine_patch_stretch = true
+stretch_margin_left = 6
+stretch_margin_top = 6
+stretch_margin_right = 6
+stretch_margin_bottom = 6
+texture_under = ExtResource("17_nsjn4")
+texture_over = ExtResource("18_hdfcf")
+texture_progress = ExtResource("19_elixp")
+
+[node name="mp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+layout_mode = 2
+nine_patch_stretch = true
+stretch_margin_left = 6
+stretch_margin_top = 6
+stretch_margin_right = 6
+stretch_margin_bottom = 6
+texture_under = ExtResource("17_nsjn4")
+texture_over = ExtResource("18_hdfcf")
+texture_progress = ExtResource("20_qqpl8")
+
+[node name="character_stats" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/v_separation = -4
+columns = 2
+
+[node name="ad" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="ap" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="def" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="mdef" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="acc" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="eva" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="critchance" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
+
+[node name="critdmg" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 11
 
 [node name="enemyPanel" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
 layout_mode = 1

@@ -40,7 +40,7 @@ func generate_new_maze():
 	spawn_enemies(labMaze, enemiesCounter)
 	spawn_chests(labMaze, chestCounter)  # Spawn 2 chests as a test
 	SHOP_KEEPER_SPAWNER.despawn_all_objects()
-	if randf() <= 0.5: # 20% chance to spawn shop
+	if randf() <= 0.5: # 50% chance to spawn shop
 		SHOP_KEEPER_SPAWNER.spawnObject(labMaze, 1, self)
 	#print_maze(labMaze)  # Debug output
 

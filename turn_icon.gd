@@ -1,5 +1,5 @@
 class_name turnIcon
-extends VBoxContainer
+extends PanelContainer
 const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
 const BUFF_ICON = preload("res://assets/abilities/buffs/buffIcon.tscn")
 
@@ -7,23 +7,23 @@ signal icon_pressed(combatant, sender)
 var combatant: CharacterStats = null  # Store the combatant in the TurnIcon
 
 # Set the combatant (called from the Party component)
-func set_combatant(combatant):
-	$nameLabel.text = combatant.character_name
-	update_health(combatant.current_hp, combatant.max_hp)
-	update_mp(combatant.current_mp, combatant.max_mp)
-	update_lvl(combatant.level)
-	self.combatant = combatant  # Store the combatant for later access
+func set_combatant(combatantSet: CharacterStats):
+	%nameLabel.text = combatantSet.character_name
+	update_health(combatantSet.current_hp, combatantSet.max_hp)
+	update_mp(combatantSet.current_mp, combatantSet.max_mp)
+	update_lvl(combatantSet.level)
+	self.combatant = combatantSet  # Store the combatant for later access
 	updateBuffList()
 
 # Update the health label
-func update_health(current, max):
-	$hpLabel.text = "HP: " + str(current) + "/" + str(max)
+func update_health(current, maxHP):
+	%hpLabel.text = "HP: " + str(current) + "/" + str(maxHP)
 
-func update_mp(current, max):
-	$mpLabel.text = "MP: " + str(current) + "/" + str(max)
+func update_mp(current, maxHP):
+	%mpLabel.text = "MP: " + str(current) + "/" + str(maxHP)
 
 func update_lvl(current):
-	$lvlLabel.text = "Lv. " + str(current)
+	%lvlLabel.text = "Lv. " + str(current)
 
 # Function to get the stored combatant
 func get_combatant():
@@ -35,7 +35,7 @@ func show_heal(heal_amount, color=Color(0.229, 0.62, 0.366, 1.0)):
 	
 	heal_label.set_heal(heal_amount, color)
 
-	$nameLabel.add_child(heal_label)
+	%nameLabel.add_child(heal_label)
 
 func show_damage(damage_amount):
 	# Spawn healing popup
@@ -45,24 +45,24 @@ func show_damage(damage_amount):
 	heal_label.set_damage(damage_amount)
 
 	# Add to the PopupLayer CanvasLayer instead of current_scene
-	var popup_layer = $"../../.."
+	var popup_layer = $"../../../.."
 	popup_layer.add_child(heal_label)
 
 func highlight(enable: bool):
 	if enable:
-		$nameLabel.add_theme_color_override("font_color", Color(1, 1, 0)) # Yellow
+		%nameLabel.add_theme_color_override("font_color", Color(1, 1, 0)) # Yellow
 	else:
-		$nameLabel.add_theme_color_override("font_color", Color(1, 1, 1)) # White
+		%nameLabel.add_theme_color_override("font_color", Color(1, 1, 1)) # White
 
 
 func _on_name_label_pressed() -> void:
 	emit_signal("icon_pressed", combatant, self)
 
 func updateBuffList():
-	var children = $buffList.get_children()
+	var children = %buffList.get_children()
 	for c in children:
 		c.queue_free()
 	for buff in combatant.stat_buffs:
 		var buffTexture = BUFF_ICON.instantiate()
 		buffTexture.tooltip_strings.append(buff.tooltip())
-		$buffList.add_child(buffTexture)
+		%buffList.add_child(buffTexture)
