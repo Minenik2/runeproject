@@ -2,16 +2,25 @@
 extends Node
 
 # Node References
-@onready var current_member_display = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"
-@onready var action_menu = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"
-@onready var enemy_container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyPanel/enemyGroup"
+@onready var action_menu = %actionMenu
+@onready var item_menu: VBoxContainer = %itemMenu
+@onready var special_menu: VBoxContainer = %specialMenu
+@onready var enemy_container = %enemyGroup
 @onready var party_ui: combatPartyShowcaseUI = %PartyUI
 @onready var message_panel: Panel = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/messagePanel"
 @onready var current_player_info: PanelContainer = %currentPlayerInfo
-@onready var turn_indicator: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/turnIndicator"
+@onready var turn_indicator: Label = %turnIndicator
 @onready var canvas_layer: CanvasLayer = $"../CanvasLayer"
 @onready var ui: Control = $"../CanvasLayer/UI"
-@onready var description: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/description"
+@onready var description: Label = %description
+
+const NORMAL_COMBAT = preload("uid://dfp3v14drfldu")
+const HOVER_COMBAT = preload("uid://dku3i7kc8lhey")
+const PRESSED_COMBAT = preload("uid://dw1ecoumkr2uh")
+
+
+
+
 
 @onready var target_component: Node = $targetComponent
 
@@ -134,8 +143,8 @@ func _on_item_button_pressed() -> void:
 	ally_targeting_mode = false
 	_highlight_enemies(false)
 	party_ui.clear_highlights()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".show()
+	action_menu.hide()
+	item_menu.show()
 
 func _on_special_button_2_pressed() -> void:
 	Music.play_ui_hit_combat()
@@ -148,7 +157,7 @@ func _on_special_button_2_pressed() -> void:
 	party_ui.clear_highlights()
 	
 	# Clear any previous buttons in the special menu (if any)
-	var container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu"
+	var container = %specialMenu
 
 	# Remove all existing buttons
 	for child in container.get_children():
@@ -157,6 +166,9 @@ func _on_special_button_2_pressed() -> void:
 	# Create a button for each ability
 	for ability in abilities:
 		var button = Button.new()
+		button.add_theme_stylebox_override("normal",NORMAL_COMBAT)
+		button.add_theme_stylebox_override("hover", HOVER_COMBAT)
+		button.add_theme_stylebox_override("pressed", PRESSED_COMBAT)
 		button.text = ability.name
 		
 		# Use a lambda function to call _on_ability_button_pressed with the specific ability
@@ -181,16 +193,20 @@ func _on_special_button_2_pressed() -> void:
 		)
 		
 		# Add the button to the special menu
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".add_child(button)
+		special_menu.add_child(button)
 	
 	# Optionally, you can add a "Cancel" button to return to the action menu
 	var cancel_button = Button.new()
+	cancel_button.add_theme_stylebox_override("normal",NORMAL_COMBAT)
+	cancel_button.add_theme_stylebox_override("hover", HOVER_COMBAT)
+	cancel_button.add_theme_stylebox_override("pressed", PRESSED_COMBAT)
+	cancel_button.add_theme_font_size_override("font", 22)
 	cancel_button.text = "Cancel"
 	cancel_button.pressed.connect(func(): _on_back_button_pressed())
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".add_child(cancel_button)
+	special_menu.add_child(cancel_button)
 	
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".show()
+	action_menu.hide()
+	special_menu.show()
 	
 func _highlight_enemies(active: bool):
 	for enemy in enemy_container.get_children():
@@ -216,9 +232,9 @@ func _check_combat_end():
 		fade_overlay.visible = true
 		fade_overlay.modulate.a = 0.0  # Start transparent
 		
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton".disabled = true
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton".disabled = true
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton".disabled = true
+		%"actionMenu/attackButton".disabled = true
+		%"actionMenu/specialButton".disabled = true
+		%"actionMenu/itemButton".disabled = true
 
 		var tween = create_tween()
 		tween.tween_property(fade_overlay, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
@@ -230,9 +246,9 @@ func _check_combat_end():
 		tween.tween_callback(func():
 			GameManager.generate_new_maze()
 			_end_combat()
-			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/attackButton".disabled = false
-			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton".disabled = false
-			$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton".disabled = false
+			%"actionMenu/attackButton".disabled = false
+			%"actionMenu/specialButton".disabled = false
+			%"actionMenu/itemButton".disabled = false
 		)
 
 #
@@ -358,9 +374,9 @@ func _on_back_button_pressed() -> void:
 	ally_targeting_mode = false
 	party_ui.clear_highlights()
 	
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+	special_menu.hide()
+	item_menu.hide()
+	action_menu.show()
 	
 # Function to handle the ability use when the button is pressed
 func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
@@ -380,8 +396,8 @@ func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 		$playerAttackComponent.attack($targetComponent.currentTarget,ability,turnOrder,turn,message_panel,enemiesRes,enemy_container_ui)
 		current_ability = null
 		# hide special menu
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		special_menu.hide()
+		action_menu.show()
 		postAttack()
 	elif ability.target_type == BaseSpellStrategy.TARGETING_TYPE.ALLY:
 		ally_targeting_mode = true
@@ -402,8 +418,8 @@ func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 		party_ui.updateAllBuff()
 		current_ability = null
 		# hide special menu
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		special_menu.hide()
+		action_menu.show()
 		postAttack()
 
 #
@@ -431,8 +447,8 @@ func _on_party_ui_party_member_pressed(member: CharacterStats, memberIcon: turnI
 		message_panel.add_message(message)
 
 		# Hide menus
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+		special_menu.hide()
+		action_menu.show()
 
 		# Reset targeting state
 		current_ability = null
@@ -475,8 +491,8 @@ func _on_party_ui_party_member_item_heal_completed(target, item) -> void:
 	party_ui.clear_highlights()
 	
 	# Hide menus
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
-	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".show()
+	item_menu.hide()
+	action_menu.show()
 	
 	# Move caster to end of turn order
 	turnOrder.push_back(turnOrder.pop_front())
