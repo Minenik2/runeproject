@@ -5,9 +5,9 @@ extends Node
 @onready var current_member_display = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"
 @onready var action_menu = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu"
 @onready var enemy_container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/enemyPanel/enemyGroup"
-@onready var party_ui: GridContainer = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI"
+@onready var party_ui: combatPartyShowcaseUI = %PartyUI
 @onready var message_panel: Panel = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/messagePanel"
-@onready var current_player_info: PanelContainer = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"
+@onready var current_player_info: PanelContainer = %currentPlayerInfo
 @onready var turn_indicator: Label = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer/turnIndicator"
 @onready var canvas_layer: CanvasLayer = $"../CanvasLayer"
 @onready var ui: Control = $"../CanvasLayer/UI"
@@ -133,6 +133,7 @@ func _on_item_button_pressed() -> void:
 	targeting_mode = false
 	ally_targeting_mode = false
 	_highlight_enemies(false)
+	party_ui.clear_highlights()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".show()
 
@@ -144,6 +145,7 @@ func _on_special_button_2_pressed() -> void:
 	targeting_mode = false
 	ally_targeting_mode = false
 	_highlight_enemies(false)
+	party_ui.clear_highlights()
 	
 	# Clear any previous buttons in the special menu (if any)
 	var container = $"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu"
@@ -354,6 +356,7 @@ func _reset_position(initial_position: Vector2):
 func _on_back_button_pressed() -> void:
 	Music.play_ui_hit_combat()
 	ally_targeting_mode = false
+	party_ui.clear_highlights()
 	
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
 	$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu".hide()
@@ -383,6 +386,7 @@ func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 	elif ability.target_type == BaseSpellStrategy.TARGETING_TYPE.ALLY:
 		ally_targeting_mode = true
 		current_ability = ability
+		party_ui.highlight_all()
 	elif ability.target_type == BaseSpellStrategy.TARGETING_TYPE.SELFCAST:
 		var castSpell = ability.cast(turnOrder[0], turnOrder[0], null, null)
 		if !castSpell[0]:
@@ -395,7 +399,7 @@ func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 		message += ability.combatText()
 		message_panel.add_message(message)
 		$heal.play()
-		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI".updateAllBuff()
+		party_ui.updateAllBuff()
 		current_ability = null
 		# hide special menu
 		$"../CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu".hide()
@@ -410,7 +414,7 @@ func _on_ability_button_pressed(ability: BaseSpellStrategy) -> void:
 func _on_party_ui_party_member_pressed(member: CharacterStats, memberIcon: turnIcon) -> void:
 	if ally_targeting_mode:
 		var caster = turnOrder[0]
-		var spell = current_ability
+		var spell: BaseSpellStrategy = current_ability
 		var castSpell = spell.cast(caster, member, memberIcon, null)
 		
 		if !castSpell[0]:
@@ -433,6 +437,7 @@ func _on_party_ui_party_member_pressed(member: CharacterStats, memberIcon: turnI
 		# Reset targeting state
 		current_ability = null
 		ally_targeting_mode = false
+		party_ui.clear_highlights()
 
 		# Update UI
 		party_ui.update_status()

@@ -17,10 +17,14 @@ func set_combatant(combatantSet: CharacterStats):
 
 # Update the health label
 func update_health(current, maxHP):
-	%hpLabel.text = "HP: " + str(current) + "/" + str(maxHP)
+	%hpLabel.text = str(current) + "/" + str(maxHP)
+	$VBoxContainer/hpBar.max_value = maxHP
+	$VBoxContainer/hpBar.value = current
 
-func update_mp(current, maxHP):
-	%mpLabel.text = "MP: " + str(current) + "/" + str(maxHP)
+func update_mp(current, maxMP):
+	%mpLabel.text = str(current) + "/" + str(maxMP)
+	$VBoxContainer/mpBar.max_value = maxMP
+	$VBoxContainer/mpBar.value = current
 
 func update_lvl(current):
 	%lvlLabel.text = "Lv. " + str(current)
@@ -28,6 +32,12 @@ func update_lvl(current):
 # Function to get the stored combatant
 func get_combatant():
 	return combatant
+
+func flash_color(color=Color(0.8, 0.8, 0.8, 1.0)):
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.05)
+	tween.tween_property(self, "modulate", color, 0.15)
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.05)
 
 func show_heal(heal_amount, color=Color(0.229, 0.62, 0.366, 1.0)):
 	# Spawn healing popup
@@ -45,7 +55,7 @@ func show_damage(damage_amount):
 	heal_label.set_damage(damage_amount)
 
 	# Add to the PopupLayer CanvasLayer instead of current_scene
-	var popup_layer = $"../../../.."
+	var popup_layer = $"../../../../.."
 	popup_layer.add_child(heal_label)
 
 func highlight(enable: bool):
@@ -66,3 +76,16 @@ func updateBuffList():
 		var buffTexture = BUFF_ICON.instantiate()
 		buffTexture.tooltip_strings.append(buff.tooltip())
 		%buffList.add_child(buffTexture)
+
+
+func _on_hp_bar_mouse_entered() -> void:
+	%hpLabel.text = "HP: " + str(combatant.current_hp) + "/" + str(combatant.max_hp)
+
+func _on_hp_bar_mouse_exited() -> void:
+	%hpLabel.text = str(combatant.current_hp) + "/" + str(combatant.max_hp)
+
+func _on_mp_bar_mouse_entered() -> void:
+	%mpLabel.text = "MP: " + str(combatant.current_mp) + "/" + str(combatant.max_mp)
+
+func _on_mp_bar_mouse_exited() -> void:
+	%mpLabel.text = str(combatant.current_mp) + "/" + str(combatant.max_mp)

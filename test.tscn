@@ -108,6 +108,7 @@ volume_db = -20.0
 [node name="PartyUIOverworld" type="HBoxContainer" parent="UI"]
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 script = ExtResource("4_0m0f1")
 
 [node name="Minimap" type="Control" parent="UI" node_paths=PackedStringArray("dungeon_map", "player_marker", "labyrinth_generator", "player")]
@@ -119,6 +120,7 @@ anchor_bottom = 1.0
 offset_top = -150.0
 offset_right = 150.0
 grow_vertical = 0
+mouse_filter = 2
 script = ExtResource("1_g14j6")
 dungeon_map = NodePath("MarginContainer/CenterContainer/maptexture")
 player_marker = NodePath("MarginContainer/CenterContainer/PlayerPointer")
@@ -171,17 +173,6 @@ size_flags_horizontal = 4
 texture = ExtResource("4_00tp4")
 expand_mode = 1
 stretch_mode = 3
-
-[node name="GridContainer" type="GridContainer" parent="UI/Minimap"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -602.0
-offset_right = 512.0
-offset_bottom = -90.0
-grow_vertical = 0
-metadata/_edit_use_anchors_ = true
 
 [node name="fogOfWar" type="ColorRect" parent="UI/Minimap"]
 visible = false

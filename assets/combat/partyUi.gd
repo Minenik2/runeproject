@@ -1,4 +1,5 @@
 extends GridContainer 
+class_name combatPartyShowcaseUI
 
 signal party_member_pressed(member, icon: turnIcon)
 signal party_member_item_heal_completed(target, item)
@@ -43,11 +44,11 @@ func flash_damage(member, damage):
 			tween.tween_property(icon, "modulate", Color(1, 1, 1, 1), 0.05)
 
 			# Damage number (added to external layer)
-			if $"..":
+			if $"../..":
 				var damage_label = preload("res://assets/combat/floating_damage_label.tscn").instantiate()
 				damage_label.set_damage(damage)
 				damage_label.z_index = 10
-				$"..".add_child(damage_label)
+				$"../..".add_child(damage_label)
 				
 				# Position over the icon's global position
 				var global_pos = icon.get_global_position()
@@ -147,11 +148,11 @@ func _on_party_icon_pressed(member, sender):
 	
 		var use_item = item.use(member, sender)
 		if !use_item[0]:
-			$"../../../../../../CombatManager/invalid".play()
-			$"../PanelContainer/HBoxContainer/description".text = use_item[1]
+			Music.play_invalid()
+			%description.text = use_item[1]
 			return
 		
-		$"../../../../../../CombatManager/heal".play()
+		%heal.play()
 		# send to combat manager for updating turn order
 		emit_signal("party_member_item_heal_completed", member, selectedItem)
 		
@@ -161,7 +162,7 @@ func _on_party_icon_pressed(member, sender):
 			clear_highlights()
 	
 		update_status()
-		$"../itemMenu/inventoryUI".update_inventory()
+		%inventoryUI.update_inventory()
 		
 
 func highlight_all():

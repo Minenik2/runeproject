@@ -1,7 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://dcbkgikp2rkro"]
+[gd_scene load_steps=8 format=3 uid="uid://dcbkgikp2rkro"]
 
 [ext_resource type="Script" uid="uid://df8grtmr854li" path="res://turn_icon.gd" id="1_cqemw"]
 [ext_resource type="Texture2D" uid="uid://dfy37ysoov3dh" path="res://assets/art/ui/uiBox.png" id="1_jts41"]
+[ext_resource type="Texture2D" uid="uid://fmsa13ckh6vl" path="res://assets/art/ui/hp_bar.png" id="3_6fx0q"]
+[ext_resource type="Texture2D" uid="uid://bterasoes1bp6" path="res://assets/art/ui/hp_bar_over.png" id="4_70fgr"]
+[ext_resource type="Texture2D" uid="uid://bswyceilpow0l" path="res://assets/art/ui/hp_bar_progress.png" id="5_x5yj0"]
+[ext_resource type="Texture2D" uid="uid://bafqi42sly1b8" path="res://assets/art/ui/mp_bar_progress.png" id="6_70fgr"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wyxt8"]
 texture = ExtResource("1_jts41")
@@ -18,11 +22,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_wyxt8")
 script = ExtResource("1_cqemw")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="buffList" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="nameLabel" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 1
+text = "test"
 
 [node name="lvlLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -30,25 +49,61 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Lv."
 
-[node name="buffList" type="HBoxContainer" parent="VBoxContainer"]
-unique_name_in_owner = true
+[node name="hpBar" type="TextureProgressBar" parent="VBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
+nine_patch_stretch = true
+stretch_margin_left = 6
+stretch_margin_top = 8
+stretch_margin_right = 6
+stretch_margin_bottom = 8
+texture_under = ExtResource("3_6fx0q")
+texture_over = ExtResource("4_70fgr")
+texture_progress = ExtResource("5_x5yj0")
 
-[node name="nameLabel" type="Button" parent="VBoxContainer"]
+[node name="hpLabel" type="Label" parent="VBoxContainer/hpBar"]
 unique_name_in_owner = true
-layout_mode = 2
-text = "test"
-
-[node name="hpLabel" type="Label" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5254902)
+theme_override_constants/shadow_offset_x = 2
 theme_override_font_sizes/font_size = 11
 text = "HP"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="mpLabel" type="Label" parent="VBoxContainer"]
-unique_name_in_owner = true
+[node name="mpBar" type="TextureProgressBar" parent="VBoxContainer"]
 layout_mode = 2
+nine_patch_stretch = true
+stretch_margin_left = 6
+stretch_margin_top = 6
+stretch_margin_right = 6
+stretch_margin_bottom = 6
+texture_under = ExtResource("3_6fx0q")
+texture_over = ExtResource("4_70fgr")
+texture_progress = ExtResource("6_70fgr")
+
+[node name="mpLabel" type="Label" parent="VBoxContainer/mpBar"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5254902)
+theme_override_constants/shadow_offset_x = 2
 theme_override_font_sizes/font_size = 11
 text = "MP"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/nameLabel" to="." method="_on_name_label_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/hpBar" to="." method="_on_hp_bar_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/hpBar" to="." method="_on_hp_bar_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/mpBar" to="." method="_on_mp_bar_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/mpBar" to="." method="_on_mp_bar_mouse_exited"]

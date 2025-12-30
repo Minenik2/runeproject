@@ -69,6 +69,7 @@ stream = ExtResource("2_6foyy")
 panning_strength = 0.0
 
 [node name="heal" type="AudioStreamPlayer2D" parent="CombatManager"]
+unique_name_in_owner = true
 stream = ExtResource("8_q0k0i")
 pitch_scale = 1.6
 panning_strength = 0.0
@@ -157,6 +158,7 @@ layout_mode = 2
 text = "Turn 1"
 
 [node name="description" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
@@ -209,6 +211,7 @@ offset_bottom = 25.0
 grow_vertical = 2
 
 [node name="inventoryUI" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu" instance=ExtResource("10_q0k0i")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="backButton" type="Button" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu"]
@@ -235,44 +238,42 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Back"
 
-[node name="PartyUI" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -92.0
-offset_right = 320.0
-grow_vertical = 0
-columns = 4
-script = ExtResource("2_grv6n")
-
-[node name="currentPlayerInfo" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -157.0
-offset_top = -224.0
-grow_horizontal = 0
+grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
+
+[node name="PartyUI" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+columns = 4
+script = ExtResource("2_grv6n")
+
+[node name="currentPlayerInfo" type="PanelContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_08ddm")
 script = ExtResource("4_de3ys")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo"]
 layout_mode = 2
 
-[node name="visualRight" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="visualRight" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
 
-[node name="nameLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="nameLabel" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "name"
 
-[node name="hp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="hp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
 nine_patch_stretch = true
 stretch_margin_left = 6
@@ -283,7 +284,7 @@ texture_under = ExtResource("17_nsjn4")
 texture_over = ExtResource("18_hdfcf")
 texture_progress = ExtResource("19_elixp")
 
-[node name="mp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="mp_bar" type="TextureProgressBar" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
 nine_patch_stretch = true
 stretch_margin_left = 6
@@ -294,54 +295,54 @@ texture_under = ExtResource("17_nsjn4")
 texture_over = ExtResource("18_hdfcf")
 texture_progress = ExtResource("20_qqpl8")
 
-[node name="character_stats" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer"]
+[node name="character_stats" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/v_separation = -4
+theme_override_constants/v_separation = -6
 columns = 2
 
-[node name="ad" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="ad" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="ap" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="ap" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="def" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="def" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="mdef" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="mdef" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="acc" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="acc" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="eva" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="eva" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="critchance" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="critchance" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 11
 
-[node name="critdmg" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/currentPlayerInfo/VBoxContainer/character_stats"]
+[node name="critdmg" type="Label" parent="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/currentPlayerInfo/VBoxContainer/character_stats"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
@@ -416,9 +417,9 @@ color = Color(0, 0, 0, 1)
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/specialButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu" method="_on_special_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/actionMenu/itemButton" to="CombatManager" method="_on_item_button_pressed"]
 [connection signal="item_hovered" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CombatManager" method="_on_inventory_ui_item_hovered"]
-[connection signal="item_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" method="_on_inventory_ui_item_pressed"]
+[connection signal="item_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/inventoryUI" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/PartyUI" method="_on_inventory_ui_item_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/itemMenu/backButton" to="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/PartyUI" method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/specialMenu/backButton" to="CombatManager" method="_on_back_button_pressed"]
-[connection signal="party_member_item_heal_completed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" to="CombatManager" method="_on_party_ui_party_member_item_heal_completed"]
-[connection signal="party_member_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/PartyUI" to="CombatManager" method="_on_party_ui_party_member_pressed"]
+[connection signal="party_member_item_heal_completed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/PartyUI" to="CombatManager" method="_on_party_ui_party_member_item_heal_completed"]
+[connection signal="party_member_pressed" from="CanvasLayer/UI/PanelContainer/VBoxContainer/content/HBoxContainer/PartyUI" to="CombatManager" method="_on_party_ui_party_member_pressed"]

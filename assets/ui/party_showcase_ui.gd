@@ -1,4 +1,5 @@
 extends GridContainer
+class_name partyShowcaseUI
 
 signal party_member_pressed(member, sender)
 signal sendt_message(message) # this signal is to send a message that can be either placed on a tooltip, or combat log
