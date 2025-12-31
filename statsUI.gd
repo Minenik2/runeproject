@@ -9,13 +9,21 @@ var selectedMemberVisual = Database.memberRes[0] # user clicked on a member
 const FLOATING_DAMAGE_LABEL = preload("res://assets/combat/floating_damage_label.tscn")
 @onready var party_showcase_ui: GridContainer = $"../inventoryPanel/HBoxContainer/partyShowcaseUI"
 
+const HOVER_COMBAT = preload("uid://dku3i7kc8lhey")
+const NORMAL_COMBAT = preload("uid://dfp3v14drfldu")
+const PRESSED_COMBAT = preload("uid://dw1ecoumkr2uh")
+
 func _ready() -> void:
 	for c in Database.memberRes:
 		var button = Button.new()
 		button.text = c.character_name
+		button.add_theme_stylebox_override("hover", HOVER_COMBAT)
+		button.add_theme_stylebox_override("normal", NORMAL_COMBAT)
+		button.add_theme_stylebox_override("pressed", PRESSED_COMBAT)
+		
 		# Optionally connect a pressed signal if you want interaction:
 		button.pressed.connect(_on_character_button_pressed.bind(c))
-		$"../statsPanel/VBoxContainer".add_child(button)
+		$"../statsPanel/characterList".add_child(button)
 		
 		var icon = preload("res://TurnIcon.tscn").instantiate()
 		icon.set_combatant(c)
@@ -36,24 +44,45 @@ func _on_character_button_pressed(c):
 	selectedMemberVisual = c
 	populate_stats(c)
 
-func populate_stats(c):
-	$"../statsPanel/VBoxContainer2/TextureRect".texture = c.battle_sprite
-	$"../statsPanel/VBoxContainer2/heroName".text = c.character_name
-	$"../statsPanel/VBoxContainer2/lvl".text = "Lv. %s" % c.level
-	$"../statsPanel/VBoxContainer2/exp".text = "Exp: %s / %s" % [c.experience, c.experience_to_level]
-	$"../statsPanel/VBoxContainer2/hp".text = "HP: %s / %s" % [c.current_hp, c.max_hp]
-	$"../statsPanel/VBoxContainer2/Mp".text = "MP: %s / %s" % [c.current_mp, c.max_mp]
+func populate_stats(c:CharacterStats):
+	%characterArt.texture = c.battle_sprite
+	%heroName.text = c.character_name
+	%lvl.text = "Lv. %s" % c.level
+	%exp.text = "Exp: %s / %s" % [c.experience, c.experience_to_level]
+	%hp.text = "HP: %s / %s" % [c.current_hp, c.max_hp]
+	%Mp.text = "MP: %s / %s" % [c.current_mp, c.max_mp]
+	
+	%xp_bar.max_value = c.experience_to_level
+	%hpBar.max_value = c.max_hp
+	%mpBar.max_value = c.max_mp
+	%xp_bar.value = c.experience
+	%hpBar.value = c.current_hp
+	%mpBar.value = c.current_mp
 	
 	# Primary stats
-	$"../statsPanel/VBoxContainer/strength".text = "Strength: %s" % c.strength
-	$"../statsPanel/VBoxContainer/intelligence".text = "Intelligence: %s" % c.intelligence
-	$"../statsPanel/VBoxContainer/vitality".text = "Vitality: %s" % c.vitality
-	$"../statsPanel/VBoxContainer/dexterity".text = "Dexterity: %s" % c.dexterity
-	$"../statsPanel/VBoxContainer/faith".text = "Faith: %s" % c.faith
-	$"../statsPanel/VBoxContainer/speed".text = "Speed: %s" % c.speed
+	%strength.text = "Strength: %s" % c.strength
+	%intelligence.text = "Intelligence: %s" % c.intelligence
+	%vitality.text = "Vitality: %s" % c.vitality
+	%dexterity.text = "Dexterity: %s" % c.dexterity
+	%faith.text = "Faith: %s" % c.faith
 	
 	# Class
-	$"../statsPanel/VBoxContainer/class".text = "Class: %s" % c.CHARACTER_CLASS.keys()[c.character_class]
+	%class.text = "Class: %s" % c.CHARACTER_CLASS.keys()[c.character_class]
+	
+	# sub stats
+	%ad.text = "AD:%s" % [c.attack_power]
+	%ap.text = "AP:%s" % [c.magic_power]
+	%def.text = "DEF:%s" % [c.defense]
+	%mdef.text = "MDEF:%s" % [c.magic_defense]
+	%acc.text = "ACC:%s" % [snapped(c.accuracy, 0.01)]
+	%eva.text = "EVA:%s" % [snapped(c.evasion, 0.01)]
+	%critchance.text = "CRATE:%s" % [snapped(c.critical_chance, 0.01)]
+	%critdmg.text = "CDMG:%s" % [snapped(c.critical_multiplier, 0.01)]
+	
+	if c.level_up_points > 0:
+		%levelUp.disabled = false
+	else:
+		%levelUp.disabled = true
 
 
 func _on_tab_changed(tab: int) -> void:
@@ -226,3 +255,7 @@ func _on_party_showcase_ui_party_member_pressed(member: CharacterStats, sender: 
 
 func _on_party_showcase_ui_sendt_message(message: Variant) -> void:
 	$"../inventoryPanel/tooltip".text = message
+
+
+func _on_level_up_pressed() -> void:
+	pass # Replace with function body.

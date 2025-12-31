@@ -4,7 +4,7 @@ class_name CharacterStats
 
 enum BUFFABLE_STATS {
 	max_hp,
-	defense,
+	defense, 
 	attack_power
 }
 
@@ -34,7 +34,6 @@ enum CHARACTER_CLASS {
 @export var vitality: int = 9
 @export var dexterity: int = 9
 @export var faith: int = 9
-@export var speed: int = 9
 
 @export_category("Leveling")
 @export var experience: int = 0
@@ -42,6 +41,9 @@ enum CHARACTER_CLASS {
 
 @export var abilities: Array[BaseSpellStrategy] = []
 @export var spellUnlockEntry: Array[SpellUnlockEntry] = []
+
+@export_category("Curves")
+@export var max_hp_curve = preload("res://assets/characters/curves/maxHealth_statCurve.tres")
 
 # Derived stats (no @export since they're calculated)
 var attack_power: int
@@ -52,6 +54,7 @@ var magic_defense: int
 var evasion: float
 var critical_chance: float
 var critical_multiplier: float
+var speed: int
 var combat_initiative : int
 var is_ally: bool
 var is_dead: bool = false
@@ -67,6 +70,7 @@ var base_abilities: Array[BaseSpellStrategy]
 var base_experience_to_level: int
 
 var stat_buffs: Array[StatBuff]
+var level_up_points: int = 0
 
 # Initialize with default values
 func _init():
@@ -171,6 +175,7 @@ func calculate_derived_stats():
 	current_hp = min(current_hp, max_hp)
 	current_mp = min(current_mp, max_mp)
 	
+	# apply the buffs
 	for stat_name in stat_multipliers:
 		var cur_property_name: String = stat_name.to_lower()
 		set(cur_property_name, get(cur_property_name) * stat_multipliers[stat_name])
@@ -198,6 +203,7 @@ func gain_exp(amount: int) -> bool:
 
 func level_up():
 	level += 1
+	level_up_points += 1
 	# check if the target leveled up naturally or by other means such as using an item
 	if experience >= experience_to_level:
 		experience =  experience - experience_to_level

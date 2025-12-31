@@ -6,7 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://c2a0e1tu4ajov" path="res://addons/tooltips_pro/examples/resources/styles/LockBorderStyleBoxFlat.tres" id="4_i6mk0"]
 
 [node name="TooltipTemplateDefault" type="PanelContainer" node_paths=PackedStringArray("content_labels", "locked_elements", "locking_elements", "timer_lock_progress_bar") groups=["tooltips"]]
-z_index = 1
+z_index = 20
 custom_minimum_size = Vector2(64, 0)
 offset_right = 118.0
 offset_bottom = 39.0
