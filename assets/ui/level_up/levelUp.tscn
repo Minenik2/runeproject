@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://1vdtg7jce70g"]
+
+[ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="1_1ocqv"]
+[ext_resource type="Texture2D" uid="uid://cs3gh5rv5xl4" path="res://assets/art/crosshairLock.png" id="2_6qmqw"]
+[ext_resource type="Script" uid="uid://cysx8oyyfd6d" path="res://assets/ui/level_up/level_upUI.gd" id="2_eros6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6qmqw"]
+texture = ExtResource("1_1ocqv")
+modulate_color = Color(0.4509804, 0.41568628, 0.20784314, 1)
+
+[node name="LevelUp" type="Panel" unique_id=919167173]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_6qmqw")
+script = ExtResource("2_eros6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=834583240]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="levelUpText" type="Label" parent="VBoxContainer" unique_id=169329788]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Lirae leveled up! - choose an upgrade"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=314318048]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer" unique_id=845025759]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="powerUP" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=1882711028]
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Increase HP"
+icon = ExtResource("2_6qmqw")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+
+[node name="powerUP2" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=318050489]
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="powerUP3" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2016853168]
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="infoLabel" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=394116413]
+layout_mode = 2
+text = "Choose an upgrade"
+horizontal_alignment = 1
+
+[connection signal="mouse_entered" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP" to="." method="_on_power_up_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP" to="." method="_on_power_up_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP2" to="." method="_on_power_up_2_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP2" to="." method="_on_power_up_2_pressed"]
+[connection signal="mouse_entered" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP3" to="." method="_on_power_up_3_mouse_entered"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/HBoxContainer/powerUP3" to="." method="_on_power_up_3_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://be4diiash3jp6"]
+[gd_scene format=3 uid="uid://be4diiash3jp6"]
 
 [ext_resource type="Script" uid="uid://cfvdp38dc0ydb" path="res://player.gd" id="1_37kl0"]
 [ext_resource type="Script" uid="uid://c8odkda4mx4i1" path="res://labyrinth_generator.gd" id="1_ehkex"]
@@ -37,6 +37,7 @@
 [ext_resource type="StyleBox" uid="uid://dfp3v14drfldu" path="res://assets/ui/stylebox/normalCombat.stylebox" id="27_2h37t"]
 [ext_resource type="StyleBox" uid="uid://dw1ecoumkr2uh" path="res://assets/ui/stylebox/pressedCombat.stylebox" id="28_adp8l"]
 [ext_resource type="StyleBox" uid="uid://dku3i7kc8lhey" path="res://assets/ui/stylebox/hoverCombat.stylebox" id="29_dvnpp"]
+[ext_resource type="PackedScene" uid="uid://1vdtg7jce70g" path="res://assets/ui/level_up/levelUp.tscn" id="34_adp8l"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xersf"]
 
@@ -75,6 +76,14 @@ texture_margin_top = 12.0
 texture_margin_right = 12.0
 texture_margin_bottom = 12.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dvnpp"]
+texture = ExtResource("24_lb1cv")
+texture_margin_left = 12.0
+texture_margin_top = 12.0
+texture_margin_right = 12.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.91, 0.79534, 0.5824, 1)
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hdfcf"]
 load_path = "res://.godot/imported/uiBox.png-be998f19161d28a3ef95669b7020a3ce.ctex"
 
@@ -109,46 +118,67 @@ fog_density = 0.6
 radius = 0.1
 height = 0.5
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=294743126]
 
-[node name="labyrinth_generator" type="Node" parent="."]
+[node name="labyrinth_generator" type="Node" parent="." unique_id=870867671]
 script = ExtResource("1_ehkex")
 enemy_scene = ExtResource("3_77dp3")
 chest_scene = ExtResource("4_pdf00")
 
-[node name="generators" type="Node" parent="labyrinth_generator"]
+[node name="generators" type="Node" parent="labyrinth_generator" unique_id=1503897752]
 
-[node name="carve_path" type="Node" parent="labyrinth_generator/generators"]
+[node name="carve_path" type="Node" parent="labyrinth_generator/generators" unique_id=1821356377]
 script = ExtResource("5_dwqlq")
 
-[node name="prims_algo" type="Node" parent="labyrinth_generator/generators"]
+[node name="prims_algo" type="Node" parent="labyrinth_generator/generators" unique_id=1642918948]
 script = ExtResource("6_15c7i")
 
-[node name="room_based_algo" type="Node" parent="labyrinth_generator/generators"]
+[node name="room_based_algo" type="Node" parent="labyrinth_generator/generators" unique_id=296363501]
 script = ExtResource("7_xpeyw")
 
-[node name="labyrinth_builder" type="Node" parent="labyrinth_generator" node_paths=PackedStringArray("gridmap")]
+[node name="labyrinth_builder" type="Node" parent="labyrinth_generator" unique_id=524650394 node_paths=PackedStringArray("gridmap")]
 script = ExtResource("5_eski5")
 gridmap = NodePath("../../GridMap")
 
-[node name="labyrinth_decorator" type="Node" parent="labyrinth_generator" node_paths=PackedStringArray("player")]
+[node name="labyrinth_decorator" type="Node" parent="labyrinth_generator" unique_id=1598888773 node_paths=PackedStringArray("player")]
 script = ExtResource("9_15c7i")
 maze_reset_scene = ExtResource("2_xersf")
 player = NodePath("../../player")
 
-[node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator"]
+[node name="unlock" type="AudioStreamPlayer" parent="labyrinth_generator" unique_id=542364546]
 stream = ExtResource("4_uty7l")
 volume_db = -20.0
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1783542544]
 
-[node name="PartyUIOverworld" type="HBoxContainer" parent="UI"]
+[node name="tooltip_middle" type="Label" parent="UI" unique_id=364585994]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -183.0
+offset_top = -22.0
+offset_right = 183.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.79, 0.79, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.866667)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 10
+text = "Press Space To Decent"
+horizontal_alignment = 1
+
+[node name="PartyUIOverworld" type="HBoxContainer" parent="UI" unique_id=73898967]
 offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("4_0m0f1")
 
-[node name="Minimap" type="Control" parent="UI" node_paths=PackedStringArray("dungeon_map", "player_marker", "labyrinth_generator", "player")]
+[node name="Minimap" type="Control" parent="UI" unique_id=1161899470 node_paths=PackedStringArray("dungeon_map", "player_marker", "labyrinth_generator", "player")]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 2
@@ -164,23 +194,23 @@ player_marker = NodePath("MarginContainer/CenterContainer/PlayerPointer")
 labyrinth_generator = NodePath("../../labyrinth_generator")
 player = NodePath("../../player")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Minimap"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Minimap" unique_id=192042509]
 layout_mode = 0
 offset_top = -75.0
 offset_right = 225.0
 offset_bottom = 150.0
 
-[node name="CenterContainer" type="CenterContainer" parent="UI/Minimap/MarginContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="UI/Minimap/MarginContainer" unique_id=1496991421]
 layout_mode = 2
 
-[node name="maptexture" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer"]
+[node name="maptexture" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer" unique_id=549326829]
 texture_filter = 1
 custom_minimum_size = Vector2(225, 225)
 layout_mode = 2
 texture = SubResource("AtlasTexture_00tp4")
 expand_mode = 2
 
-[node name="exitMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture"]
+[node name="exitMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture" unique_id=173311861]
 visible = false
 modulate = Color(0.45, 1, 0, 1)
 texture_filter = 1
@@ -191,7 +221,7 @@ pivot_offset = Vector2(8, 8)
 texture = ExtResource("4_00tp4")
 stretch_mode = 2
 
-[node name="mobMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture"]
+[node name="mobMarker" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer/maptexture" unique_id=1864628534]
 visible = false
 modulate = Color(1, 0.333333, 0, 1)
 texture_filter = 1
@@ -202,7 +232,7 @@ pivot_offset = Vector2(8, 8)
 texture = ExtResource("4_00tp4")
 stretch_mode = 2
 
-[node name="PlayerPointer" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer"]
+[node name="PlayerPointer" type="TextureRect" parent="UI/Minimap/MarginContainer/CenterContainer" unique_id=124905139]
 modulate = Color(1, 0.211765, 1, 1)
 texture_filter = 1
 layout_mode = 2
@@ -211,7 +241,7 @@ texture = ExtResource("4_00tp4")
 expand_mode = 1
 stretch_mode = 3
 
-[node name="fogOfWar" type="ColorRect" parent="UI/Minimap"]
+[node name="fogOfWar" type="ColorRect" parent="UI/Minimap" unique_id=359758884]
 visible = false
 material = SubResource("ShaderMaterial_ehkex")
 layout_mode = 0
@@ -219,20 +249,20 @@ offset_right = 64.0
 offset_bottom = 64.0
 color = Color(0, 0, 0, 0)
 
-[node name="fogofwar" type="TextureRect" parent="UI/Minimap"]
+[node name="fogofwar" type="TextureRect" parent="UI/Minimap" unique_id=552784404]
 visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="background" type="ColorRect" parent="UI/Minimap"]
+[node name="background" type="ColorRect" parent="UI/Minimap" unique_id=1770735345]
 visible = false
 layout_mode = 0
 offset_right = 64.0
 offset_bottom = 64.0
 color = Color(0.381703, 0.381703, 0.381703, 1)
 
-[node name="alertMarker" type="TextureRect" parent="UI/Minimap"]
+[node name="alertMarker" type="TextureRect" parent="UI/Minimap" unique_id=708898524]
 visible = false
 layout_mode = 1
 anchors_preset = -1
@@ -241,7 +271,7 @@ anchor_bottom = 0.157
 offset_right = -4.12
 offset_bottom = -4.28
 
-[node name="depthUI" type="Label" parent="UI"]
+[node name="depthUI" type="Label" parent="UI" unique_id=1604300521]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -251,7 +281,8 @@ grow_horizontal = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_a3se8")
 text = "Depth: 1"
 
-[node name="menuUI" type="Panel" parent="UI"]
+[node name="menuUI" type="Panel" parent="UI" unique_id=485500825]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -259,7 +290,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_uty7l")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI" unique_id=626652350]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -267,7 +298,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TabBar" type="TabBar" parent="UI/menuUI/VBoxContainer"]
+[node name="TabBar" type="TabBar" parent="UI/menuUI/VBoxContainer" unique_id=1295710192]
 layout_mode = 2
 current_tab = 0
 tab_count = 3
@@ -276,52 +307,52 @@ tab_1/title = "Spells"
 tab_2/title = "Inventory"
 script = ExtResource("9_a3se8")
 
-[node name="statsPanel" type="HBoxContainer" parent="UI/menuUI/VBoxContainer"]
+[node name="statsPanel" type="HBoxContainer" parent="UI/menuUI/VBoxContainer" unique_id=478743966]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="characterList" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
+[node name="characterList" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel" unique_id=816609655]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel" unique_id=2140908415]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.2
 theme_override_constants/separation = 10
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer" unique_id=286623574]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_adp8l")
 
-[node name="characterArt" type="TextureRect" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer/PanelContainer"]
+[node name="characterArt" type="TextureRect" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer/PanelContainer" unique_id=1283303424]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 stretch_mode = 5
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel" unique_id=1700735248]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="topInfo" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="topInfo" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=1896444497]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ffwl0")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo" unique_id=1794828207]
 layout_mode = 2
 
-[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo/VBoxContainer"]
+[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo/VBoxContainer" unique_id=251823063]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
 text = "hero name"
 horizontal_alignment = 1
 
-[node name="lvl" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo/VBoxContainer"]
+[node name="lvl" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/topInfo/VBoxContainer" unique_id=1751816613]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -329,7 +360,7 @@ theme_override_font_sizes/font_size = 22
 text = "Lvl: 2"
 horizontal_alignment = 1
 
-[node name="xp_bar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="xp_bar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=301532357]
 unique_name_in_owner = true
 layout_mode = 2
 nine_patch_stretch = true
@@ -341,7 +372,7 @@ texture_under = ExtResource("17_yww54")
 texture_over = ExtResource("18_j75vh")
 texture_progress = ExtResource("19_rrpoi")
 
-[node name="exp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/xp_bar"]
+[node name="exp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/xp_bar" unique_id=1897273466]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -354,15 +385,15 @@ theme_override_font_sizes/font_size = 11
 text = "Exp 50/100"
 horizontal_alignment = 1
 
-[node name="coreStats" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="coreStats" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=1286898369]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_ffwl0")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats" unique_id=214672218]
 layout_mode = 2
 
-[node name="strength" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="strength" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=1187374585]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -373,7 +404,7 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="intelligence" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="intelligence" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=1463028523]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -384,7 +415,7 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="vitality" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="vitality" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=1258911037]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -395,7 +426,7 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="dexterity" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="dexterity" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=899444793]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -406,7 +437,7 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="faith" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="faith" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=2034038239]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -417,7 +448,7 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="class" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer"]
+[node name="class" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/coreStats/VBoxContainer" unique_id=782020403]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -428,76 +459,76 @@ theme_override_font_sizes/font_size = 22
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="subStats" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="subStats" type="PanelContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=1088702942]
 layout_mode = 2
 size_flags_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_ffwl0")
 
-[node name="character_stats" type="GridContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats"]
+[node name="character_stats" type="GridContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats" unique_id=2002363381]
 layout_mode = 2
 theme_override_constants/v_separation = -6
 columns = 2
 
-[node name="ad" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="ad" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=1485902568]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="ap" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="ap" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=441046117]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="def" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="def" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=180590564]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="mdef" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="mdef" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=2132593761]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="acc" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="acc" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=947658914]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="eva" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="eva" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=334243140]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="critchance" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="critchance" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=1875621958]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="critdmg" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats"]
+[node name="critdmg" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/subStats/character_stats" unique_id=201829508]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 
-[node name="hp_mp" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="hp_mp" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=809715956]
 layout_mode = 2
 
-[node name="hpBar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp"]
+[node name="hpBar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp" unique_id=442976440]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
@@ -511,7 +542,7 @@ texture_under = ExtResource("20_34fux")
 texture_over = ExtResource("21_ppv7d")
 texture_progress = ExtResource("22_naet1")
 
-[node name="hp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp/hpBar"]
+[node name="hp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp/hpBar" unique_id=1117112520]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -524,7 +555,7 @@ theme_override_font_sizes/font_size = 11
 text = "Hp: 30/100"
 horizontal_alignment = 1
 
-[node name="mpBar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp"]
+[node name="mpBar" type="TextureProgressBar" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp" unique_id=1483525345]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
@@ -537,7 +568,7 @@ texture_under = ExtResource("20_34fux")
 texture_over = ExtResource("21_ppv7d")
 texture_progress = ExtResource("23_ppv7d")
 
-[node name="Mp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp/mpBar"]
+[node name="Mp" type="Label" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/hp_mp/mpBar" unique_id=1326290806]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -550,96 +581,96 @@ theme_override_font_sizes/font_size = 11
 text = "Mp: 30/100"
 horizontal_alignment = 1
 
-[node name="levelUp" type="Button" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2"]
+[node name="levelUp" type="Button" parent="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2" unique_id=2117542012]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 33
-theme_override_styles/normal = ExtResource("27_2h37t")
+theme_override_styles/normal = SubResource("StyleBoxTexture_dvnpp")
 theme_override_styles/pressed = ExtResource("28_adp8l")
 theme_override_styles/hover = ExtResource("29_dvnpp")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_2h37t")
 text = "Level up"
 
-[node name="spellPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer"]
+[node name="spellPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer" unique_id=255622003]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel"]
+[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel" unique_id=731350997]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Choose a spell"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel" unique_id=2039094209]
 layout_mode = 2
 
-[node name="hbox" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer"]
+[node name="hbox" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer" unique_id=1676202026]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CharactersContainer" type="GridContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/hbox"]
+[node name="CharactersContainer" type="GridContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/hbox" unique_id=2059172457]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 3
 
-[node name="SpellsContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer"]
+[node name="SpellsContainer" type="VBoxContainer" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer" unique_id=1290708459]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/SpellsContainer"]
+[node name="heroName" type="Label" parent="UI/menuUI/VBoxContainer/spellPanel/HBoxContainer/SpellsContainer" unique_id=1615919470]
 visible = false
 layout_mode = 2
 size_flags_vertical = 1
 text = "hero name"
 horizontal_alignment = 1
 
-[node name="CancelSpellButton" type="Button" parent="UI/menuUI/VBoxContainer/spellPanel"]
+[node name="CancelSpellButton" type="Button" parent="UI/menuUI/VBoxContainer/spellPanel" unique_id=1435163542]
 visible = false
 layout_mode = 2
 text = "Cancel spell"
 
-[node name="inventoryPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer"]
+[node name="inventoryPanel" type="VBoxContainer" parent="UI/menuUI/VBoxContainer" unique_id=1070087385]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="tooltip" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+[node name="tooltip" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel" unique_id=997396305]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Choose an item"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/menuUI/VBoxContainer/inventoryPanel" unique_id=1834413114]
 layout_mode = 2
 size_flags_vertical = 2
 
-[node name="partyShowcaseUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("11_vxl6d")]
+[node name="partyShowcaseUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" unique_id=1535758854 instance=ExtResource("11_vxl6d")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="inventoryUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" instance=ExtResource("12_eski5")]
+[node name="inventoryUI" parent="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer" unique_id=592482973 instance=ExtResource("12_eski5")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+[node name="info" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel" unique_id=1598529475]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="title" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel"]
+[node name="title" type="Label" parent="UI/menuUI/VBoxContainer/inventoryPanel" unique_id=421950377]
 custom_minimum_size = Vector2(10, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer"]
+[node name="Button" type="Button" parent="UI/menuUI/VBoxContainer" unique_id=1772992664]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("27_2h37t")
 theme_override_styles/pressed = ExtResource("28_adp8l")
@@ -647,42 +678,24 @@ theme_override_styles/hover = ExtResource("29_dvnpp")
 theme_override_styles/disabled = ExtResource("27_2h37t")
 text = "Exit Menu"
 
-[node name="uiHit" type="AudioStreamPlayer2D" parent="UI/menuUI"]
+[node name="uiHit" type="AudioStreamPlayer2D" parent="UI/menuUI" unique_id=1099678375]
 stream = ExtResource("10_a3se8")
 panning_strength = 0.0
 
-[node name="uiHeal" type="AudioStreamPlayer2D" parent="UI/menuUI"]
+[node name="uiHeal" type="AudioStreamPlayer2D" parent="UI/menuUI" unique_id=289392756]
 stream = ExtResource("12_4uo0j")
 pitch_scale = 1.6
 panning_strength = 0.0
 
-[node name="invalid" type="AudioStreamPlayer2D" parent="UI/menuUI"]
+[node name="invalid" type="AudioStreamPlayer2D" parent="UI/menuUI" unique_id=1646861755]
 stream = ExtResource("12_45l4g")
 volume_db = -5.0
 panning_strength = 0.0
 
-[node name="tooltip_middle" type="Label" parent="UI"]
+[node name="LevelUp" parent="UI" unique_id=919167173 instance=ExtResource("34_adp8l")]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -22.0
-offset_right = 20.0
-offset_bottom = 22.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(1, 0.79, 0.79, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.866667)
-theme_override_constants/shadow_offset_x = 0
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/shadow_outline_size = 10
-text = "Press Space To Decent"
-horizontal_alignment = 1
 
-[node name="text_popup" type="Control" parent="UI"]
+[node name="text_popup" type="Control" parent="UI" unique_id=281945327]
 layout_mode = 3
 anchors_preset = 7
 anchor_left = 0.5
@@ -696,32 +709,32 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=524645607]
 environment = SubResource("Environment_g14j6")
 
-[node name="player" type="CharacterBody3D" parent="." groups=["player"]]
+[node name="player" type="CharacterBody3D" parent="." unique_id=312071700 groups=["player"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, 0.5)
 collision_layer = 2
 script = ExtResource("1_37kl0")
 
-[node name="Camera3D" type="Camera3D" parent="player"]
+[node name="Camera3D" type="Camera3D" parent="player" unique_id=115627625]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player" unique_id=712627989]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.131681, 0)
 shape = SubResource("CapsuleShape3D_37kl0")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="player"]
+[node name="SpotLight3D" type="SpotLight3D" parent="player" unique_id=444858293]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.165992)
 light_color = Color(0.932796, 0.851745, 0.749393, 1)
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="player"]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="player" unique_id=861119796]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.8, -0.5)
 stream = ExtResource("8_5tkv4")
 pitch_scale = 2.22
 panning_strength = 0.0
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap" parent="." unique_id=485574865]
 mesh_library = ExtResource("2_8uh7m")
 cell_size = Vector3(1, 1, 1)
 cell_scale = 0.5
@@ -730,12 +743,12 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="door" parent="." instance=ExtResource("5_ykrsh")]
+[node name="door" parent="." unique_id=379491442 instance=ExtResource("5_ykrsh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44325, 0.50771, 0.501451)
 
 [connection signal="party_member_pressed" from="UI/PartyUIOverworld" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_ui_overworld_party_member_pressed"]
 [connection signal="tab_changed" from="UI/menuUI/VBoxContainer/TabBar" to="UI/menuUI/VBoxContainer/TabBar" method="_on_tab_changed"]
-[connection signal="pressed" from="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/levelUp" to="UI/menuUI/VBoxContainer/TabBar" method="_on_level_up_pressed"]
+[connection signal="pressed" from="UI/menuUI/VBoxContainer/statsPanel/VBoxContainer2/levelUp" to="UI/LevelUp" method="_on_levelUp_pressed"]
 [connection signal="pressed" from="UI/menuUI/VBoxContainer/spellPanel/CancelSpellButton" to="UI/menuUI/VBoxContainer/TabBar" method="_on_cancel_spell_button_pressed"]
 [connection signal="party_member_pressed" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/partyShowcaseUI" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_showcase_ui_party_member_pressed"]
 [connection signal="sendt_message" from="UI/menuUI/VBoxContainer/inventoryPanel/HBoxContainer/partyShowcaseUI" to="UI/menuUI/VBoxContainer/TabBar" method="_on_party_showcase_ui_sendt_message"]

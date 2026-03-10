@@ -16,6 +16,7 @@ const SOUL_HUSK = preload("res://assets/items/item_xp_01.tres")
 
 # MP restore items
 const LITANY_PHIAL = preload("uid://em12b0k0nyi5")
+
 # Gold
 var gold = 0
 

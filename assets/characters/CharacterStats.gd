@@ -11,7 +11,7 @@ enum BUFFABLE_STATS {
 enum CHARACTER_CLASS {
 	Warrior,    # High HP/Strength
 	Arcanist,       # High MP/Intelligence
-	Rogue,      # High Dexterity/Speed
+	Rogue,      # High Dexterity
 	Cleric,     # Balanced Faith/Vitality
 	Vampire     # Hybrid Strength/Faith
 }
@@ -54,7 +54,6 @@ var magic_defense: int
 var evasion: float
 var critical_chance: float
 var critical_multiplier: float
-var speed: int
 var combat_initiative : int
 var is_ally: bool
 var is_dead: bool = false
@@ -65,7 +64,6 @@ var base_intelligence: int
 var base_vitality: int
 var base_dexterity: int
 var base_faith: int
-var base_speed: int
 var base_abilities: Array[BaseSpellStrategy]
 var base_experience_to_level: int
 
@@ -85,7 +83,6 @@ func setup_base_stats():
 	base_vitality = vitality
 	base_dexterity = dexterity
 	base_faith = faith
-	base_speed = speed
 	base_abilities = abilities.duplicate()
 	base_experience_to_level = experience_to_level
 
@@ -222,7 +219,7 @@ func level_up():
 		CHARACTER_CLASS.Cleric:
 			faith += randi_range(1, 2)
 		CHARACTER_CLASS.Vampire:
-			speed += randi_range(1, 2)
+			dexterity += randi_range(1, 2)
 	
 	var current_max_hp = max_hp
 	var current_max_mp = max_mp
@@ -274,7 +271,7 @@ func is_alive() -> bool:
 
 # Calculate initiative for turn order (higher is better)
 func calculate_initiative() -> int:
-	combat_initiative = speed + randi() % 6 # Add small random variance
+	combat_initiative = dexterity + randi() % 6 # Add small random variance
 	return combat_initiative  
 
 func reset_stats():
@@ -289,7 +286,6 @@ func reset_stats():
 	vitality = base_vitality
 	dexterity = base_dexterity
 	faith = base_faith
-	speed = base_speed
 
 	# Reset abilities if desired
 	abilities = base_abilities.duplicate()

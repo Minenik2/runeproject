@@ -19,8 +19,7 @@ enum SCALING_STAT {
 	INTELLIGENCE,
 	VITALITY,
 	DEXTERITY,
-	FAITH,
-	SPEED
+	FAITH
 }
 
 @export var name: String
@@ -50,8 +49,6 @@ func calculate_scaled_power(character) -> float:
 			scaling_value = character.dexterity
 		SCALING_STAT.FAITH:
 			scaling_value = character.faith
-		SCALING_STAT.SPEED:
-			scaling_value = character.speed
 		SCALING_STAT.NONE:
 			scaling_value = 0.0
 	

@@ -255,7 +255,3 @@ func _on_party_showcase_ui_party_member_pressed(member: CharacterStats, sender: 
 
 func _on_party_showcase_ui_sendt_message(message: Variant) -> void:
 	$"../inventoryPanel/tooltip".text = message
-
-
-func _on_level_up_pressed() -> void:
-	pass # Replace with function body.

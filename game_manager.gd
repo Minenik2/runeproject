@@ -59,7 +59,6 @@ func create_goblin(stat):
 	goblin.vitality = stat
 	goblin.dexterity = stat
 	goblin.faith = stat
-	goblin.speed = stat
 	
 	goblin.calculate_derived_stats()
 	return goblin

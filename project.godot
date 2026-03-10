@@ -21,11 +21,15 @@ resources_spreadsheet_view/fold_docks=true
 resources_spreadsheet_view/resource_cell_label_mode=1
 resources_spreadsheet_view/freeze_first_column=true
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="runeproject"
 run/main_scene="uid://be4diiash3jp6"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [audio]
@@ -43,6 +47,7 @@ TooltipPlaceholderVariables="*res://addons/tooltips_pro/scripts/tooltip_placehol
 TooltipLinkData="*res://addons/tooltips_pro/scripts/tooltip_link_data.gd"
 ShopUi="*res://assets/ui/shop_ui.tscn"
 UiManager="*res://assets/ui/uiManager/uiManager.gd"
+UpgradeGacha="*uid://00nmv8quv70y"
 
 [display]
 
