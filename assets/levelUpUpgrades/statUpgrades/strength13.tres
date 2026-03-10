@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="statUpgradeStrategy" format=3 uid="uid://bmr13l5yem1kb"]
 
+[ext_resource type="Texture2D" uid="uid://bqhlrfuogxv2b" path="res://assets/art/upgrades/strength.png" id="1_75tpg"]
 [ext_resource type="Script" uid="uid://tp7xrmkkpssu" path="res://assets/levelUpUpgrades/statUpgradeStrategy.gd" id="1_rsd6b"]
 
 [resource]
 script = ExtResource("1_rsd6b")
 upgrade_amount = 5
-rarity = 0
+icon = ExtResource("1_75tpg")
+rarity = 2
 metadata/_custom_type_script = "uid://tp7xrmkkpssu"

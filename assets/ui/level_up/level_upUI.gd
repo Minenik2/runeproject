@@ -13,6 +13,12 @@ var upgrade1: BaseUpgradeStrategy = null
 var upgrade2: BaseUpgradeStrategy = null
 var upgrade3: BaseUpgradeStrategy = null
 
+var rarity_colors := {
+	BaseUpgradeStrategy.RARITY.COMMON: Color(1.0, 1.0, 1.0, 1.0),
+	BaseUpgradeStrategy.RARITY.RARE: Color(0.418, 0.567, 0.896, 1.0),
+	BaseUpgradeStrategy.RARITY.LEGENDARY: Color(0.785, 0.9, 0.135, 1.0)
+}
+
 func _on_power_up_pressed() -> void:
 	$"../menuUI/uiHit".play()
 	upgrade1.applyUpgrade(currentCharacter)
@@ -46,8 +52,26 @@ func _on_power_up_3_mouse_entered() -> void:
 func _on_levelUp_pressed() -> void:
 	$"../menuUI/uiHit".play()
 	upgrade1 = UpgradeGacha.roll_upgrade_loot()
+	
 	upgrade2 = UpgradeGacha.roll_upgrade_loot()
+	while upgrade2 == upgrade1:
+		upgrade2 = UpgradeGacha.roll_upgrade_loot()
+
 	upgrade3 = UpgradeGacha.roll_upgrade_loot()
+	while upgrade3 == upgrade1 or upgrade3 == upgrade2:
+		upgrade3 = UpgradeGacha.roll_upgrade_loot()
+	
+	power_up.icon = upgrade1.icon
+	power_up.modulate = rarity_colors[upgrade1.rarity]
+
+	power_up_2.icon = upgrade2.icon
+	power_up_2.modulate = rarity_colors[upgrade2.rarity]
+
+	power_up_3.icon = upgrade3.icon
+	power_up_3.modulate = rarity_colors[upgrade3.rarity]
+	
 	currentCharacter = tab_bar.selectedMemberVisual
 	currentCharacter.level_up_points -= 1
+	level_up_text.text = "%s leveled up! - Choose an upgrade" % [currentCharacter.character_name]
+	
 	show()

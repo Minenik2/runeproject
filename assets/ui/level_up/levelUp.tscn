@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://1vdtg7jce70g"]
 
 [ext_resource type="Texture2D" uid="uid://c2rre6dl8ejcy" path="res://assets/art/ddt.jpg" id="1_1ocqv"]
-[ext_resource type="Texture2D" uid="uid://cs3gh5rv5xl4" path="res://assets/art/crosshairLock.png" id="2_6qmqw"]
 [ext_resource type="Script" uid="uid://cysx8oyyfd6d" path="res://assets/ui/level_up/level_upUI.gd" id="2_eros6"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6qmqw"]
@@ -44,8 +43,6 @@ size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 132)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Increase HP"
-icon = ExtResource("2_6qmqw")
 icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
@@ -54,11 +51,15 @@ expand_icon = true
 custom_minimum_size = Vector2(0, 132)
 layout_mode = 2
 size_flags_horizontal = 3
+icon_alignment = 1
+expand_icon = true
 
 [node name="powerUP3" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer" unique_id=2016853168]
 custom_minimum_size = Vector2(0, 132)
 layout_mode = 2
 size_flags_horizontal = 3
+icon_alignment = 1
+expand_icon = true
 
 [node name="infoLabel" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=394116413]
 layout_mode = 2

@@ -277,6 +277,7 @@ func calculate_initiative() -> int:
 func reset_stats():
 	# Reset level and experience
 	level = 1
+	level_up_points = 0
 	experience = 0
 	experience_to_level = base_experience_to_level
 

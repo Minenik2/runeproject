@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="statUpgradeStrategy" format=3 uid="uid://271mse3cx3ty"]
 
 [ext_resource type="Script" uid="uid://tp7xrmkkpssu" path="res://assets/levelUpUpgrades/statUpgradeStrategy.gd" id="1_3r5wb"]
+[ext_resource type="Texture2D" uid="uid://birk2v32njrpk" path="res://assets/art/upgrades/faith.png" id="1_x8ejx"]
 
 [resource]
 script = ExtResource("1_3r5wb")
 stat_increase = 4
 upgrade_amount = 2
+icon = ExtResource("1_x8ejx")
 rarity = 1
 metadata/_custom_type_script = "uid://tp7xrmkkpssu"
